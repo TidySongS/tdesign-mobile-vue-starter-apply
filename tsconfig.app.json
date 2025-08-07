@@ -1,0 +1,13 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "noEmit": true
+  },
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "./typed-router.d.ts", "./auto-imports.d.ts", "./node_modules/tdesign-mobile-vue/global.d.ts"],
+  "exclude": ["src/**/__tests__/*"]
+}
