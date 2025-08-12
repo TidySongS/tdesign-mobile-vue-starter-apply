@@ -1,117 +1,130 @@
 <script setup lang="ts">
-const searchValue = ref("");
+const searchValue = ref('')
 const swiperList = [
-  "/imgs/activity/sicc-2019.png",
-  "/imgs/activity/sicc-2021.png",
-  "/imgs/activity/sicc-2019.png",
-  "/imgs/activity/sicc-2021.png",
-  "/imgs/activity/sicc-2019.png",
-  "/imgs/activity/sicc-2021.png",
-];
-const currentTab = ref("1");
+  '/imgs/activity/sicc-2019.png',
+  '/imgs/activity/sicc-2021.png',
+  '/imgs/activity/sicc-2019.png',
+  '/imgs/activity/sicc-2021.png',
+  '/imgs/activity/sicc-2019.png',
+  '/imgs/activity/sicc-2021.png',
+]
+const currentTab = ref('latest')
 const tabPanels = [
   {
-    value: "1",
-    label: "最新活动",
+    value: 'latest',
+    label: '最新活动',
   },
   {
-    value: "2",
-    label: "高分活动",
+    value: 'top',
+    label: '高分活动',
   },
-];
+]
 
 const activityList = [
   {
-    name: "少年与星空 插画巡展",
-    cover: "/imgs/activity/cover-3.png",
+    name: '少年与星空 插画巡展',
+    cover: '/imgs/activity/cover-3.png',
     star: 4.5,
-    price: "¥98.00-¥118.00",
+    price: '¥98.00-¥118.00',
   },
   {
-    name: "Universe AI艺术展",
-    cover: "/imgs/activity/cover-4.png",
+    name: 'Universe AI艺术展',
+    cover: '/imgs/activity/cover-4.png',
     star: 3.5,
-    price: "¥128.00-¥228.00",
+    price: '¥128.00-¥228.00',
   },
   {
-    name: "2019 SICC服务设计创新大会",
-    cover: "/imgs/activity/cover-1.png",
+    name: '2019 SICC服务设计创新大会',
+    cover: '/imgs/activity/cover-1.png',
     star: 5,
-    price: "免费活动",
+    price: '免费活动',
   },
   {
-    name: "2021 SICC服务设计创新大会",
-    cover: "/imgs/activity/cover-2.png",
+    name: '2021 SICC服务设计创新大会',
+    cover: '/imgs/activity/cover-2.png',
     star: 4.5,
-    price: "¥88.00-¥228.00",
+    price: '¥88.00-¥228.00',
   },
-];
+]
 
 const filteredActivityList = computed(() => {
   // mock
-  let list = [...activityList];
-  if (currentTab.value === "2") {
-    return list.sort((a, b) => b.star - a.star);
+  const list = [...activityList]
+  if (currentTab.value === 'top') {
+    return list.sort((a, b) => b.star - a.star)
   }
-  return list;
-});
+  return list
+})
 
-const filterVisible = ref(false);
+const filterVisible = ref(false)
 
-const onTabChange = ($event: string | number, label: string) => {
-  currentTab.value = $event as string;
-};
+function onTabChange($event: string | number) {
+  currentTab.value = $event as string
+}
 </script>
 
 <template>
-  <div>
+  <div style="touch-action: pan-y; overflow-x: hidden">
     <t-sticky :offset-top="48" :z-index="99">
       <div class="search-container">
-        <t-search v-model="searchValue" :clearable="true" shape="round" placeholder="搜索活动"></t-search>
+        <t-search v-model="searchValue" :clearable="true" shape="round" placeholder="搜索活动" />
       </div>
     </t-sticky>
-    <div class="subtitle">
+
+    <div class="wrapper">
       <h2>热门推荐</h2>
+      <t-swiper
+        :height="159.19" :autoplay="true" :navigation="{ type: 'dots', placement: 'outside' }"
+        :style="{
+          overflow: 'visible',
+          margin: '0 calc((100vw - 283px) / 2 - 12px)',
+        }"
+      >
+        <t-swiper-item v-for="(item, index) in swiperList" :key="index">
+          <img :src="item">
+        </t-swiper-item>
+      </t-swiper>
     </div>
-    <t-swiper :height="159.19" :autoplay="true" :navigation="{ type: 'dots', placement: 'outside' }">
-      <t-swiper-item v-for="(item, index) in swiperList" :key="index">
-        <img :src="item" class="swiper-img" />
-      </t-swiper-item>
-    </t-swiper>
-    <div class="subtitle">
-      <h2 style="padding-bottom: 0">全部活动</h2>
-    </div>
-    <t-sticky :offset-top="104" :z-index="99">
-      <div class="tab-wrapper">
-        <t-tabs :default-value="currentTab" :split="false" :showBottomLine="false" @change="onTabChange">
-          <t-tab-panel v-for="(item, index) in tabPanels" :key="index" :value="item.value" :label="item.label" />
-        </t-tabs>
-        <div class="filter-container" @click="filterVisible = true">
-          <t-icon name="filter" />
-          <span>筛选</span>
-        </div>
-      </div>
-    </t-sticky>
-    <t-divider style="margin: 0" />
-    <div class="card-container">
-      <div class="card" v-for="(item, index) in filteredActivityList" :key="index">
-        <div class="card-cover">
-          <img :src="item.cover" :alt="item.name" />
-        </div>
-        <div class="card-content">
-          <h3>{{ item.name }}</h3>
-          <div class="rate-container">
-            <t-rate v-model="item.star" size="16" variant="filled" allow-half disabled />
-            <span>{{ item.star }}分</span>
+
+    <div class="wrapper">
+      <h2 style="padding-bottom: 0">
+        全部活动
+      </h2>
+      <t-sticky :offset-top="104" :z-index="99">
+        <div class="tab-wrapper">
+          <t-tabs :default-value="currentTab" :split="false" :show-bottom-line="false" @change="onTabChange">
+            <t-tab-panel v-for="(item, index) in tabPanels" :key="index" :value="item.value" :label="item.label" />
+          </t-tabs>
+          <div class="filter-container" @click="filterVisible = true">
+            <t-icon name="filter" />
+            <span>筛选</span>
           </div>
-          <span class="price">{{ item.price }}</span>
+        </div>
+      </t-sticky>
+      <t-divider style="margin: 0" />
+      <div class="card-container">
+        <div v-for="(item, index) in filteredActivityList" :key="index" class="card">
+          <div class="card-cover">
+            <img :src="item.cover" :alt="item.name">
+          </div>
+          <div class="card-content">
+            <h3>{{ item.name }}</h3>
+            <div class="rate-container">
+              <t-rate v-model="item.star" size="16" variant="filled" allow-half disabled />
+              <span>{{ item.star }}分</span>
+            </div>
+            <span class="price">{{ item.price }}</span>
+          </div>
         </div>
       </div>
     </div>
+
     <t-popup v-model="filterVisible" placement="bottom" style="padding: 16px">
-      <div class="header">
-        <div class="popup-title">全部筛选</div>
-        <t-icon name="close" @click="filterVisible = false" size="18" />
+      <div class="popup-container">
+        <div class="popup-title">
+          全部筛选
+        </div>
+        <t-icon name="close" size="18" @click="filterVisible = false" />
       </div>
     </t-popup>
   </div>
@@ -140,7 +153,7 @@ const onTabChange = ($event: string | number, label: string) => {
   background-color: white;
 }
 
-.subtitle {
+.wrapper {
   h2 {
     .p-16();
     .font-templet(600, 20px, 28px);
@@ -148,17 +161,12 @@ const onTabChange = ($event: string | number, label: string) => {
   }
 }
 
-.swiper-img {
+.t-swiper img {
   width: 283px;
   height: 100%;
   object-fit: cover;
   border-radius: var(--td-radius-large);
-  box-shadow: 0 6px 10px 5px #0000000d, 0 12px 14px 2px #0000000a,
-    0 8px 10px -5px #00000014;
-}
-
-:deep(.t-swiper-item) {
-  .flex-center();
+  box-shadow: var(--td-shadow-3);
 }
 
 .tab-wrapper {
@@ -229,21 +237,21 @@ const onTabChange = ($event: string | number, label: string) => {
       }
 
       .price {
-        .font-templet();
+        .font-templet(600, 14px, 22px);
         margin-top: auto;
       }
     }
   }
 }
 
-.header {
+.popup-container {
   .flex-center();
   height: 26px;
-}
 
-.popup-title {
-  .font-templet(600, 18px, 26px);
-  flex: 1;
-  text-align: center;
+  .popup-title {
+    .font-templet(600, 18px, 26px);
+    flex: 1;
+    text-align: center;
+  }
 }
 </style>
