@@ -88,12 +88,20 @@ function handleTabbarChange(name: string | number) {
 </style>
 
 <style lang="less">
+body {
+  margin: 0;
+}
+
 .header-navbar {
+  z-index: 99;
   .t-navbar__content {
     background-image: url('/imgs/head-bg.png');
     background-position: top center;
     background-repeat: no-repeat;
     background-size: cover;
+  }
+  .t-navbar__left {
+    margin-left: 16px;
   }
 }
 </style>
