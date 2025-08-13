@@ -1,14 +1,11 @@
 <script setup lang="ts">
+import TagFilter from '@/components/TagFilter.vue'
+
 const searchValue = ref('')
-const swiperList = [
-  '/imgs/activity/sicc-2019.png',
-  '/imgs/activity/sicc-2021.png',
-  '/imgs/activity/sicc-2019.png',
-  '/imgs/activity/sicc-2021.png',
-  '/imgs/activity/sicc-2019.png',
-  '/imgs/activity/sicc-2021.png',
-]
 const currentTab = ref('latest')
+const filterVisible = ref(false)
+const calendarVisible = ref(false)
+
 const tabPanels = [
   {
     value: 'latest',
@@ -18,6 +15,15 @@ const tabPanels = [
     value: 'top',
     label: '高分活动',
   },
+]
+
+const swiperList = [
+  '/imgs/activity/sicc-2019.png',
+  '/imgs/activity/sicc-2021.png',
+  '/imgs/activity/sicc-2019.png',
+  '/imgs/activity/sicc-2021.png',
+  '/imgs/activity/sicc-2019.png',
+  '/imgs/activity/sicc-2021.png',
 ]
 
 const activityList = [
@@ -47,6 +53,23 @@ const activityList = [
   },
 ]
 
+const fieldOriented = [
+  'IT互联网',
+  '艺术设计',
+  '科技',
+  '电商',
+  '教育',
+  '医疗健康',
+  '心理学',
+  '摄影',
+]
+
+const activityFormat = ['讲座', '展览', '工作坊']
+
+const fieldFilter = ref(['IT互联网', '艺术设计'])
+
+const formatFilter = ref(['讲座'])
+
 const filteredActivityList = computed(() => {
   // mock
   const list = [...activityList]
@@ -56,10 +79,36 @@ const filteredActivityList = computed(() => {
   return list
 })
 
-const filterVisible = ref(false)
-
 function onTabChange($event: string | number) {
   currentTab.value = $event as string
+}
+
+const minDate = new Date(2023, 2, 1)
+const maxDate = new Date()
+const startDate = new Date(2023, 2, 5)
+const endDate = new Date(2023, 2, 16)
+const dateRange = ref([startDate, endDate])
+
+function handleDateConfirm(val: any) {
+  console.log(val)
+}
+
+function formatDateRange(startDate: Date, endDate: Date) {
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    return [year, month, day]
+  }
+  const [startYear, startMonth, startDay] = formatDate(startDate)
+  const [endYear, endMonth, endDay] = formatDate(endDate)
+  if (startYear === endYear)
+    return `${startYear}年${startMonth}月${startDay}日-${endMonth}月${endDay}日`
+  return `${startYear}年${startMonth}月${startDay}日-${endYear}年${endMonth}月${endDay}日`
+}
+
+function handlePriceLabel(value: any) {
+  return value
 }
 </script>
 
@@ -74,8 +123,7 @@ function onTabChange($event: string | number) {
     <div class="wrapper">
       <h2>热门推荐</h2>
       <t-swiper
-        :height="159.19" :autoplay="true" :navigation="{ type: 'dots', placement: 'outside' }"
-        :style="{
+        :height="159.19" :autoplay="true" :navigation="{ type: 'dots', placement: 'outside' }" :style="{
           overflow: 'visible',
           margin: '0 calc((100vw - 283px) / 2 - 12px)',
         }"
@@ -119,12 +167,63 @@ function onTabChange($event: string | number) {
       </div>
     </div>
 
-    <t-popup v-model="filterVisible" placement="bottom" style="padding: 16px">
-      <div class="popup-container">
+    <t-popup v-model="filterVisible" placement="bottom">
+      <div class="popup-container popup-wrapper">
         <div class="popup-title">
-          全部筛选
+          <span> 全部筛选 </span>
+          <t-icon name="close" size="24" @click="filterVisible = false" />
         </div>
-        <t-icon name="close" size="18" @click="filterVisible = false" />
+
+        <TagFilter v-model:model-value="fieldFilter" title="面向领域" :options="fieldOriented" />
+        <TagFilter v-model:model-value="formatFilter" title="活动形式" :options="activityFormat" />
+
+        <t-divider />
+
+        <div>
+          <h4>活动日期</h4>
+          <div class="date-range-container">
+            <span>{{ formatDateRange(dateRange[0], dateRange[1]) }}</span>
+            <t-button theme="default" size="extra-small" shape="round" @click="calendarVisible = true">
+              选择日期
+            </t-button>
+          </div>
+        </div>
+
+        <t-divider />
+
+        <div>
+          <h4>价格范围(元)</h4>
+          <t-slider range :default-value="[158, 388]" :max="588" :label="handlePriceLabel" show-extreme-value />
+        </div>
+        <div class="popup-button-group">
+          <t-button theme="light" variant="base" type="reset" size="large">
+            重置
+          </t-button>
+          <t-button theme="primary" type="submit" size="large">
+            完成
+          </t-button>
+        </div>
+      </div>
+    </t-popup>
+
+    <t-popup v-model="calendarVisible" placement="bottom" :overlay-props="{ backgroundColor: 'transparent' }">
+      <div class="popup-container calendar-container">
+        <t-calendar :use-popup="false" :min-date="minDate" :max-date="maxDate" :value="dateRange" type="range">
+          <template #title>
+            <div class="calendar-title-wrapper">
+              <t-icon name="chevron-left" size="24" />
+              <div class="calendar-title">
+                选择日期
+              </div>
+              <t-icon name="close" size="24" @click="calendarVisible = false" />
+            </div>
+          </template>
+        </t-calendar>
+        <div class="confirm-date-btn">
+          <t-button theme="primary" size="large" @click="handleDateConfirm">
+            确定日期
+          </t-button>
+        </div>
       </div>
     </t-popup>
   </div>
@@ -172,12 +271,11 @@ function onTabChange($event: string | number) {
 .tab-wrapper {
   .flex-center ();
   .font-templet();
+  background-color: white;
 
   :deep(.t-tabs) {
     flex: 2;
   }
-
-  background-color: white;
 
   .filter-container {
     flex: 1;
@@ -245,13 +343,98 @@ function onTabChange($event: string | number) {
 }
 
 .popup-container {
-  .flex-center();
-  height: 26px;
+  padding: 16px 0;
+  max-height: calc(100vh - 117px);
+  overflow-y: auto;
+}
+
+.popup-wrapper {
+  .p-16();
 
   .popup-title {
+    .flex-center();
     .font-templet(600, 18px, 26px);
-    flex: 1;
-    text-align: center;
+    width: 100%;
+    height: 26px;
+    margin-bottom: 14px;
+
+    span {
+      padding-left: 24px;
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  h4 {
+    .font-templet(600, 14px, 22px);
+    margin: 0;
+  }
+
+  .t-divider {
+    margin: 24px 0;
+  }
+
+  .date-range-container {
+    .flex-center();
+    .font-templet(400, 16px, 24px);
+    margin-top: 8px;
+    justify-content: space-between;
+  }
+
+  .t-slider {
+    .font-templet();
+    padding-bottom: 24px;
+
+    :deep(.t-slider__range-extreme) {
+      .font-templet(400, 16px, 24px);
+    }
+  }
+
+  .popup-button-group {
+    .flex-center();
+    margin-top: 16px;
+    width: 100%;
+    gap: 8px;
+
+    button {
+      width: 50%;
+    }
+  }
+}
+
+.calendar-container {
+  :deep(.t-calendar__title) {
+    padding-top: 0;
+  }
+
+  :deep(.t-calendar__days) {
+    .t-calendar__days-item {
+      &::before {
+        content: "周";
+      }
+    }
+  }
+
+  .calendar-title-wrapper {
+    .flex-center();
+    width: 100%;
+
+    .calendar-title {
+      margin: auto;
+    }
+  }
+
+  :deep(.t-calendar__months) {
+    height: 458px;
+  }
+
+  .confirm-date-btn {
+    .flex-center();
+    padding: 16px;
+
+    .t-button {
+      flex: 1;
+    }
   }
 }
 </style>

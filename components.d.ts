@@ -10,8 +10,12 @@ declare module 'vue' {
   export interface GlobalComponents {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TagFilter: typeof import('./src/components/TagFilter.vue')['default']
     TButton: typeof import('tdesign-mobile-vue')['Button']
+    TCalendar: typeof import('tdesign-mobile-vue')['Calendar']
     TCell: typeof import('tdesign-mobile-vue')['Cell']
+    TCheckbox: typeof import('tdesign-mobile-vue')['Checkbox']
+    TCheckboxGroup: typeof import('tdesign-mobile-vue')['CheckboxGroup']
     TDivider: typeof import('tdesign-mobile-vue')['Divider']
     TIcon: typeof import('tdesign-mobile-vue')['Icon']
     TList: typeof import('tdesign-mobile-vue')['List']
@@ -20,6 +24,7 @@ declare module 'vue' {
     TPullDownRefresh: typeof import('tdesign-mobile-vue')['PullDownRefresh']
     TRate: typeof import('tdesign-mobile-vue')['Rate']
     TSearch: typeof import('tdesign-mobile-vue')['Search']
+    TSlider: typeof import('tdesign-mobile-vue')['Slider']
     TSticky: typeof import('tdesign-mobile-vue')['Sticky']
     TSwiper: typeof import('tdesign-mobile-vue')['Swiper']
     TSwiperItem: typeof import('tdesign-mobile-vue')['SwiperItem']
@@ -27,5 +32,6 @@ declare module 'vue' {
     TTabBarItem: typeof import('tdesign-mobile-vue')['TabBarItem']
     TTabPanel: typeof import('tdesign-mobile-vue')['TabPanel']
     TTabs: typeof import('tdesign-mobile-vue')['Tabs']
+    TTag: typeof import('tdesign-mobile-vue')['Tag']
   }
 }
