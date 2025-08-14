@@ -27,32 +27,54 @@ function updateLocation() {
         const { latitude, longitude } = position.coords
         try {
           const cityName = await getCityNameFromCoords(latitude, longitude)
-          userInfo.locationName = cityName
-          locationStatus.value = false
-          Toast('定位成功')
+          if (cityName === '未知城市') {
+            throw new Error('无法获取城市信息')
+          }
+          else {
+            userInfo.locationName = cityName
+            Toast({
+              className: 'toast-root--success',
+              theme: 'success',
+              direction: 'column',
+              message: '定位成功',
+            })
+          }
         }
         catch (error) {
-          Toast('定位失败，请稍后重试')
           console.error('逆地理编码失败', error)
+          Toast({
+            theme: 'error',
+            direction: 'column',
+            message: '定位失败，请稍后重试',
+          })
+        }
+        finally {
+          locationStatus.value = false
         }
       },
       (error) => {
         locationStatus.value = false
         console.error('获取地理位置失败', error)
+        let msg = ''
         switch (error.code) {
           case error.PERMISSION_DENIED:
-            Toast('您拒绝了地理位置请求')
+            msg = '您拒绝了地理位置请求'
             break
           case error.POSITION_UNAVAILABLE:
-            Toast('位置信息不可用')
+            msg = '位置信息不可用'
             break
           case error.TIMEOUT:
-            Toast('获取位置超时')
+            msg = '获取位置超时'
             break
           default:
-            Toast('发生未知错误')
+            msg = '发生未知错误'
             break
         }
+        Toast({
+          theme: 'error',
+          direction: 'column',
+          message: msg,
+        })
       },
       {
         enableHighAccuracy: true,
@@ -71,13 +93,29 @@ async function getCityNameFromCoords(
   latitude: number,
   longitude: number,
 ): Promise<string> {
-  // TODO: 替换为实际的API调用
-  console.log(`经度: ${longitude}, 纬度: ${latitude}`)
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve('深圳市')
-    }, 1000)
-  })
+  const tencentApiKey = import.meta.env.VITE_TENCENT_MAP_API_KEY
+  if (!tencentApiKey) {
+    throw new Error(
+      '腾讯地图 API Key 缺失，请在 .env 文件中设置 VITE_TENCENT_MAP_API_KEY',
+    )
+  }
+  const url = `/api/tencent/map/ws/geocoder/v1/?location=${latitude},${longitude}&key=${tencentApiKey}`
+  try {
+    const response = await fetch(url, { signal: AbortSignal.timeout(5000) })
+    if (!response.ok) {
+      throw new Error('无法从腾讯地图获取城市名称')
+    }
+    const data = await response.json()
+    if (data.status !== 0) {
+      throw new Error(`腾讯地图 API 返回错误: ${data.message}`)
+    }
+    const city = data.result.address_component.city
+    return city || '未知城市'
+  }
+  catch (error) {
+    console.error('逆地理编码失败', error)
+    throw error
+  }
 }
 </script>
 
