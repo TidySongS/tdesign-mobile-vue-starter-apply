@@ -1,0 +1,22 @@
+.p-16 {
+  padding: 16px;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.font-templet(@w: 400, @s: 14px, @h: 22px) {
+  color: var(--td-text-color-primary);
+  font-weight: @w;
+  font-size: @s;
+  line-height: @h;
+}
+
+.popup-container {
+  padding: 16px 0;
+  max-height: calc(100vh - 117px);
+  overflow-y: auto;
+}
