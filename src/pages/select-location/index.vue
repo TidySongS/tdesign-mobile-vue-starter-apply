@@ -99,7 +99,7 @@ async function getCityNameFromCoords(
       '腾讯地图 API Key 缺失，请在 .env 文件中设置 VITE_TENCENT_MAP_API_KEY',
     )
   }
-  const url = `/api/tencent/map/ws/geocoder/v1/?location=${latitude},${longitude}&key=${tencentApiKey}`
+  const url = `/api/tencent-map/ws/geocoder/v1/?location=${latitude},${longitude}&key=${tencentApiKey}`
   try {
     const response = await fetch(url, { signal: AbortSignal.timeout(5000) })
     if (!response.ok) {

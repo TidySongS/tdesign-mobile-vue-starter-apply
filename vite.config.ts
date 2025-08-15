@@ -38,10 +38,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api/tencent/map': {
+      '/api/tencent-map': {
         target: 'https://apis.map.qq.com',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api\/tencent\/map/, ''),
+        rewrite: path => path.replace(/^\/api\/tencent-map/, ''),
       },
     },
   },

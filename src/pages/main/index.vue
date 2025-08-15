@@ -1,15 +1,27 @@
 <script setup lang="ts">
+import type { Activity, Filters } from '@/types/interface'
+import { defaultFilterOptions, useFilters } from '@/hooks/useFilters'
+import {
+  fetchMockActivityList,
+  fetchMockSwiperList,
+} from '@/mocks/activityMocks'
+
 const router = useRouter()
 const searchValue = ref('')
 const currentTab = ref('latest')
+const isFetchSwiperList = ref(true)
+const isFetchActivityList = ref(true)
+const isLoadAllActivities = ref(false)
+const isRefreshActivityList = ref(true)
 const filterPopupVisible = ref(false)
+const pageSize = 5
+let currentPage = 1
 
-const filters = reactive({
-  fields: ['IT互联网', '艺术设计'],
-  formats: ['讲座'],
-  priceRange: [158, 388],
-  dateRange: [new Date(2023, 2, 10), new Date(2023, 2, 18)],
-})
+const { filters, resetFilters } = useFilters()
+
+const swiperList = ref<string[]>([])
+
+const activityList = ref<Activity[]>([])
 
 const tabPanels = [
   {
@@ -22,83 +34,112 @@ const tabPanels = [
   },
 ]
 
-const mockedSwiperList = [
-  '/imgs/activity/sicc-2019.png',
-  '/imgs/activity/sicc-2021.png',
-  '/imgs/activity/sicc-2019.png',
-  '/imgs/activity/sicc-2021.png',
-  '/imgs/activity/sicc-2019.png',
-  '/imgs/activity/sicc-2021.png',
-]
-
-const mockedActivityList = [
-  {
-    id: 1,
-    name: '少年与星空 插画巡展',
-    cover: '/imgs/activity/cover-3.png',
-    star: 4.5,
-    price: '¥98.00-¥118.00',
-  },
-  {
-    id: 2,
-    name: 'Universe AI艺术展',
-    cover: '/imgs/activity/cover-4.png',
-    star: 3.5,
-    price: '¥128.00-¥228.00',
-  },
-  {
-    id: 3,
-    name: '2019 SICC服务设计创新大会',
-    cover: '/imgs/activity/cover-1.png',
-    star: 5,
-    price: '免费活动',
-  },
-  {
-    id: 4,
-    name: '2021 SICC服务设计创新大会',
-    cover: '/imgs/activity/cover-2.png',
-    star: 4.5,
-    price: '¥88.00-¥228.00',
-  },
-]
-
-const defaultFilterOptions = {
-  fieldOriented: [
-    'IT互联网',
-    '艺术设计',
-    '科技',
-    '电商',
-    '教育',
-    '医疗健康',
-    '心理学',
-    '摄影',
-  ],
-  activityFormat: ['讲座', '展览', '工作坊'],
-  minPrice: 0,
-  maxPrice: 588,
-  minDate: new Date(2023, 2, 1),
-  maxDate: new Date(),
-}
-
-const swiperList = mockedSwiperList
-const activityList = mockedActivityList
-
 function goToActivityDetail(id: number | string) {
   router.push(`/activity-detail/${id}`)
 }
 
-function fetchActivityList() {
-  console.log('fetch activity list')
+async function fetchActivityList(isRefreshMode = true) {
+  if (isLoadAllActivities.value && !isRefreshMode) {
+    return
+  }
+  isRefreshActivityList.value = isRefreshMode
+  isFetchActivityList.value = true
+  if (isRefreshActivityList.value) {
+    currentPage = 1
+    isLoadAllActivities.value = false
+  }
+  try {
+    const payload = {
+      sort: currentTab.value,
+      page: currentPage,
+      pageSize,
+    }
+    const result = await fetchMockActivityList(payload, filters)
+
+    if (isRefreshActivityList.value) {
+      activityList.value = result.data
+    }
+    else {
+      activityList.value.push(...result.data)
+    }
+    currentPage++
+
+    if (activityList.value.length >= result.total) {
+      isLoadAllActivities.value = true
+    }
+  }
+  catch (error: any) {
+    if (error?.name === 'AbortError') {
+      console.log('请求被取消')
+      return
+    }
+    console.error('获取活动列表失败:', error)
+  }
+  finally {
+    isFetchActivityList.value = false
+  }
 }
 
-function handleFiltersUpdate(newFilters: any) {
+async function fetchSwiperList() {
+  try {
+    const result = await fetchMockSwiperList()
+    swiperList.value = result.data
+  }
+  catch (error: any) {
+    console.error('获取轮播图列表失败:', error)
+  }
+  finally {
+    isFetchSwiperList.value = false
+  }
+}
+
+function resetAndFetch() {
+  resetFilters()
+  fetchActivityList()
+  filterPopupVisible.value = false
+}
+
+function handleFiltersUpdate(newFilters: Filters) {
   Object.assign(filters, newFilters)
   fetchActivityList()
+}
+
+function handlePageScroll() {
+  if (isLoadAllActivities.value)
+    return
+  const scrollHeight = document.documentElement.scrollHeight
+  const scrollTop
+    = document.documentElement.scrollTop || document.body.scrollTop
+  const clientHeight = document.documentElement.clientHeight
+  const scrollBottom = scrollHeight - scrollTop - clientHeight
+  if (scrollBottom < 50 && !isFetchActivityList.value) {
+    fetchActivityList(false)
+  }
+}
+
+onMounted(() => {
+  fetchSwiperList()
+  fetchActivityList()
+  window.addEventListener('scroll', handlePageScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handlePageScroll)
+})
+
+function formatPrice(priceRange: number[]): string {
+  if (priceRange.length === 2 && priceRange[1] !== 0) {
+    return `¥${priceRange[0].toFixed(2)}-¥${priceRange[1].toFixed(2)}`
+  }
+  else if (priceRange.length === 1 && priceRange[0] !== 0) {
+    return `¥${priceRange[0].toFixed(2)}`
+  }
+  return '免费活动'
 }
 </script>
 
 <template>
-  <div style="touch-action: pan-y; overflow-x: hidden">
+  <div class="page-container">
     <t-sticky :offset-top="48" :z-index="99">
       <div class="search-container">
         <t-search
@@ -112,36 +153,63 @@ function handleFiltersUpdate(newFilters: any) {
 
     <div class="wrapper">
       <h2>热门推荐</h2>
-      <t-swiper
-        :height="159.2"
-        :autoplay="true"
-        :navigation="{ type: 'dots', placement: 'outside' }"
-        :style="{
-          overflow: 'visible',
-          margin: '0 calc(50vw - 153.5px) 0 calc(50vw - 141.5px)',
-        }"
-      >
-        <t-swiper-item v-for="(item, index) in swiperList" :key="index">
-          <img :src="item">
-        </t-swiper-item>
-      </t-swiper>
+      <Transition name="swiper-fade" mode="out-in">
+        <div
+          v-if="isFetchSwiperList"
+          key="swiper-placeholder"
+          class="swiper-placeholder-container"
+        >
+          <div class="swiper-placeholder">
+            <div
+              class="swiper-side swiper-img"
+              style="border-radius: 0 9px 9px 0"
+            />
+            <div class="swiper-main swiper-img" />
+            <div
+              class="swiper-side swiper-img"
+              style="border-radius: 9px 0 0 9px"
+            />
+          </div>
+          <div class="dots-placeholder">
+            <t-loading theme="dots" :duration="5000" size="30px" />
+          </div>
+        </div>
+        <t-swiper
+          v-else
+          key="swiper"
+          :height="159.2"
+          :autoplay="true"
+          :navigation="{ type: 'dots', placement: 'outside' }"
+          :style="{
+            overflow: 'visible',
+            margin: '0 calc(50vw - 153.5px) 0 calc(50vw - 141.5px)',
+          }"
+        >
+          <t-swiper-item
+            v-for="(item, index) in swiperList"
+            :key="`swiper-${index}`"
+          >
+            <img :src="item">
+          </t-swiper-item>
+        </t-swiper>
+      </Transition>
     </div>
 
-    <div class="wrapper">
+    <div class="wrapper flex-fill-col">
       <h2 style="padding-bottom: 0">
         全部活动
       </h2>
       <t-sticky :offset-top="104" :z-index="99">
         <div class="tab-wrapper">
           <t-tabs
-            :default-value="currentTab"
+            v-model:value="currentTab"
             :split="false"
             :show-bottom-line="false"
-            @change="fetchActivityList"
+            @change="fetchActivityList()"
           >
             <t-tab-panel
               v-for="(item, index) in tabPanels"
-              :key="index"
+              :key="`tab-${index}`"
               :value="item.value"
               :label="item.label"
             />
@@ -153,38 +221,77 @@ function handleFiltersUpdate(newFilters: any) {
         </div>
       </t-sticky>
       <t-divider style="margin: 0" />
-      <div class="card-container">
+
+      <Transition name="fade" mode="out-in">
         <div
-          v-for="item in activityList"
-          :key="item.id"
-          class="card"
-          @click="goToActivityDetail(item.id)"
+          v-if="!isFetchActivityList && activityList.length === 0"
+          key="empty"
+          class="empty-result-container"
         >
-          <div class="card-cover">
-            <img :src="item.cover" :alt="item.name">
-          </div>
-          <div class="card-content">
-            <h3>{{ item.name }}</h3>
-            <div class="rate-container">
-              <t-rate
-                v-model="item.star"
-                size="16"
-                variant="filled"
-                allow-half
-                disabled
+          <t-result>
+            <template #image>
+              <t-image
+                src="https://tdesign.gtimg.com/mobile/demos/result1.png"
+                class="external-class-image"
               />
-              <span>{{ item.star }}分</span>
+            </template>
+            <template #title>
+              <div style="font-size: large">
+                暂无相关活动
+              </div>
+            </template>
+            <template #description>
+              <div>换个筛选条件试试，或许有惊喜哦～</div>
+            </template>
+          </t-result>
+        </div>
+        <div
+          v-else-if="isFetchActivityList && isRefreshActivityList"
+          key="skeleton"
+          class="card-container"
+        >
+          <ActivityCardSkeleton />
+        </div>
+        <div v-else class="card-container">
+          <div
+            v-for="item in activityList"
+            :key="`activity-${item.id}`"
+            class="card"
+            @click="goToActivityDetail(item.id)"
+          >
+            <div class="card-cover">
+              <img :src="item.cover" :alt="item.name">
             </div>
-            <span class="price">{{ item.price }}</span>
+            <div class="card-content">
+              <h3>{{ item.name }}</h3>
+              <div class="rate-container">
+                <t-rate
+                  v-model="item.star"
+                  size="16"
+                  variant="filled"
+                  allow-half
+                  disabled
+                />
+                <span>{{ item.star }}分</span>
+              </div>
+              <span class="price">{{ formatPrice(item.priceRange) }}</span>
+            </div>
+          </div>
+          <div
+            v-if="!isRefreshActivityList && isFetchActivityList"
+            key="skeleton-more"
+          >
+            <ActivityCardSkeleton :count="1" />
           </div>
         </div>
-      </div>
+      </Transition>
     </div>
 
     <ActivityFilterPopup
       v-model:visible="filterPopupVisible"
       :filters
       :options="defaultFilterOptions"
+      @reset="resetAndFetch"
       @update:filters="handleFiltersUpdate"
     />
   </div>
@@ -192,6 +299,13 @@ function handleFiltersUpdate(newFilters: any) {
 
 <style scoped lang="less">
 @import "@/style/home.less";
+.page-container {
+  .flex-col();
+  touch-action: pan-y;
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: calc(100vh - 104px);
+}
 
 .search-container {
   padding: 8px 16px;
@@ -199,10 +313,40 @@ function handleFiltersUpdate(newFilters: any) {
 }
 
 .wrapper {
+  .flex-col();
   h2 {
     .p-16();
     .font-templet(600, 20px, 28px);
     margin: 0;
+  }
+}
+
+.swiper-placeholder-container {
+  .flex-col();
+  height: 177.19px;
+  .swiper-placeholder {
+    flex-grow: 1;
+    .flex-center();
+    .swiper-main {
+      width: 283px;
+      margin: 0 12px;
+    }
+    .swiper-img {
+      height: 100%;
+      border-radius: var(--td-radius-large);
+      background-color: var(--td-gray-color-1);
+    }
+    .swiper-side {
+      width: calc(50vw - 153.5px);
+    }
+  }
+  .dots-placeholder {
+    display: flex;
+    height: 18px;
+    .t-loading {
+      bottom: 0;
+      margin: auto;
+    }
   }
 }
 
@@ -230,17 +374,30 @@ function handleFiltersUpdate(newFilters: any) {
   }
 }
 
+.swiper-fade-enter-active {
+  transition: opacity 0.5s ease;
+}
+
+.swiper-fade-enter-from {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.empty-result-container {
+  .flex-center();
+  flex: 1;
+}
+
 .card-container {
-  margin-bottom: 72px;
-
+  margin-bottom: 56px;
   .card {
-    display: flex;
-    height: 120px;
-    margin: 16px;
-    border-radius: var(--td-radius-large);
-    box-shadow: var(--td-shadow-3);
-    overflow: hidden;
-
     .card-cover {
       flex-shrink: 0;
       width: 120px;
@@ -254,12 +411,6 @@ function handleFiltersUpdate(newFilters: any) {
     }
 
     .card-content {
-      .p-16();
-      padding-bottom: 12px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-
       h3 {
         .font-templet();
         margin: 0 0 8px 0;
@@ -278,11 +429,6 @@ function handleFiltersUpdate(newFilters: any) {
         :deep(.t-rate__icon-left--selected) {
           color: var(--td-warning-color-5);
         }
-      }
-
-      .price {
-        .font-templet(600, 14px, 22px);
-        margin-top: auto;
       }
     }
   }

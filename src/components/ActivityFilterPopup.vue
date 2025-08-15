@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import type { Filters } from '@/types/interface'
+import { copyFilters } from '@/hooks/useFilters'
+
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -10,39 +13,69 @@ const props = defineProps({
   },
   options: {
     type: Object,
-    default: () => ({
-      fieldOriented: [],
-      activityFormat: [],
-      minPrice: 0,
-      maxPrice: 1000,
-      minDate: new Date(2025, 8, 1),
-      maxDate: new Date(),
-    }),
+    required: true,
   },
+  onReset: { type: Function, required: true },
 })
 
-const emit = defineEmits(['update:visible', 'update:filters'])
+const emit = defineEmits(['update:visible', 'update:filters', 'reset'])
 const calendarVisible = ref(false)
 const tmpFilters = ref({ ...props.filters })
 const tmpDateRange = ref(props.filters.dateRange)
 
+watch(
+  () => props.filters,
+  (newFilters) => {
+    tmpFilters.value = { ...newFilters }
+    tmpDateRange.value = newFilters.dateRange.map((d: Date) => new Date(d))
+  },
+  { deep: true, immediate: true },
+)
+
 function resetFilters() {
-  tmpFilters.value = { ...props.filters }
-  tmpDateRange.value = props.filters.dateRange
+  emit('reset')
+}
+
+function resetTmpFilters() {
+  tmpFilters.value = copyFilters(props.filters as Filters)
+  tmpDateRange.value = props.filters.dateRange.map((d: Date) => new Date(d))
 }
 
 function onPopupUpdate(value: boolean) {
   if (value === false)
-    resetFilters()
+    resetTmpFilters()
   emit('update:visible', value)
 }
 
 function closePopup() {
-  resetFilters()
+  resetTmpFilters()
   emit('update:visible', false)
 }
 
-function formatDateRange(dateRange: any) {
+function closeCalendar() {
+  calendarVisible.value = false
+  tmpDateRange.value = tmpFilters.value.dateRange.map((d: Date) => new Date(d))
+}
+
+function handlePriceLabel(value: any) {
+  return value
+}
+
+function handleDateSelect(newDateRange: Date) {
+  tmpDateRange.value = newDateRange
+}
+
+function handleDateConfirm() {
+  tmpFilters.value.dateRange = tmpDateRange.value
+  calendarVisible.value = false
+}
+
+function applyFilters() {
+  emit('update:filters', tmpFilters.value)
+  emit('update:visible', false)
+}
+
+function formatDateRange(dateRange: Date[]) {
   const formatDate = (date: Date) => {
     const year = date.getFullYear()
     const month = date.getMonth() + 1
@@ -56,29 +89,6 @@ function formatDateRange(dateRange: any) {
   if (startYear === endYear)
     return `${startYear}年${startMonth}月${startDay}日-${endMonth}月${endDay}日`
   return `${startYear}年${startMonth}月${startDay}日-${endYear}年${endMonth}月${endDay}日`
-}
-
-function handlePriceLabel(value: any) {
-  return value
-}
-
-function closeCalendar() {
-  tmpDateRange.value = tmpFilters.value.dateRange
-  calendarVisible.value = false
-}
-
-function handleDateSelect(newDateRange: any) {
-  tmpDateRange.value = newDateRange
-}
-
-function handleDateConfirm() {
-  tmpFilters.value.dateRange = tmpDateRange.value
-  calendarVisible.value = false
-}
-
-function applyFilters() {
-  emit('update:filters', tmpFilters.value)
-  emit('update:visible', false)
 }
 </script>
 
@@ -98,12 +108,12 @@ function applyFilters() {
         <TagFilter
           v-model:model-value="tmpFilters.fields"
           title="面向领域"
-          :options="options.fieldOriented"
+          :options="options.fields"
         />
         <TagFilter
           v-model:model-value="tmpFilters.formats"
           title="活动形式"
-          :options="options.activityFormat"
+          :options="options.formats"
         />
 
         <t-divider />
@@ -130,8 +140,8 @@ function applyFilters() {
           <t-slider
             v-model="tmpFilters.priceRange"
             range
-            :min="options.minPrice"
-            :max="options.maxPrice"
+            :min="options.priceRange[0]"
+            :max="options.priceRange[1]"
             :label="handlePriceLabel"
             show-extreme-value
           />
@@ -161,12 +171,13 @@ function applyFilters() {
       v-model="calendarVisible"
       placement="bottom"
       :overlay-props="{ backgroundColor: 'transparent' }"
+      @close="closeCalendar"
     >
       <div class="popup-container calendar-container">
         <t-calendar
           :use-popup="false"
-          :min-date="options.minDate"
-          :max-date="options.maxDate"
+          :min-date="options.dateRange[0]"
+          :max-date="options.dateRange[1]"
           :value="tmpDateRange"
           type="range"
           @select="handleDateSelect"
@@ -271,12 +282,12 @@ function applyFilters() {
   }
 
   :deep(.t-calendar__months) {
-    height: 458px;
+    height: 474px;
   }
 
   .confirm-date-btn {
     .flex-center();
-    padding: 16px;
+    padding: 16px 16px 0 16px;
 
     .t-button {
       flex: 1;
