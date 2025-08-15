@@ -21,10 +21,7 @@ export default defineConfig({
           library: 'mobile-vue',
         }),
       ],
-      imports: [
-        VueRouterAutoImports,
-        'vue',
-      ],
+      imports: [VueRouterAutoImports, 'vue'],
     }),
     Components({
       resolvers: [
@@ -44,5 +41,12 @@ export default defineConfig({
     port: 18000, // 端口
     open: '/', // 启动时自动打开首页
     //https: false,
+    proxy: {
+      '/api/tencent/map': {
+        target: 'https://apis.map.qq.com',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api\/tencent\/map/, ''),
+      },
+    },
   },
 })

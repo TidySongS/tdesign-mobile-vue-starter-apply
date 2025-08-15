@@ -55,10 +55,10 @@ function handleTabbarChange(name: string | number) {
   <header>
     <t-navbar :title="currentInfo.showTitle ? currentInfo.label : ''" class="header-navbar">
       <template #left>
-        <span v-if="currentInfo.showLocation">
+        <div v-if="currentInfo.showLocation" @click="router.push('/select-location')">
           <t-icon name="location" />
           <span class="location-text">{{ userInfo.locationName }}</span>
-        </span>
+        </div>
       </template>
     </t-navbar>
   </header>
@@ -89,11 +89,15 @@ function handleTabbarChange(name: string | number) {
 
 <style lang="less">
 .header-navbar {
+  z-index: 99;
   .t-navbar__content {
     background-image: url('/imgs/head-bg.png');
     background-position: top center;
     background-repeat: no-repeat;
     background-size: cover;
+  }
+  .t-navbar__left {
+    margin-left: 16px;
   }
 }
 </style>

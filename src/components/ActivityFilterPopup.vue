@@ -1,0 +1,286 @@
+<script setup lang="ts">
+const props = defineProps({
+  visible: {
+    type: Boolean,
+    default: false,
+  },
+  filters: {
+    type: Object,
+    required: true,
+  },
+  options: {
+    type: Object,
+    default: () => ({
+      fieldOriented: [],
+      activityFormat: [],
+      minPrice: 0,
+      maxPrice: 1000,
+      minDate: new Date(2025, 8, 1),
+      maxDate: new Date(),
+    }),
+  },
+})
+
+const emit = defineEmits(['update:visible', 'update:filters'])
+const calendarVisible = ref(false)
+const tmpFilters = ref({ ...props.filters })
+const tmpDateRange = ref(props.filters.dateRange)
+
+function resetFilters() {
+  tmpFilters.value = { ...props.filters }
+  tmpDateRange.value = props.filters.dateRange
+}
+
+function onPopupUpdate(value: boolean) {
+  if (value === false)
+    resetFilters()
+  emit('update:visible', value)
+}
+
+function closePopup() {
+  resetFilters()
+  emit('update:visible', false)
+}
+
+function formatDateRange(dateRange: any) {
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    return [year, month, day]
+  }
+  const [startYear, startMonth, startDay] = formatDate(dateRange[0])
+  if (dateRange.length === 1)
+    return `${startYear}年${startMonth}月${startDay}日`
+  const [endYear, endMonth, endDay] = formatDate(dateRange[1])
+  if (startYear === endYear)
+    return `${startYear}年${startMonth}月${startDay}日-${endMonth}月${endDay}日`
+  return `${startYear}年${startMonth}月${startDay}日-${endYear}年${endMonth}月${endDay}日`
+}
+
+function handlePriceLabel(value: any) {
+  return value
+}
+
+function closeCalendar() {
+  tmpDateRange.value = tmpFilters.value.dateRange
+  calendarVisible.value = false
+}
+
+function handleDateSelect(newDateRange: any) {
+  tmpDateRange.value = newDateRange
+}
+
+function handleDateConfirm() {
+  tmpFilters.value.dateRange = tmpDateRange.value
+  calendarVisible.value = false
+}
+
+function applyFilters() {
+  emit('update:filters', tmpFilters.value)
+  emit('update:visible', false)
+}
+</script>
+
+<template>
+  <div>
+    <t-popup
+      :visible="props.visible"
+      placement="bottom"
+      @update:visible="onPopupUpdate"
+    >
+      <div class="popup-container popup-wrapper">
+        <div class="popup-title">
+          <span> 全部筛选 </span>
+          <t-icon name="close" size="24" @click="closePopup" />
+        </div>
+
+        <TagFilter
+          v-model:model-value="tmpFilters.fields"
+          title="面向领域"
+          :options="options.fieldOriented"
+        />
+        <TagFilter
+          v-model:model-value="tmpFilters.formats"
+          title="活动形式"
+          :options="options.activityFormat"
+        />
+
+        <t-divider />
+
+        <div>
+          <h4>活动日期</h4>
+          <div class="date-range-container">
+            <span>{{ formatDateRange(tmpFilters.dateRange) }}</span>
+            <t-button
+              theme="default"
+              size="extra-small"
+              shape="round"
+              @click="calendarVisible = true"
+            >
+              选择日期
+            </t-button>
+          </div>
+        </div>
+
+        <t-divider />
+
+        <div>
+          <h4>价格范围(元)</h4>
+          <t-slider
+            v-model="tmpFilters.priceRange"
+            range
+            :min="options.minPrice"
+            :max="options.maxPrice"
+            :label="handlePriceLabel"
+            show-extreme-value
+          />
+        </div>
+        <div class="popup-button-group">
+          <t-button
+            theme="light"
+            variant="base"
+            type="reset"
+            size="large"
+            @click="resetFilters"
+          >
+            重置
+          </t-button>
+          <t-button
+            theme="primary"
+            type="submit"
+            size="large"
+            @click="applyFilters"
+          >
+            完成
+          </t-button>
+        </div>
+      </div>
+    </t-popup>
+    <t-popup
+      v-model="calendarVisible"
+      placement="bottom"
+      :overlay-props="{ backgroundColor: 'transparent' }"
+    >
+      <div class="popup-container calendar-container">
+        <t-calendar
+          :use-popup="false"
+          :min-date="options.minDate"
+          :max-date="options.maxDate"
+          :value="tmpDateRange"
+          type="range"
+          @select="handleDateSelect"
+        >
+          <template #title>
+            <div class="calendar-title-wrapper">
+              <t-icon name="chevron-left" size="24" @click="closeCalendar" />
+              <div class="calendar-title">
+                选择日期
+              </div>
+              <t-icon name="close" size="24" @click="closeCalendar" />
+            </div>
+          </template>
+        </t-calendar>
+        <div class="confirm-date-btn">
+          <t-button theme="primary" size="large" @click="handleDateConfirm">
+            确定日期
+          </t-button>
+        </div>
+      </div>
+    </t-popup>
+  </div>
+</template>
+
+<style scoped lang="less">
+@import "@/style/home.less";
+
+.popup-wrapper {
+  .p-16();
+
+  .popup-title {
+    .flex-center();
+    .font-templet(600, 18px, 26px);
+    width: 100%;
+    height: 26px;
+    margin-bottom: 14px;
+
+    span {
+      padding-left: 24px;
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  h4 {
+    .font-templet(600, 14px, 22px);
+    margin: 0;
+  }
+
+  .t-divider {
+    margin: 24px 0;
+  }
+
+  .date-range-container {
+    .flex-center();
+    .font-templet(400, 16px, 24px);
+    margin-top: 8px;
+    justify-content: space-between;
+  }
+
+  .t-slider {
+    .font-templet();
+    padding-bottom: 24px;
+
+    :deep(.t-slider__range-extreme) {
+      .font-templet(400, 16px, 24px);
+    }
+  }
+
+  .popup-button-group {
+    .flex-center();
+    margin-top: 16px;
+    width: 100%;
+    gap: 8px;
+
+    button {
+      width: 50%;
+    }
+  }
+}
+
+.calendar-container {
+  :deep(.t-calendar__title) {
+    padding-top: 0;
+  }
+
+  :deep(.t-calendar__days) {
+    .t-calendar__days-item {
+      &::before {
+        content: "周";
+      }
+    }
+  }
+
+  .calendar-title-wrapper {
+    .flex-center();
+    width: 100%;
+
+    .calendar-title {
+      margin: auto;
+    }
+  }
+
+  :deep(.t-calendar__months) {
+    height: 458px;
+  }
+
+  .confirm-date-btn {
+    .flex-center();
+    padding: 16px;
+
+    .t-button {
+      flex: 1;
+    }
+  }
+}
+</style>
