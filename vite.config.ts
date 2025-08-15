@@ -40,7 +40,7 @@ export default defineConfig({
     host: '0.0.0.0', // ✅ 已配置：监听所有网络接口
     port: 18000, // 端口
     open: '/', // 启动时自动打开首页
-    //https: false,
+    // https: false,
     proxy: {
       '/api/tencent/map': {
         target: 'https://apis.map.qq.com',

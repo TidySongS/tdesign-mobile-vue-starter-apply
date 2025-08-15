@@ -1,102 +1,107 @@
 <script setup lang="ts">
-import { computed, defineProps, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+    import {
+        computed,
+        defineProps,
+        reactive,
+        ref
+    } from 'vue'
+    import {
+        useRouter
+    } from 'vue-router'
 
-interface Props {
-  eventId?: string
-  date?: string
-}
+    interface Props {
+        eventId ? : string
+        date ? : string
+    }
 
-const props = defineProps<Props>()
-const router = useRouter()
+    const props = defineProps < Props > ()
+    const router = useRouter()
 
-const eventTitle = ref('2021 SICC服务设计创新大会')
-const eventDate = ref('2021年3月16日')
-const eventLocation = ref('深圳市腾讯滨海大厦')
+    const eventTitle = ref('2021 SICC服务设计创新大会')
+    const eventDate = ref('2021年3月16日')
+    const eventLocation = ref('深圳市腾讯滨海大厦')
 
-// 人员信息
-const persons = reactive([
-  { id: '1', name: '蔡宣轩', selected: true },
-  { id: '2', name: '蔡晓萱', selected: false }
-])
+    // 人员信息
+    const persons = reactive([{
+            id: '1',
+            name: '蔡宣轩'
+        }, {
+            id: '2',
+            name: '蔡晓萱'
+        }])
+        // 选中的人员ID数组
+    const selectedPersonIds = ref(['1'])
 
-// 票类场次
-const tickets = reactive([
-  { id: '1', date: '2021年3月16日', selected: true }
-])
+    // 票类场次
+    const tickets = reactive([{
+            id: '1',
+            date: '2021年3月16日'
+        }])
+        // 选中的票类场次ID
+    const selectedTicketId = ref('1')
 
-// 票档价格
-const prices = reactive([
-  { 
-    id: '1', 
-    description: '早鸟价-单人票', 
-    price: 88, 
-    originalPrice: 128, 
-    selected: true 
-  }, 
-  { 
-    id: '2', 
-    description: '早鸟价-双人票', 
-    price: 168, 
-    originalPrice: 228, 
-    selected: false 
-  }, 
-  { 
-    id: '3', 
-    description: '正价-单人票', 
-    price: 128, 
-    originalPrice: 128, 
-    selected: false 
-  }, 
-  { 
-    id: '4', 
-    description: '正价-双人票', 
-    price: 228, 
-    originalPrice: 228, 
-    selected: false 
-  }
-])
+    // 票档价格
+    const prices = reactive([{
+            id: '1',
+            description: '早鸟价-单人票',
+            price: 88,
+            originalPrice: 128
+        }, {
+            id: '2',
+            description: '早鸟价-双人票',
+            price: 168,
+            originalPrice: 228
+        }, {
+            id: '3',
+            description: '正价-单人票',
+            price: 128,
+            originalPrice: 128
+        }, {
+            id: '4',
+            description: '正价-双人票',
+            price: 228,
+            originalPrice: 228
+        }])
+        // 选中的票档价格ID
+    const selectedPriceId = ref('1')
 
-// 计算总价
-const totalPrice = computed(() => {
-  const selectedPrice = prices.find(p => p.selected)
-  return selectedPrice ? selectedPrice.price : 0
-})
+    // 计算总价
+    const totalPrice = computed(() => {
+        const selectedPrice = prices.find(p => p.id === selectedPriceId.value)
+        return selectedPrice ? selectedPrice.price : 0
+    })
 
-// 是否可以购买
-const canPurchase = computed(() => {
-  const selectedPerson = persons.find(p => p.selected)
-  const selectedTicket = tickets.find(t => t.selected)
-  const selectedPrice = prices.find(p => p.selected)
-  return selectedPerson && selectedTicket && selectedPrice
-})
+    // 是否可以购买
+    const canPurchase = computed(() => {
+        return selectedPersonIds.value.length > 0 && selectedTicketId.value && selectedPriceId.value
+    })
 
-// 选择人员
-function selectPerson(personId: string) {
-  persons.forEach(p => p.selected = p.id === personId)
-}
+    // 处理人员选择变化
+    function handlePersonChange(value: string[]) {
+        selectedPersonIds.value = value
+    }
 
-// 选择票类场次
-function selectTicket(ticketId: string) {
-  tickets.forEach(t => t.selected = t.id === ticketId)
-}
+    // 处理票类场次选择变化
+    function handleTicketChange(value: string) {
+        selectedTicketId.value = value
+    }
 
-// 选择价格
-function selectPrice(priceId: string) {
-  prices.forEach(p => p.selected = p.id === priceId)
-}
+    // 处理票档价格选择变化
+    function handlePriceChange(value: string) {
+        selectedPriceId.value = value
+    }
 
-// 增加人员
-function addPerson() {
-  router.push('/person-info')
-}
+    // 增加人员
+    function addPerson() {
+        router.push('/person-info')
+    }
 
-// 确认购买
-function handleConfirmPurchase() {
-  if (canPurchase.value) {
-    router.push('/buy-result')
-  }
-}
+    // 确认购买
+    function handleConfirmPurchase() {
+        if (canPurchase.value) {
+            router.push('/buy-result')
+        }
+    }
 </script>
 
 <template>
@@ -105,7 +110,6 @@ function handleConfirmPurchase() {
       <t-navbar title="购买确认" left-arrow :on-left-click="$router.back" />
       <div class="event-container">
         <div class="flex-center">
-          <t-icon name="calendar" size="24" />
           <span>{{ eventTitle }}</span>
         </div>
         <div class="event-details">
@@ -118,351 +122,306 @@ function handleConfirmPurchase() {
             <span>{{ eventLocation }}</span>
           </div>
         </div>
+        <t-divider />
       </div>
-      <t-divider />
     </header>
     <div class="page-content">
       <!-- 人员信息 -->
       <div class="section">
         <div class="section-header">
           <h3 class="section-title">人员信息</h3>
-          <t-button size="small" variant="outline" @click="addPerson">
+          <t-button size="small" shape="round" @click="addPerson">
             + 增加人员
           </t-button>
         </div>
-        <div class="person-list">
+        <t-checkbox-group v-model="selectedPersonIds" class="person-grid" borderless>
           <div 
             v-for="person in persons" 
-            :key="person.id"
-            class="person-item"
-            :class="{ 'person-item--selected': person.selected }"
-            @click="selectPerson(person.id)"
+            :key="person.id" 
+            :class="`card ${selectedPersonIds.indexOf(person.id) > -1 ? 'card--active' : ''}`"
           >
-            <t-icon 
-              v-if="person.selected" 
+            <TIcon 
+              v-if="selectedPersonIds.indexOf(person.id) > -1" 
               name="check" 
-              size="16" 
-              class="check-icon" 
+              class="card__icon" 
+              :aria-hidden="true" 
             />
-            <span class="person-name">{{ person.name }}</span>
+            <t-checkbox :value="person.id" :label="person.name" icon="none" />
           </div>
-        </div>
+        </t-checkbox-group>
       </div>
 
       <!-- 票类场次 -->
       <div class="section">
         <h3 class="section-title">票类场次</h3>
-        <div class="ticket-list">
+        <t-radio-group v-model="selectedTicketId" @change="handleTicketChange">
           <div 
             v-for="ticket in tickets" 
-            :key="ticket.id"
-            class="ticket-item"
-            :class="{ 'ticket-item--selected': ticket.selected }"
-            @click="selectTicket(ticket.id)"
+            :key="ticket.id" 
+            :class="`card ${selectedTicketId === ticket.id ? 'card--active' : ''}`"
           >
-            <t-icon 
-              v-if="ticket.selected" 
+            <TIcon 
+              v-if="selectedTicketId === ticket.id" 
               name="check" 
-              size="16" 
-              class="check-icon" 
+              class="card__icon" 
             />
-            <span class="ticket-date">{{ ticket.date }}</span>
+            <t-radio 
+              :value="ticket.id" 
+              :label="ticket.date" 
+              icon="none" 
+              borderless 
+            />
           </div>
-        </div>
+        </t-radio-group>
       </div>
 
       <!-- 票档价格 -->
       <div class="section">
         <h3 class="section-title">票档价格</h3>
-        <div class="price-list">
+        <t-radio-group v-model="selectedPriceId" @change="handlePriceChange">
           <div 
             v-for="price in prices" 
-            :key="price.id"
-            class="price-item"
-            :class="{ 'price-item--selected': price.selected }"
-            @click="selectPrice(price.id)"
+            :key="price.id" 
+            :class="`card ${selectedPriceId === price.id ? 'card--active' : ''}`"
           >
-            <t-icon 
-              v-if="price.selected" 
+            <TIcon 
+              v-if="selectedPriceId === price.id" 
               name="check" 
-              size="16" 
-              class="check-icon" 
+              class="card__icon" 
             />
-            <div class="price-content">
-              <div class="price-description">{{ price.description }}</div>
+            <div class="price-card-content">
+              <t-radio 
+                :value="price.id" 
+                :label="price.description" 
+                icon="none" 
+                borderless 
+              />
               <div class="price-amount">
                 <span class="current-price">¥{{ price.price }}</span>
                 <span v-if="price.originalPrice > price.price" class="original-price">¥{{ price.originalPrice }}</span>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+</div>
+</t-radio-group>
+</div>
+</div>
 
-    <!-- 底部操作栏 -->
-    <div class="bottom-action-bar">
-      <div class="price-info">
+<!-- 底部操作栏 -->
+<div class="bottom-action-bar">
+    <div class="price-info">
         <span class="price-label">待支付:</span>
         <span class="price-value">¥{{ totalPrice }}</span>
-      </div>
-      <t-button 
-        theme="primary" 
-        size="large"
-        :disabled="!canPurchase"
-        @click="handleConfirmPurchase"
-      >
-        确认购买
-      </t-button>
     </div>
-  </div>
+    <t-button theme="primary" size="large" :disabled="!canPurchase" @click="handleConfirmPurchase">
+        确认购买
+    </t-button>
+</div>
+</div>
 </template>
 
 <style lang="less" scoped>
-//@import "@/style/home.less";
-
-header {
-  top: 0;
-  z-index: 99;
-  height: 104px;
-  position: sticky;
-  background: white;
-  .location-container {
-    .p-16();
-    .flex-center();
-    .font-templet(400,16px,24px);
-    top: 48px;
-    height: 24px;
-    width: calc(100% - 32px);
-    position: fixed;
-    background: white;
-    justify-content: space-between;
-    span {
-      margin-left: 4px;
+    @import "@/style/home.less";
+    header {
+        top: 0;
+        z-index: 99;
+        height: 104px;
+        position: sticky;
+        background: white;
+        .event-container {
+            .p-16();
+            .flex-center();
+            .font-templet(400, 16px, 24px);
+            flex-direction: column;
+            top: 48px;
+            height: 74px;
+            width: calc(100% - 32px);
+            position: fixed;
+            background: white;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-left: 16px;
+            .event-details {
+                display: flex;
+                align-items: center;
+                .detail-item {
+                    display: flex;
+                    align-items: center;
+                    span {
+                        margin-left: 4px; // 图标和文字之间的间距
+                        color: #000000e6;
+                        font-size: 14px;
+                        font-weight: 400;
+                    }
+                    .t-icon {
+                        color: #0052D9;
+                    }
+                }
+            }
+            span {
+                font-size: 16px;
+                color: #333;
+                margin-left: 4px; // 如果需要调整事件标题的文字间距
+            }
+        }
     }
-  }
-}
-.buy-confirm-page {
-  min-height: 100vh;
-  background-color: #f5f5f5;
-  padding-bottom: 80px;
-}
-
-.event-container {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.flex-center {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-}
-
-.event-details {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  .detail-item {
-    display: flex;
-    align-items: center;
-    color: #666;
-    font-size: 14px;
-
-    .t-icon {
-      margin-right: 8px;
-      color: #999;
+    
+    .buy-confirm-page {
+        min-height: 100vh;
+        background-color: #fff;
+        padding-bottom: 80px;
     }
-  }
-}
-
-.page-content {
-  padding: 16px;
-}
-
-.section {
-  background: white;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-
-  .section-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-  }
-}
-
-.person-list {
-  display: flex;
-  gap: 12px;
-}
-
-.person-item {
-  flex: 1;
-  position: relative;
-  padding: 12px 16px;
-  border: 1.5px solid #e5e5e5;
-  border-radius: 6px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &--selected {
-    border-color: #0052d9;
-    background-color: #f0f7ff;
-
-    .check-icon {
-      position: absolute;
-      top: -1px;
-      left: -1px;
-      background: #0052d9;
-      color: white;
-      border-radius: 0 0 6px 0;
-      padding: 2px;
+    
+    .flex-center {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        span {
+            opacity: 1;
+            color: #000000e6;
+            font-size: 20px;
+            font-weight: 600;
+            font-family: "PingFang SC";
+            text-align: left;
+            line-height: 28px;
+        }
     }
-  }
-
-  .person-name {
-    font-size: 14px;
-    color: #333;
-  }
-}
-
-.ticket-list {
-  .ticket-item {
-    position: relative;
-    padding: 12px 16px;
-    border: 1.5px solid #e5e5e5;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-
-    &--selected {
-      border-color: #0052d9;
-      background-color: #f0f7ff;
-
-      .check-icon {
+    
+    .page-content {
+        padding: 16px;
+        margin-top: 30px;
+    }
+    
+    .section {
+        background: white;
+        border-radius: 8px;
+        padding: 6px;
+        margin-bottom: 16px;
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+    }
+    /* 人员信息网格布局 */
+    
+    .person-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+    
+    .person-grid .card {
+        margin: 0;
+    }
+    
+    .person-grid .card::after {
+        border-width: 12px;
+    }
+    
+    .person-grid .card__icon {
+        font-size: 12px;
+    }
+    /* 卡片样式 */
+    
+    .card {
+        position: relative;
+        margin: 16px 0;
+        border-radius: 6px;
+        overflow: hidden;
+        box-sizing: border-box;
+        border: 1.5px solid #DCDCDC;
+        /* padding: 8px; */
+    }
+    
+    .card--active {
+        border-color: #0052d9;
+    }
+    
+    .card--active::after {
+        content: '';
+        display: block;
         position: absolute;
-        top: -1px;
-        left: -1px;
-        background: #0052d9;
-        color: white;
-        border-radius: 0 0 6px 0;
-        padding: 2px;
-      }
+        left: 0;
+        top: 0;
+        width: 0;
+        border: 14px solid #0052d9;
+        border-bottom-color: transparent;
+        border-right-color: transparent;
     }
-
-    .ticket-date {
-      font-size: 14px;
-      color: #333;
-    }
-  }
-}
-
-.price-list {
-  .price-item {
-    position: relative;
-    padding: 16px;
-    border: 1.5px solid #e5e5e5;
-    border-radius: 6px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    &--selected {
-      border-color: #0052d9;
-      background-color: #f0f7ff;
-
-      .check-icon {
+    
+    .card__icon {
+        color: #fff;
         position: absolute;
-        top: -1px;
-        left: -1px;
-        background: #0052d9;
-        color: white;
-        border-radius: 0 0 6px 0;
-        padding: 2px;
-      }
+        left: 1.5px;
+        top: 1.5px;
+        z-index: 1;
+        font-size: 14px;
     }
-
-    .price-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* 价格卡片内容布局 */
+    
+    .price-card-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
     }
-
-    .price-description {
-      font-size: 14px;
-      color: #333;
-    }
-
+    /* 价格样式 */
+    
     .price-amount {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      .current-price {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-align: right;
+        padding-right: 12px;
+        /* 增加右侧内边距，使价格离边线远一点 */
+    }
+    
+    .current-price {
         font-size: 16px;
         font-weight: 600;
         color: #0052d9;
-      }
-
-      .original-price {
+    }
+    
+    .original-price {
         font-size: 14px;
         color: #999;
         text-decoration: line-through;
-      }
     }
-  }
-}
-
-.bottom-action-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  padding: 12px 16px;
-  border-top: 1px solid #e5e5e5;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-
-  .price-info {
-    .price-label {
-      font-size: 14px;
-      color: #666;
+    
+    .bottom-action-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 12px 16px;
+        border-top: 1px solid #e5e5e5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        .price-info {
+            .price-label {
+                font-size: 14px;
+                color: #666;
+            }
+            .price-value {
+                font-size: 16px;
+                font-weight: 600;
+                color: #0052d9;
+                margin-left: 4px;
+            }
+        }
+         :deep(.t-button) {
+            min-width: 120px;
+        }
     }
-
-    .price-value {
-      font-size: 16px;
-      font-weight: 600;
-      color: #0052d9;
-      margin-left: 4px;
-    }
-  }
-
-  :deep(.t-button) {
-    min-width: 120px;
-  }
-}
 </style>

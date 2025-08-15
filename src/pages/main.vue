@@ -26,6 +26,12 @@ const tabbarList: TabbarItem[] = [
     icon: 'user',
     showTitle: true,
   },
+  {
+    label: '购买确认',
+    name: '/buy-confirm',
+    icon: 'cart',
+    showTitle: true,
+  },
 ]
 
 const currentInfo = ref({ ...tabbarList[0] })
