@@ -2,12 +2,18 @@
     import {
         ShareIcon
     } from 'tdesign-icons-vue-next';
+    import {
+        ref
+    } from 'vue';
     const route = useRoute()
     const router = useRouter()
 
     const share = () => h(ShareIcon, {
         size: '24px'
     });
+
+    // 控制分享弹窗的显示/隐藏
+    const isSharePopupVisible = ref(false);
 
     // 活动ID
     const activityId = ref(null)
@@ -66,7 +72,14 @@
 
     // 分享给朋友
     function shareWithFriends() {
-        console.log('分享给朋友')
+        isSharePopupVisible.value = true;
+        console.log('打开分享弹窗');
+    }
+
+    // 关闭分享弹窗
+    function closeSharePopup() {
+        isSharePopupVisible.value = false;
+        console.log('关闭分享弹窗');
     }
 
     // 去查看
@@ -82,23 +95,21 @@
 
 <template>
   <header>
-    <t-navbar title="购买结果" left-arrow :on-left-click="$router.back" />
+    <t-navbar title="购买结果" left-arrow :on-left-click="$router.back" class="tnavbar" />
   </header>
   <div class="buy-result-page">
     <div class="page-content">
       <!-- 成功状态 -->
       <div class="result-status">
         <div class="status-icon">
-          <t-icon name="check-circle" size="48" color="#00a870" />
+          <t-icon name="check-circle" size="80px" color="#2BA471" />
         </div>
         <h2 class="status-title">购买成功</h2>
       </div>
 
       <!-- 活动信息卡片 -->
       <div class="activity-card">
-        <div class="activity-cover-container">
-          <img :src="activity.cover || '/imgs/activity/sicc-2021.png'" alt="活动封面" class="activity-cover" />
-        </div>
+        <img :src="activity.cover || '/imgs/activity/sicc-2021.png'" alt="活动封面" class="activity-cover" />
         <h3 class="activity-name">{{ activity.name }}</h3>
         <div class="activity-details">
           <div class="detail-item">
@@ -113,16 +124,14 @@
       </div>
 
       <!-- 报名人员 -->
+      <h3 class="section-title">报名人员</h3>
       <div class="person-info">
-        <h3 class="section-title">报名人员</h3>
-        <div class="person-card">
-          <div class="person-avatar">
-            <img src="/imgs/head-bg.png" alt="头像" />
-          </div>
-          <div class="person-details">
-            <div class="person-name">{{ selectedPerson.name }}</div>
-            <div class="person-desc">{{ selectedPerson.age }} {{ selectedPerson.occupation }}</div>
-          </div>
+        <div class="person-avatar">
+          <img src="/imgs/head-bg.png" alt="头像" />
+        </div>
+        <div class="person-details">
+          <div class="person-name">{{ selectedPerson.name }}</div>
+          <div class="person-desc">{{ selectedPerson.age }} {{ selectedPerson.occupation }}</div>
         </div>
       </div>
 
@@ -134,7 +143,7 @@
           block
           size="large"
           :icon="share"
-          class="action-btn share-btn"
+          borderless
           @click="shareWithFriends"
         >
           分享给朋友
@@ -143,7 +152,7 @@
           theme="primary"
           block
           size="large"
-          class="action-btn"
+          borderless
           @click="goToView"
         >
           去查看
@@ -151,9 +160,48 @@
       </div>
     </div>
   </div>
+
+  <!-- 分享弹窗 -->
+  <t-popup
+    v-model:visible="isSharePopupVisible"
+    placement="bottom"
+    :close-on-overlay-click="true"
+    :prevent-scroll-through="true"
+  >
+    <div class="share-popup">
+      <div class="share-section">
+        <h3 class="share-title">分享给朋友</h3>
+        <div class="share-friends">
+          <!-- 朋友头像列表（暂不实现） -->
+        </div>
+      </div>
+      
+      <div class="share-section">
+        <h3 class="share-title">分享到社媒</h3>
+        <div class="share-social">
+          <!-- 社交媒体图标列表（暂不实现） -->
+        </div>
+      </div>
+      
+      <div class="share-cancel">
+        <t-button
+          block
+          size="large"
+          variant="text"
+          @click="closeSharePopup"
+        >
+          取消
+        </t-button>
+      </div>
+    </div>
+  </t-popup>
 </template>
 
 <style lang="less" scoped>
+    .tnavbar {
+        --td-navbar-bg-color: #f5f6f7;
+    }
+    
     .buy-result-page {
         min-height: 100vh;
         background-color: #F5F6F7;
@@ -166,58 +214,55 @@
     
     .result-status {
         text-align: center;
+        margin-top: 24px;
         margin-bottom: 24px;
         .status-icon {
             margin-bottom: 16px;
         }
         .status-title {
+            opacity: 1;
+            color: #000000e6;
             font-size: 20px;
             font-weight: 600;
-            color: #333;
+            font-family: "PingFang SC";
+            text-align: center;
+            line-height: 28px;
             margin: 0;
         }
     }
     
     .activity-card {
         background: white;
-        border-radius: 8px;
+        border-radius: 12px;
         padding: 16px;
         margin-bottom: 16px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        .activity-cover-container {
-            border: 1px dashed #ddd;
-            border-radius: 8px;
-            /* padding: 12px; */
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
         .activity-cover {
             width: 100%;
             height: 100%;
             object-fit: contain;
             display: block;
-            border-radius: 4px;
+            border-radius: 9.06px;
         }
         .activity-name {
+            height: 26px;
             font-size: 18px;
             font-weight: 600;
             color: #333;
-            margin: 16px 16px 8px;
+            margin: 16px 0px 8px;
         }
         .activity-details {
-            padding: 0 16px 16px;
+            /* padding: 0 16px 16px; */
+            display: flex;
+            flex-direction: row;
             .detail-item {
                 display: flex;
                 align-items: center;
-                margin-bottom: 8px;
-                &:last-child {
-                    margin-bottom: 0;
-                }
+                margin-right: 16px;
+                margin-bottom: 10px;
                 .t-icon {
                     color: #0052D9;
-                    margin-right: 8px;
+                    margin-right: 5px;
                 }
                 span {
                     font-size: 14px;
@@ -227,48 +272,46 @@
         }
     }
     
+    .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #000;
+        margin: 24px 0 16px 0;
+    }
+    
     .person-info {
         background: white;
         border-radius: 8px;
-        padding: 16px;
-        margin-bottom: 32px;
+        margin-bottom: 38px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin: 0 0 16px 0;
-        }
-        .person-card {
-            display: flex;
-            align-items: center;
-            border: 1px dashed #ddd;
-            border-radius: 8px;
+        display: flex;
+        align-items: center;
+        border: 0 solid #e7e7e7;
+        padding: 12px;
+        .person-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
             padding: 12px;
-            .person-avatar {
-                width: 48px;
-                height: 48px;
-                border-radius: 50%;
-                overflow: hidden;
-                margin-right: 12px;
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
+            margin-right: 12px;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
-            .person-details {
-                flex: 1;
-                .person-name {
-                    font-size: 16px;
-                    font-weight: 500;
-                    color: #333;
-                    margin-bottom: 4px;
-                }
-                .person-desc {
-                    font-size: 12px;
-                    color: #999;
-                }
+        }
+        .person-details {
+            flex: 1;
+            .person-name {
+                font-size: 16px;
+                font-weight: 500;
+                color: #333;
+                margin-bottom: 4px;
+            }
+            .person-desc {
+                font-size: 12px;
+                color: #999;
             }
         }
     }
@@ -277,5 +320,40 @@
         display: flex;
         flex-direction: row;
         gap: 12px;
+        margin-top: 38px;
+    }
+    /* 分享弹窗样式 */
+    
+    .share-popup {
+        background-color: white;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+        padding: 24px 16px;
+        .share-section {
+            margin-bottom: 24px;
+            .share-title {
+                font-size: 16px;
+                font-weight: 500;
+                color: #333;
+                margin: 0 0 16px 0;
+            }
+            .share-friends,
+            .share-social {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+                min-height: 60px;
+            }
+        }
+        .share-cancel {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f5f5f5;
+             :deep(.t-button) {
+                font-size: 16px;
+                color: #333;
+                height: 48px;
+            }
+        }
     }
 </style>
