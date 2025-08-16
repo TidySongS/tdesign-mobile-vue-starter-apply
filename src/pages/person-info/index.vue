@@ -1,13 +1,4 @@
 <script setup lang="ts">
-    import {
-        reactive,
-        ref,
-    } from 'vue'
-    import {
-        useRouter
-    } from 'vue-router'
-
-    const router = useRouter()
     const form = ref(null)
 
     // 表单数据
@@ -140,9 +131,9 @@
 </script>
 
 <template>
-    <header>
-        <t-navbar title="个人信息" left-arrow :on-left-click="$router.back" />
-    </header>
+  <header>
+    <t-navbar title="个人信息" left-arrow :on-left-click="$router.back" />
+  </header>
   <div class="person-info-page">
     <div class="page-content">
       <!-- 表单内容 -->

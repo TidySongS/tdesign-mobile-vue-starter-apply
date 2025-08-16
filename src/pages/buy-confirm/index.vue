@@ -1,25 +1,19 @@
 <script setup lang="ts">
-    import {
-        computed,
-        defineProps,
-        reactive,
-        ref
-    } from 'vue'
-    import {
-        useRouter
-    } from 'vue-router'
-
-    interface Props {
-        eventId ? : string
-        date ? : string
-    }
-
-    const props = defineProps < Props > ()
+    const route = useRoute()
     const router = useRouter()
 
-    const eventTitle = ref('2021 SICC服务设计创新大会')
-    const eventDate = ref('2021年3月16日')
-    const eventLocation = ref('深圳市腾讯滨海大厦')
+    // 活动ID
+    const activityId = computed(() => {
+            return route.query.eventId ? Number(route.query.eventId) : null
+        })
+        // 活动信息
+    const eventTitle = ref('')
+    const eventDate = ref('')
+    const eventLocation = ref('')
+
+    // 加载状态
+    const loading = ref(true)
+    const error = ref(false)
 
     // 人员信息
     const persons = reactive([{
@@ -33,37 +27,14 @@
     const selectedPersonIds = ref(['1'])
 
     // 票类场次
-    const tickets = reactive([{
-            id: '1',
-            date: '2021年3月16日'
-        }])
+    const tickets = reactive([])
         // 选中的票类场次ID
-    const selectedTicketId = ref('1')
+    const selectedTicketId = ref('')
 
     // 票档价格
-    const prices = reactive([{
-            id: '1',
-            description: '早鸟价-单人票',
-            price: 88,
-            originalPrice: 128
-        }, {
-            id: '2',
-            description: '早鸟价-双人票',
-            price: 168,
-            originalPrice: 228
-        }, {
-            id: '3',
-            description: '正价-单人票',
-            price: 128,
-            originalPrice: 128
-        }, {
-            id: '4',
-            description: '正价-双人票',
-            price: 228,
-            originalPrice: 228
-        }])
+    const prices = reactive([])
         // 选中的票档价格ID
-    const selectedPriceId = ref('1')
+    const selectedPriceId = ref('')
 
     // 计算总价
     const totalPrice = computed(() => {
@@ -75,6 +46,63 @@
     const canPurchase = computed(() => {
         return selectedPersonIds.value.length > 0 && selectedTicketId.value && selectedPriceId.value
     })
+
+    // 获取活动信息
+    async function fetchActivityData() {
+        if (!activityId.value) {
+            error.value = true
+            loading.value = false
+            return
+        }
+
+        try {
+            // 获取活动详情
+            const activityResponse = await fetch(`/api/activities/${activityId.value}`)
+            if (!activityResponse.ok) {
+                throw new Error('Failed to fetch activity')
+            }
+            const activityData = await activityResponse.json()
+
+            // 设置活动信息
+            eventTitle.value = activityData.name
+            eventDate.value = activityData.date
+            eventLocation.value = activityData.location
+
+            // 获取票类场次
+            const ticketsResponse = await fetch(`/api/activities/${activityId.value}/tickets`)
+            if (!ticketsResponse.ok) {
+                throw new Error('Failed to fetch tickets')
+            }
+            const ticketsData = await ticketsResponse.json()
+
+            // 更新票类场次数据
+            tickets.length = 0
+            tickets.push(...ticketsData)
+            if (tickets.length > 0) {
+                selectedTicketId.value = tickets[0].id
+            }
+
+            // 获取票档价格
+            const pricesResponse = await fetch(`/api/activities/${activityId.value}/prices`)
+            if (!pricesResponse.ok) {
+                throw new Error('Failed to fetch prices')
+            }
+            const pricesData = await pricesResponse.json()
+
+            // 更新票档价格数据
+            prices.length = 0
+            prices.push(...pricesData)
+            if (prices.length > 0) {
+                selectedPriceId.value = prices[0].id
+            }
+
+            loading.value = false
+        } catch (err) {
+            console.error('Error fetching data:', err)
+            error.value = true
+            loading.value = false
+        }
+    }
 
     // 处理人员选择变化
     function handlePersonChange(value: string[]) {
@@ -98,42 +126,55 @@
 
     // 确认购买
     function handleConfirmPurchase() {
-        if (canPurchase.value) {
-            router.push('/buy-result')
-        }
+        console.log(activityId.value);
+        setTimeout(() => 0, 2000)
+            // 跳转到购买结果页面并传递订单信息
+        router.push({
+            path: '/buy-result',
+            query: {
+                eventId: activityId.value,
+            }
+        })
     }
+    // 组件挂载时获取数据
+    onMounted(() => {
+        fetchActivityData()
+    })
 </script>
 
 <template>
   <div class="buy-confirm-page">
-    <header>
-      <t-navbar title="购买确认" left-arrow :on-left-click="$router.back" />
-      <div class="event-container">
-        <div class="flex-center">
-          <span>{{ eventTitle }}</span>
-        </div>
-        <div class="event-details">
-          <div class="detail-item">
-            <t-icon name="time" size="16" />
-            <span>{{ eventDate }}</span>
+    <!-- <t-loading :loading="loading" theme="dots" size="large" class="loading-container" /> -->
+    
+    <template v-if="!loading && !error">
+      <header>
+        <t-navbar title="购买确认" left-arrow :on-left-click="$router.back" />
+        <div class="event-container">
+          <div class="flex-center">
+            <span>{{ eventTitle }}</span>
           </div>
-          <div class="detail-item">
-            <t-icon name="location" size="16" />
-            <span>{{ eventLocation }}</span>
+          <div class="event-details">
+            <div class="detail-item">
+              <t-icon name="time" size="16" />
+              <span>{{ eventDate }}</span>
+            </div>
+            <div class="detail-item">
+              <t-icon name="location" size="16" />
+              <span>{{ eventLocation }}</span>
+            </div>
           </div>
+          <t-divider />
         </div>
-        <t-divider />
-      </div>
-    </header>
-    <div class="page-content">
-      <!-- 人员信息 -->
-      <div class="section">
-        <div class="section-header">
-          <h3 class="section-title">人员信息</h3>
-          <t-button size="small" shape="round" @click="addPerson">
-            + 增加人员
-          </t-button>
-        </div>
+      </header>
+      <div class="page-content">
+        <!-- 人员信息 -->
+        <div class="section">
+          <div class="section-header">
+            <h3 class="section-title">人员信息</h3>
+            <t-button size="small" shape="round" @click="addPerson">
+              + 增加人员
+            </t-button>
+          </div>
         <t-checkbox-group v-model="selectedPersonIds" class="person-grid" borderless>
           <div 
             v-for="person in persons" 
@@ -215,7 +256,10 @@
     <t-button theme="primary" size="large" :disabled="!canPurchase" @click="handleConfirmPurchase">
         确认购买
     </t-button>
-</div>
+      </div>
+    </template>
+
+<t-empty v-if="!loading && error" description="加载失败，请重试" />
 </div>
 </template>
 

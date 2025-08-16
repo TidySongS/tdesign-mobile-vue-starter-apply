@@ -20,6 +20,7 @@ declare module 'vue' {
     TCheckboxGroup: typeof import('tdesign-mobile-vue')['CheckboxGroup']
     TDateTimePicker: typeof import('tdesign-mobile-vue')['DateTimePicker']
     TDivider: typeof import('tdesign-mobile-vue')['Divider']
+    TEmpty: typeof import('tdesign-mobile-vue')['Empty']
     TFooter: typeof import('tdesign-mobile-vue')['Footer']
     TForm: typeof import('tdesign-mobile-vue')['Form']
     TFormItem: typeof import('tdesign-mobile-vue')['FormItem']
