@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { Activity, Filters } from '@/types/interface'
-import { defaultFilterOptions, useFilters } from '@/hooks/useFilters'
+import { useFilters } from '@/hooks/useFilters'
 import {
-  fetchMockActivityList,
-  fetchMockSwiperList,
+  activityList as staticActivityList,
+  swiperList as staticSwiperList,
 } from '@/mocks/activityMocks'
+import axios from '@/services/index'
 
 const router = useRouter()
 const searchValue = ref('')
@@ -49,13 +50,32 @@ async function fetchActivityList(isRefreshMode = true) {
     isLoadAllActivities.value = false
   }
   try {
-    const payload = {
-      sort: currentTab.value,
-      page: currentPage,
-      pageSize,
+    let result
+    if (import.meta.env.VITE_DATA_SOURCE === 'static') {
+      const total = staticActivityList.length
+      const sortedData = [...staticActivityList]
+      if (currentTab.value === 'top') {
+        sortedData.sort((a, b) => b.star - a.star)
+      }
+      else if (currentTab.value === 'latest') {
+        sortedData.sort(
+          (a, b) => b.dateRange[0].getTime() - a.dateRange[0].getTime(),
+        )
+      }
+      result = { data: sortedData, total }
     }
-    const result = await fetchMockActivityList(payload, filters)
-
+    else {
+      const payload = {
+        sort: currentTab.value,
+        page: currentPage,
+        pageSize,
+        filters: JSON.stringify(filters),
+      }
+      const { data: axiosResult } = await axios.get('/api/getFilteredActivittList', {
+        params: payload,
+      })
+      result = axiosResult
+    }
     if (isRefreshActivityList.value) {
       activityList.value = result.data
     }
@@ -82,8 +102,13 @@ async function fetchActivityList(isRefreshMode = true) {
 
 async function fetchSwiperList() {
   try {
-    const result = await fetchMockSwiperList()
-    swiperList.value = result.data
+    if (import.meta.env.VITE_DATA_SOURCE === 'static') {
+      swiperList.value = staticSwiperList
+    }
+    else {
+      const { data: result } = await axios.get('/api/getSwiperList')
+      swiperList.value = result.data
+    }
   }
   catch (error: any) {
     console.error('获取轮播图列表失败:', error)
@@ -290,7 +315,6 @@ function formatPrice(priceRange: number[]): string {
     <ActivityFilterPopup
       v-model:visible="filterPopupVisible"
       :filters
-      :options="defaultFilterOptions"
       @reset="resetAndFetch"
       @update:filters="handleFiltersUpdate"
     />

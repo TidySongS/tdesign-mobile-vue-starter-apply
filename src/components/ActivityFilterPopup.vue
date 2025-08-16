@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Filters } from '@/types/interface'
+import { defaultFilterOptions } from '@/constant/filters'
 import { copyFilters } from '@/hooks/useFilters'
 
 const props = defineProps({
@@ -13,7 +14,7 @@ const props = defineProps({
   },
   options: {
     type: Object,
-    required: true,
+    default: defaultFilterOptions,
   },
   onReset: { type: Function, required: true },
 })

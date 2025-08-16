@@ -1,7 +1,7 @@
 import type { Activity, Filters } from '@/types/interface'
-import { defaultFilterOptions } from '@/hooks/useFilters'
+import { defaultFilterOptions } from '@/constant/filters'
 
-const swiperList = [
+export const swiperList = [
   '/imgs/activity/sicc-2019.png',
   '/imgs/activity/sicc-2021.png',
   '/imgs/activity/sicc-2019.png',
@@ -10,7 +10,7 @@ const swiperList = [
   '/imgs/activity/sicc-2021.png',
 ]
 
-const activityList = [
+export const activityList = [
   {
     id: 1,
     name: '2019 SICC服务设计创新大会',
@@ -138,14 +138,12 @@ const activityList = [
 
 let activeRequestController: AbortController | null = null
 
-export async function fetchMockActivityList(
-  payload: {
-    sort: string
-    page: number
-    pageSize: number
-  },
-  filters: Filters,
-): Promise<{ data: Activity[], total: number }> {
+export async function fetchMockActivityList(payload: {
+  sort: string
+  page: number
+  pageSize: number
+  filters: Filters
+}): Promise<{ data: Activity[], total: number }> {
   if (activeRequestController) {
     activeRequestController.abort()
   }
@@ -160,21 +158,21 @@ export async function fetchMockActivityList(
 
       let filteredResult = activityList
 
-      if (filters.fields.length > 0) {
+      if (payload.filters.fields.length > 0) {
         filteredResult = filteredResult.filter(activity =>
-          filters.fields.some((field: string) =>
+          payload.filters.fields.some((field: string) =>
             activity.fieldOriented.includes(field),
           ),
         )
       }
 
-      if (filters.formats.length > 0) {
+      if (payload.filters.formats.length > 0) {
         filteredResult = filteredResult.filter(activity =>
-          filters.formats.includes(activity.format),
+          payload.filters.formats.includes(activity.format),
         )
       }
 
-      const [minPrice, maxPrice] = filters.priceRange
+      const [minPrice, maxPrice] = payload.filters.priceRange
       if (
         minPrice !== defaultFilterOptions.priceRange[0]
         || maxPrice !== defaultFilterOptions.priceRange[1]
@@ -194,7 +192,8 @@ export async function fetchMockActivityList(
           )
         })
       }
-      const [startDate, endDate] = filters.dateRange
+      const startDate = new Date(payload.filters.dateRange[0])
+      const endDate = new Date(payload.filters.dateRange[1])
       if (
         startDate.getTime() !== defaultFilterOptions.dateRange[0].getTime()
         || endDate.getTime() !== defaultFilterOptions.dateRange[1].getTime()
@@ -220,7 +219,6 @@ export async function fetchMockActivityList(
       const start = (page - 1) * pageSize
       const end = start + pageSize
       const paginatedData = filteredResult.slice(start, end)
-
       resolve({ data: paginatedData, total })
     }, 1000)
     signal.addEventListener('abort', () => {

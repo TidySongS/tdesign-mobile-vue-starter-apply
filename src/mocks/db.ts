@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker'
-import { factory } from '@mswjs/data'
+import { factory, primaryKey } from '@mswjs/data'
 
 export const db = factory({
   user: {
-    id: Number,
+    id: primaryKey(faker.string.uuid),
     name: () => faker.person.fullName(),
     email: () => faker.internet.email(),
   },
