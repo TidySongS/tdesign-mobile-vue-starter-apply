@@ -14,7 +14,7 @@ defineProps({
       :loading="true"
       :row-col="[{ size: '120px' }]"
     />
-    <div class="card-content">
+    <div class="card__content">
       <t-skeleton
         animation="flashed"
         :loading="true"

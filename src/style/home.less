@@ -19,8 +19,14 @@
   flex-direction: column;
 }
 
+.font(@s: 14px, @w: 400) {
+  font-size: @s;
+  font-weight: @w;
+  // https://tdesign.tencent.com/design/fonts#header-18
+  line-height: @s + 8px;
+}
+
 .font-templet(@w: 400, @s: 14px, @h: 22px) {
-  color: var(--td-text-color-primary);
   font-weight: @w;
   font-size: @s;
   line-height: @h;
@@ -33,22 +39,21 @@
 }
 
 .card {
-  display: flex;
-  height: 120px;
   margin: 16px;
+  display: flex;
+  height: var(--card-height);
   border-radius: var(--td-radius-large);
-  box-shadow: var(--td-shadow-3);
+  box-shadow: var(--shadow);
   overflow: hidden;
-  .card-content {
+  &__content {
     .p-16();
-    padding-bottom: 12px;
+    .flex-col();
     width: 100%;
-    display: flex;
-    flex-direction: column;
+    padding-bottom: 12px;
   }
 }
 
 .price {
-  .font-templet(600, 14px, 22px);
+  .font(14px, 600);
   margin-top: auto;
 }

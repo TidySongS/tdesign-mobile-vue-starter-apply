@@ -3,7 +3,7 @@ import { enableMocking } from '@/mocks/browser'
 import App from './App.vue'
 import router from './router'
 import 'tdesign-mobile-vue/es/style/index.css'
-import '@/style/index.less'
+import '@/style/main.less'
 
 const app = createApp(App)
 app.use(router);

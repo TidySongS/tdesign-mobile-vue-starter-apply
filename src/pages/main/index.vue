@@ -71,9 +71,12 @@ async function fetchActivityList(isRefreshMode = true) {
         pageSize,
         filters: JSON.stringify(filters),
       }
-      const { data: axiosResult } = await axios.get('/api/getFilteredActivittList', {
-        params: payload,
-      })
+      const { data: axiosResult } = await axios.get(
+        '/api/getFilteredActivittList',
+        {
+          params: payload,
+        },
+      )
       result = axiosResult
     }
     if (isRefreshActivityList.value) {
@@ -164,7 +167,7 @@ function formatPrice(priceRange: number[]): string {
 </script>
 
 <template>
-  <div class="page-container">
+  <div class="page-container flex-col">
     <t-sticky :offset-top="48" :z-index="99">
       <div class="search-container">
         <t-search
@@ -176,22 +179,22 @@ function formatPrice(priceRange: number[]): string {
       </div>
     </t-sticky>
 
-    <div class="wrapper">
+    <div class="recommend-container">
       <h2>热门推荐</h2>
       <Transition name="swiper-fade" mode="out-in">
         <div
           v-if="isFetchSwiperList"
           key="swiper-placeholder"
-          class="swiper-placeholder-container"
+          class="swiper-placeholder-container flex-col"
         >
-          <div class="swiper-placeholder">
+          <div class="swiper-placeholder flex-center">
             <div
-              class="swiper-side swiper-img"
+              class="swiper-placeholder__side swiper-img"
               style="border-radius: 0 9px 9px 0"
             />
-            <div class="swiper-main swiper-img" />
+            <div class="swiper-placeholder__main swiper-img" />
             <div
-              class="swiper-side swiper-img"
+              class="swiper-placeholder__side swiper-img"
               style="border-radius: 9px 0 0 9px"
             />
           </div>
@@ -205,10 +208,7 @@ function formatPrice(priceRange: number[]): string {
           :height="159.2"
           :autoplay="true"
           :navigation="{ type: 'dots', placement: 'outside' }"
-          :style="{
-            overflow: 'visible',
-            margin: '0 calc(50vw - 153.5px) 0 calc(50vw - 141.5px)',
-          }"
+          class="swiper"
         >
           <t-swiper-item
             v-for="(item, index) in swiperList"
@@ -220,12 +220,12 @@ function formatPrice(priceRange: number[]): string {
       </Transition>
     </div>
 
-    <div class="wrapper flex-fill-col">
+    <div class="activity-container flex-fill-col">
       <h2 style="padding-bottom: 0">
         全部活动
       </h2>
       <t-sticky :offset-top="104" :z-index="99">
-        <div class="tab-wrapper">
+        <div class="tab-wrapper flex-center">
           <t-tabs
             v-model:value="currentTab"
             :split="false"
@@ -239,8 +239,11 @@ function formatPrice(priceRange: number[]): string {
               :label="item.label"
             />
           </t-tabs>
-          <div class="filter-container" @click="filterPopupVisible = true">
-            <t-icon name="filter" />
+          <div
+            class="filter-container flex-center"
+            @click="filterPopupVisible = true"
+          >
+            <t-icon name="filter" size="16" />
             <span>筛选</span>
           </div>
         </div>
@@ -251,13 +254,12 @@ function formatPrice(priceRange: number[]): string {
         <div
           v-if="!isFetchActivityList && activityList.length === 0"
           key="empty"
-          class="empty-result-container"
+          class="empty-result-container "
         >
           <t-result>
             <template #image>
               <t-image
                 src="https://tdesign.gtimg.com/mobile/demos/result1.png"
-                class="external-class-image"
               />
             </template>
             <template #title>
@@ -284,10 +286,10 @@ function formatPrice(priceRange: number[]): string {
             class="card"
             @click="goToActivityDetail(item.id)"
           >
-            <div class="card-cover">
+            <div class="card__cover">
               <img :src="item.cover" :alt="item.name">
             </div>
-            <div class="card-content">
+            <div class="card__content">
               <h3>{{ item.name }}</h3>
               <div class="rate-container">
                 <t-rate
@@ -323,69 +325,71 @@ function formatPrice(priceRange: number[]): string {
 
 <style scoped lang="less">
 @import "@/style/home.less";
+
 .page-container {
-  .flex-col();
   touch-action: pan-y;
   overflow-x: hidden;
   overflow-y: auto;
-  min-height: calc(100vh - 104px);
+  min-height: calc(100vh - var(--navbar-height) - var(--tabbar-height));
 }
 
 .search-container {
   padding: 8px 16px;
-  background-color: white;
+  background: var(--bg-color-page);
 }
 
-.wrapper {
-  .flex-col();
+.recommend-container,
+.activity-container {
   h2 {
     .p-16();
-    .font-templet(600, 20px, 28px);
-    margin: 0;
+    .font(20px, 600);
   }
 }
 
 .swiper-placeholder-container {
-  .flex-col();
-  height: 177.19px;
-  .swiper-placeholder {
-    flex-grow: 1;
-    .flex-center();
-    .swiper-main {
-      width: 283px;
-      margin: 0 12px;
-    }
-    .swiper-img {
-      height: 100%;
-      border-radius: var(--td-radius-large);
-      background-color: var(--td-gray-color-1);
-    }
-    .swiper-side {
-      width: calc(50vw - 153.5px);
-    }
-  }
-  .dots-placeholder {
-    display: flex;
-    height: 18px;
-    .t-loading {
-      bottom: 0;
-      margin: auto;
-    }
+  height: calc(var(--swiper-height) + 18px);
+}
+
+.dots-placeholder {
+  display: flex;
+  height: 18px;
+  .t-loading {
+    bottom: 0;
+    margin: auto;
   }
 }
 
-.t-swiper img {
-  width: 283px;
-  height: 100%;
-  object-fit: cover;
-  border-radius: var(--td-radius-large);
-  box-shadow: var(--td-shadow-3);
+.swiper-placeholder {
+  flex-grow: 1;
+  &__main {
+    width: var(--swiper-width);
+    margin: 0 12px;
+  }
+  .swiper-img {
+    height: 100%;
+    border-radius: var(--td-radius-large);
+    background-color: var(--gray-color-1);
+  }
+  &__side {
+    width: calc((100vw - var(--swiper-width)) / 2 - 12px);
+  }
+}
+
+.swiper {
+  overflow: visible;
+  margin: 0 calc((100vw - var(--swiper-width)) / 2 - 12px) 0
+    calc((100vw - var(--swiper-width)) / 2);
+  img {
+    width: var(--swiper-width);
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--td-radius-large);
+    box-shadow: var(--shadow);
+  }
 }
 
 .tab-wrapper {
-  .flex-center ();
-  .font-templet();
-  background-color: white;
+  background: var(--bg-color-page);
 
   :deep(.t-tabs) {
     flex: 2;
@@ -393,7 +397,6 @@ function formatPrice(priceRange: number[]): string {
 
   .filter-container {
     flex: 1;
-    .flex-center();
     border-left: 1px solid var(--td-border-level-1-color);
   }
 }
@@ -421,40 +424,41 @@ function formatPrice(priceRange: number[]): string {
 
 .card-container {
   margin-bottom: 56px;
-  .card {
-    .card-cover {
-      flex-shrink: 0;
-      width: 120px;
+}
+
+.card {
+  &__cover {
+    flex-shrink: 0;
+    width: var(--card-height);
+    height: 100%;
+
+    img {
+      width: 100%;
       height: 100%;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+      object-fit: cover;
     }
+  }
 
-    .card-content {
-      h3 {
-        .font-templet();
-        margin: 0 0 8px 0;
-      }
-
-      .rate-container {
-        .font-templet(600, 12px, 20px);
-        display: flex;
-        color: var(--td-warning-color-5);
-
-        span {
-          margin-left: 8px;
-        }
-
-        :deep(.t-rate__icon--selected),
-        :deep(.t-rate__icon-left--selected) {
-          color: var(--td-warning-color-5);
-        }
-      }
+  &__content {
+    h3 {
+      .font();
+      margin-bottom: 8px;
     }
+  }
+}
+
+.rate-container {
+  .font(12px, 600);
+  display: flex;
+  color: var(--star-color);
+
+  span {
+    margin-left: 8px;
+  }
+
+  :deep(.t-rate__icon--selected),
+  :deep(.t-rate__icon-left--selected) {
+    color: var(--star-color);
   }
 }
 </style>

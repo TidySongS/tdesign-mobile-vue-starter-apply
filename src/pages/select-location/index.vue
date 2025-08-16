@@ -122,16 +122,16 @@ async function getCityNameFromCoords(
 <template>
   <header>
     <t-navbar title="选择城市" left-arrow :on-left-click="$router.back" />
-    <div class="location-container">
-      <div class="flex-center">
-        <t-icon name="location" size="24" />
+    <div class="location-container p-16 flex-center">
+      <div class="location flex-center">
+        <t-icon name="location" size="22" />
         <t-loading
           v-if="locationStatus"
           theme="dots"
           size="24px"
           style="margin-left: 8px"
         />
-        <span v-else>
+        <span v-else class="location__name">
           {{ userInfo.locationName }}
         </span>
       </div>
@@ -147,41 +147,55 @@ async function getCityNameFromCoords(
     </div>
   </header>
   <main>
-    <div class="index-container">
+    <div class="city-container">
       <t-indexes :index-list="indexList" :sticky="false">
-        <div class="hot-city-container">
-          <div class="hot-city-header">
+        <div class="hot-city">
+          <div class="hot-city__header">
             <span> 热门城市 </span>
           </div>
           <div
             v-for="(item, index) in hotCityList"
-            :key="index"
-            class="hot-city"
+            :key="`hot-city-${index}`"
+            class="hot-city__content flex-center"
             @click="updateCity(item)"
           >
-            {{ formatCityName(item) }}
+            <span
+              :class="{
+                'city-title--active': userInfo.locationName === item,
+              }"
+            >
+              {{ formatCityName(item) }}
+            </span>
             <t-icon
               v-if="userInfo.locationName === item"
               name="check"
               size="24"
-              class="city-active-icon"
+              class="city-check--active"
             />
           </div>
         </div>
-        <template v-for="item in cityList" :key="item.index">
+        <template v-for="item in cityList" :key="`city-index-${item.index}`">
           <t-indexes-anchor :index="item.index" />
           <t-cell-group>
             <t-cell
               v-for="(val, i) in item.children"
-              :key="i"
-              :title="formatCityName(val)"
+              :key="`city-${i}`"
               @click="updateCity(val)"
             >
+              <template #title>
+                <span
+                  :class="{
+                    'city-title--active': userInfo.locationName === val,
+                  }"
+                >
+                  {{ formatCityName(val) }}
+                </span>
+              </template>
               <t-icon
                 v-if="userInfo.locationName === val"
                 name="check"
                 size="24"
-                class="city-active-icon"
+                class="city-check--active"
               />
             </t-cell>
           </t-cell-group>
@@ -197,46 +211,51 @@ async function getCityNameFromCoords(
 header {
   top: 0;
   z-index: 99;
-  height: 104px;
   position: sticky;
-  background: white;
-  .location-container {
-    .p-16();
-    .flex-center();
-    .font-templet(400,16px,24px);
-    top: 48px;
-    height: 24px;
-    width: calc(100% - 32px);
-    position: fixed;
-    background: white;
-    justify-content: space-between;
-    span {
-      margin-left: 4px;
-    }
+  background: var(--bg-color-page);
+  height: calc(var(--navbar-height) + 56px);
+}
+
+.location-container {
+  height: 24px;
+  width: calc(100% - 32px);
+  position: fixed;
+  top: var(--navbar-height);
+  background: var(--bg-color-page);
+  justify-content: space-between;
+}
+
+.location {
+  &__name {
+    margin-left: 4px;
   }
 }
 
-.index-container {
+.city-container {
   margin-top: 4px;
-  .hot-city-container {
-    .hot-city-header {
-      .font-templet();
-      height: 22px;
-      padding: 4px 16px;
-      background: var(--td-gray-color-1);
-    }
-    .hot-city {
-      .flex-center();
-      height: 23px;
-      margin-left: 16px;
-      padding: 16px 16px 16px 0;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--td-gray-color-1);
-    }
-  }
-  .city-active-icon {
+  .city-check--active {
     margin-right: 24px;
-    color: var(--td-brand-color-7);
+    color: var(--brand-main);
+  }
+  .city-title--active {
+    font-weight: 600;
+  }
+}
+
+.hot-city {
+  &__header {
+    height: 22px;
+    padding: 4px 16px;
+    background: var(--gray-color-1);
+  }
+  &__content {
+    .font(16px, 400);
+    height: 56px;
+    box-sizing: border-box;
+    margin-left: 16px;
+    padding: 16px 16px 16px 0;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--gray-color-1);
   }
 }
 </style>

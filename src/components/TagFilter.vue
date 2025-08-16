@@ -24,9 +24,20 @@ function handleChange(value: any) {
 <template>
   <div>
     <h4>{{ title }}</h4>
-    <t-checkbox-group :value="modelValue" class="tag-container" borderless @change="handleChange">
-      <t-checkbox v-for="item in options" :key="item" :value="item" :icon="false" :style="{ padding: 0 }">
-        <div :class="`tag ${modelValue.includes(item) ? 'tag-active' : ''}`">
+    <t-checkbox-group
+      :value="modelValue"
+      class="tag-container"
+      borderless
+      @change="handleChange"
+    >
+      <t-checkbox
+        v-for="item in options"
+        :key="item"
+        :value="item"
+        :icon="false"
+        :style="{ padding: 0 }"
+      >
+        <div :class="`tag ${modelValue.includes(item) ? 'tag--active' : ''}`">
           {{ item }}
         </div>
       </t-checkbox>
@@ -36,7 +47,6 @@ function handleChange(value: any) {
 
 <style scoped lang="less">
 h4 {
-  margin: 0;
   font-size: 14px;
   font-weight: 600;
   line-height: 22px;
@@ -51,19 +61,20 @@ h4 {
   .tag {
     height: 40px;
     font-size: 14px;
+    line-height: 22px;
+    box-sizing: border-box;
     border-radius: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: var(--td-gray-color-1);
+    background: var(--gray-color-1);
   }
 
-  .tag-active {
-    height: 38px;
-    color: var(--td-brand-color-7);
-    border: 1px solid var(--td-brand-color-7);
-    background: var(--td-brand-color-1);
+  .tag--active {
+    color: var(--brand-main);
+    border: 1px solid var(--brand-main);
+    background: var(--brand-main-light);
   }
 }
 </style>

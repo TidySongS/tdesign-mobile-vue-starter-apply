@@ -100,8 +100,8 @@ function formatDateRange(dateRange: Date[]) {
       placement="bottom"
       @update:visible="onPopupUpdate"
     >
-      <div class="popup-container popup-wrapper">
-        <div class="popup-title">
+      <div class="popup-container filter-popup">
+        <div class="filter-popup__title flex-center">
           <span> 全部筛选 </span>
           <t-icon name="close" size="24" @click="closePopup" />
         </div>
@@ -121,7 +121,7 @@ function formatDateRange(dateRange: Date[]) {
 
         <div>
           <h4>活动日期</h4>
-          <div class="date-range-container">
+          <div class="date-range-container flex-center">
             <span>{{ formatDateRange(tmpFilters.dateRange) }}</span>
             <t-button
               theme="default"
@@ -147,7 +147,7 @@ function formatDateRange(dateRange: Date[]) {
             show-extreme-value
           />
         </div>
-        <div class="popup-button-group">
+        <div class="popup-button-group flex-center">
           <t-button
             theme="light"
             variant="base"
@@ -184,7 +184,7 @@ function formatDateRange(dateRange: Date[]) {
           @select="handleDateSelect"
         >
           <template #title>
-            <div class="calendar-title-wrapper">
+            <div class="calendar-title-container flex-center">
               <t-icon name="chevron-left" size="24" @click="closeCalendar" />
               <div class="calendar-title">
                 选择日期
@@ -193,7 +193,7 @@ function formatDateRange(dateRange: Date[]) {
             </div>
           </template>
         </t-calendar>
-        <div class="confirm-date-btn">
+        <div class="confirm-date-btn flex-center">
           <t-button theme="primary" size="large" @click="handleDateConfirm">
             确定日期
           </t-button>
@@ -206,12 +206,10 @@ function formatDateRange(dateRange: Date[]) {
 <style scoped lang="less">
 @import "@/style/home.less";
 
-.popup-wrapper {
+.filter-popup {
   .p-16();
-
-  .popup-title {
-    .flex-center();
-    .font-templet(600, 18px, 26px);
+  &__title {
+    .font(18px, 600);
     width: 100%;
     height: 26px;
     margin-bottom: 14px;
@@ -224,8 +222,7 @@ function formatDateRange(dateRange: Date[]) {
   }
 
   h4 {
-    .font-templet(600, 14px, 22px);
-    margin: 0;
+    .font(14px, 600);
   }
 
   .t-divider {
@@ -233,26 +230,24 @@ function formatDateRange(dateRange: Date[]) {
   }
 
   .date-range-container {
-    .flex-center();
-    .font-templet(400, 16px, 24px);
+    .font(16px, 400);
     margin-top: 8px;
     justify-content: space-between;
   }
 
   .t-slider {
-    .font-templet();
+    .font();
     padding-bottom: 24px;
 
     :deep(.t-slider__range-extreme) {
-      .font-templet(400, 16px, 24px);
+      .font(16px, 400);
     }
   }
 
   .popup-button-group {
-    .flex-center();
-    margin-top: 16px;
-    width: 100%;
     gap: 8px;
+    width: 100%;
+    margin-top: 16px;
 
     button {
       width: 50%;
@@ -273,26 +268,24 @@ function formatDateRange(dateRange: Date[]) {
     }
   }
 
-  .calendar-title-wrapper {
-    .flex-center();
-    width: 100%;
-
-    .calendar-title {
-      margin: auto;
-    }
-  }
-
   :deep(.t-calendar__months) {
     height: 474px;
   }
+}
 
-  .confirm-date-btn {
-    .flex-center();
-    padding: 16px 16px 0 16px;
+.calendar-title-container {
+  width: 100%;
 
-    .t-button {
-      flex: 1;
-    }
+  .calendar-title {
+    margin: auto;
+  }
+}
+
+.confirm-date-btn {
+  padding: 16px 16px 0 16px;
+
+  .t-button {
+    flex: 1;
   }
 }
 </style>
