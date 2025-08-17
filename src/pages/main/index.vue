@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { Activity, Filters } from '@/types/interface'
+import axios from '@/api/index'
 import { useFilters } from '@/hooks/useFilters'
 import {
   activityList as staticActivityList,
   swiperList as staticSwiperList,
 } from '@/mocks/activityMocks'
-import axios from '@/services/index'
 
 const router = useRouter()
 const searchValue = ref('')
@@ -72,7 +72,7 @@ async function fetchActivityList(isRefreshMode = true) {
         filters: JSON.stringify(filters),
       }
       const { data: axiosResult } = await axios.get(
-        '/api/getFilteredActivittList',
+        '/api/getFilteredActivity',
         {
           params: payload,
         },
@@ -109,7 +109,7 @@ async function fetchSwiperList() {
       swiperList.value = staticSwiperList
     }
     else {
-      const { data: result } = await axios.get('/api/getSwiperList')
+      const { data: result } = await axios.get('/api/getHomeSwiper')
       swiperList.value = result.data
     }
   }
@@ -254,7 +254,7 @@ function formatPrice(priceRange: number[]): string {
         <div
           v-if="!isFetchActivityList && activityList.length === 0"
           key="empty"
-          class="empty-result-container "
+          class="empty-result-container"
         >
           <t-result>
             <template #image>
