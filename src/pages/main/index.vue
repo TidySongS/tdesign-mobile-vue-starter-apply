@@ -140,7 +140,7 @@ function handlePageScroll() {
     = document.documentElement.scrollTop || document.body.scrollTop
   const clientHeight = document.documentElement.clientHeight
   const scrollBottom = scrollHeight - scrollTop - clientHeight
-  if (scrollBottom < 50 && !isFetchActivityList.value) {
+  if (scrollBottom < scrollHeight * 0.2 && !isFetchActivityList.value) {
     fetchActivityList(false)
   }
 }
@@ -410,15 +410,16 @@ function formatPrice(priceRange: number[]): string {
 }
 
 .fade-enter-active {
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  transition: opacity 0.24s ease-in-out, transform 0.24s ease-in-out;
 }
 .fade-enter-from {
   opacity: 0;
-  transform: translateY(6px);
+  transform: translateY(4px);
 }
 
 .empty-result-container {
   .flex-center();
+  margin-bottom: 4px;
   flex: 1;
 }
 

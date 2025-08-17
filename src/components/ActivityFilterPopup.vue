@@ -100,71 +100,70 @@ function formatDateRange(dateRange: Date[]) {
       placement="bottom"
       @update:visible="onPopupUpdate"
     >
-      <div class="popup-container filter-popup">
-        <div class="filter-popup__title flex-center">
-          <span> 全部筛选 </span>
-          <t-icon name="close" size="24" @click="closePopup" />
-        </div>
-
-        <TagFilter
-          v-model:model-value="tmpFilters.fields"
-          title="面向领域"
-          :options="options.fields"
-        />
-        <TagFilter
-          v-model:model-value="tmpFilters.formats"
-          title="活动形式"
-          :options="options.formats"
-        />
-
-        <t-divider />
-
-        <div>
-          <h4>活动日期</h4>
-          <div class="date-range-container flex-center">
-            <span>{{ formatDateRange(tmpFilters.dateRange) }}</span>
+      <div class="popup-container">
+        <div class="filter-popup flex-fill-col">
+          <div class="filter-popup__header flex-center">
+            <span> 全部筛选 </span>
+            <t-icon name="close" size="24" @click="closePopup" />
+          </div>
+          <div class="filter-popup__content">
+            <div class="checktag-group">
+              <TagFilter
+                v-model:model-value="tmpFilters.fields"
+                title="面向领域"
+                :options="options.fields"
+              />
+              <TagFilter
+                v-model:model-value="tmpFilters.formats"
+                title="活动形式"
+                :options="options.formats"
+              />
+            </div>
+            <div class="filter">
+              <h4>活动日期</h4>
+              <div class="date-range-container flex-center">
+                <span>{{ formatDateRange(tmpFilters.dateRange) }}</span>
+                <t-button
+                  theme="default"
+                  size="extra-small"
+                  shape="round"
+                  @click="calendarVisible = true"
+                >
+                  选择日期
+                </t-button>
+              </div>
+            </div>
+            <div class="filter">
+              <h4>价格范围(元)</h4>
+              <t-slider
+                v-model="tmpFilters.priceRange"
+                range
+                :min="options.priceRange[0]"
+                :max="options.priceRange[1]"
+                :label="handlePriceLabel"
+                show-extreme-value
+              />
+            </div>
+          </div>
+          <div class="filter-popup__footer flex-center">
             <t-button
-              theme="default"
-              size="extra-small"
-              shape="round"
-              @click="calendarVisible = true"
+              theme="light"
+              variant="base"
+              type="reset"
+              size="large"
+              @click="resetFilters"
             >
-              选择日期
+              重置
+            </t-button>
+            <t-button
+              theme="primary"
+              type="submit"
+              size="large"
+              @click="applyFilters"
+            >
+              完成
             </t-button>
           </div>
-        </div>
-
-        <t-divider />
-
-        <div>
-          <h4>价格范围(元)</h4>
-          <t-slider
-            v-model="tmpFilters.priceRange"
-            range
-            :min="options.priceRange[0]"
-            :max="options.priceRange[1]"
-            :label="handlePriceLabel"
-            show-extreme-value
-          />
-        </div>
-        <div class="popup-button-group flex-center">
-          <t-button
-            theme="light"
-            variant="base"
-            type="reset"
-            size="large"
-            @click="resetFilters"
-          >
-            重置
-          </t-button>
-          <t-button
-            theme="primary"
-            type="submit"
-            size="large"
-            @click="applyFilters"
-          >
-            完成
-          </t-button>
         </div>
       </div>
     </t-popup>
@@ -206,56 +205,65 @@ function formatDateRange(dateRange: Date[]) {
 <style scoped lang="less">
 @import "@/style/home.less";
 
+.popup-container {
+  .flex-col();
+  padding: 16px 0;
+  box-sizing: border-box;
+  height: min(100vh - 16px, 656px);
+}
+
 .filter-popup {
-  .p-16();
-  &__title {
+  padding: 0 16px;
+  overflow: hidden;
+  &__header {
     .font(18px, 600);
-    width: 100%;
     height: 26px;
     margin-bottom: 14px;
-
     span {
-      padding-left: 24px;
-      flex: 1;
+      margin-left: 24px;
       text-align: center;
+      flex: 1;
     }
   }
 
-  h4 {
-    .font(14px, 600);
-  }
-
-  .t-divider {
-    margin: 24px 0;
-  }
-
-  .date-range-container {
-    .font(16px, 400);
-    margin-top: 8px;
-    justify-content: space-between;
-  }
-
-  .t-slider {
-    .font();
-    padding-bottom: 24px;
-
-    :deep(.t-slider__range-extreme) {
-      .font(16px, 400);
+  &__content {
+    flex-grow: 1;
+    height: auto;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
     }
+    scrollbar-width: none;
   }
 
-  .popup-button-group {
+  &__footer {
     gap: 8px;
-    width: 100%;
+    height: 48px;
     margin-top: 16px;
-
+    background: var(--bg-color-page);
     button {
-      width: 50%;
+      flex: 1;
     }
   }
 }
 
+.filter {
+  padding: 24px 0;
+  height: auto;
+  box-sizing: border-box;
+  border-top: 0.5px solid var(--gray-color-3);
+}
+
+.date-range-container {
+  .font(16px, 400);
+  margin-top: 8px;
+  justify-content: space-between;
+}
+
 .calendar-container {
+  position: relative;
+  padding-bottom: 80px;
   :deep(.t-calendar__title) {
     padding-top: 0;
   }
@@ -269,7 +277,7 @@ function formatDateRange(dateRange: Date[]) {
   }
 
   :deep(.t-calendar__months) {
-    height: 474px;
+    height: 472px;
   }
 }
 
@@ -282,9 +290,13 @@ function formatDateRange(dateRange: Date[]) {
 }
 
 .confirm-date-btn {
-  padding: 16px 16px 0 16px;
-
+  bottom: 0;
+  width: 100%;
+  z-index: 9999;
+  position: absolute;
+  background: var(--bg-color-page);
   .t-button {
+    margin: 16px;
     flex: 1;
   }
 }
