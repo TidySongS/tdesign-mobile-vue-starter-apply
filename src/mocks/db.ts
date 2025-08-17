@@ -30,12 +30,22 @@ export const db = factory({
     price: Number,
     originalPrice: Number,
   },
+  friendList: {
+    id: primaryKey(String),
+    name: String,
+    avatar: String,
+  },
+  shareAppIconList: {
+    id: primaryKey(String),
+    appname: String,
+    icon: String,
+  },
 })
 
 // 预生成一些假数据
 for (let i = 1; i <= 10; i++) {
   db.user.create({
-    id: i
+    id: i,
   })
 }
 
@@ -126,6 +136,35 @@ const prices = [
 ]
 
 // 创建票档价格数据
-prices.forEach(price => {
+prices.forEach((price) => {
   db.price.create(price)
+})
+
+function rName() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const s: number = Math.floor(Math.random() * 10) + 1
+  let res = ''
+  for (let i = 0; i < s; i++)
+    res += chars[Math.floor(Math.random() * chars.length)]
+  return res
+}
+
+for (let i = 1; i <= 5; i++) {
+  db.friendList.create({
+    id: i.toString(),
+    name: rName(),
+    avatar: `/imgs/avatar/avatar${i !== 1 ? i : ''}.png`,
+  })
+}
+
+const appList = [
+  { id: '1', appname: 'Doc', icon: 'imgs/icon/icon-doc.png' },
+  { id: '2', appname: 'Map', icon: 'imgs/icon/icon-map.png' },
+  { id: '3', appname: 'QQ', icon: 'imgs/icon/icon-qq.png' },
+  { id: '4', appname: 'QQ music', icon: 'imgs/icon/icon-qqmusic.png' },
+  { id: '5', appname: 'WeChat', icon: 'imgs/icon/icon-wechat.png' },
+]
+
+appList.forEach((app) => {
+  db.shareAppIconList.create(app)
 })

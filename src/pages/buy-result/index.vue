@@ -26,10 +26,13 @@
         })
         // 选中的人员
     const selectedPerson = ref({
-            name: '蔡宣轩',
-            age: '29岁',
-            occupation: '设计师/艺术从业者'
-        })
+        name: '蔡宣轩',
+        age: '29岁',
+        occupation: '设计师/艺术从业者'
+    })
+
+    const frendList = reactive([])
+    const appList = reactive([])
         // 加载状态
     const loading = ref(true)
 
@@ -52,7 +55,6 @@
                 throw new Error('Failed to fetch activity')
             }
             const data = await response.json()
-            console.log(data)
 
             // 设置活动信息
             activity.value = {
@@ -61,11 +63,35 @@
                 location: data.location,
                 cover: data.swiper,
             }
-            console.log(activity.value.cover)
 
             loading.value = false
         } catch (err) {
             console.error('Error fetching activity data:', err)
+            loading.value = false
+        }
+    }
+    //获取朋友\app信息
+    async function fetchFrendandAppdata() {
+        try {
+            const flresponse = await fetch('/api/share/friends')
+            if (!flresponse.ok)
+                throw new Error('Failed to fetch friemdList')
+
+            const fldata = await flresponse.json()
+            frendList.length = 0
+            frendList.push(...fldata)
+
+            const apresponse = await fetch('api/share/app')
+            if (!apresponse.ok)
+                throw new Error('Failed to fetch appList')
+
+            const apdata = await apresponse.json()
+            appList.length = 0
+            appList.push(...apdata)
+            loading.value = false
+        } catch (err) {
+            console.error('Error fetching data:', err)
+                //error.value = true
             loading.value = false
         }
     }
@@ -90,6 +116,7 @@
     // 组件挂载时获取数据
     onMounted(() => {
         fetchActivityData()
+        fetchFrendandAppdata()
     })
 </script>
 
@@ -171,30 +198,31 @@
     <div class="share-popup">
       <div class="share-section">
         <h3 class="share-title">分享给朋友</h3>
-        <div class="share-friends">
+        <t-grid :column="0" class="share-friends">
           <!-- 朋友头像列表（暂不实现） -->
-        </div>
-      </div>
-      
-      <div class="share-section">
-        <h3 class="share-title">分享到社媒</h3>
-        <div class="share-social">
-          <!-- 社交媒体图标列表（暂不实现） -->
-        </div>
-      </div>
-      
-      <div class="share-cancel">
-        <t-button
-          block
-          size="large"
-          variant="text"
-          @click="closeSharePopup"
-        >
-          取消
-        </t-button>
-      </div>
-    </div>
-  </t-popup>
+          <t-grid-item v-for="frend in frendList" :key="frend.id" :text="frend.name">
+            <template #image>
+              <t-avatar :image="frend.avatar" />
+            </template>
+</t-grid-item>
+</t-grid>
+</div>
+
+<div class="share-section">
+    <h3 class="share-title">分享到社媒</h3>
+    <t-grid :column="0" class="share-friends">
+        <!-- 朋友头像列表（暂不实现） -->
+        <t-grid-item v-for="app in appList" :key="app.id" :text="app.appname" :image="app.icon" />
+    </t-grid>
+</div>
+
+<div class="share-cancel">
+    <t-button block size="large" variant="text" @click="closeSharePopup">
+        取消
+    </t-button>
+</div>
+</div>
+</t-popup>
 </template>
 
 <style lang="less" scoped>
@@ -328,7 +356,7 @@
         background-color: white;
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
-        padding: 24px 16px;
+        padding: 16px 16px;
         .share-section {
             margin-bottom: 24px;
             .share-title {
@@ -346,13 +374,13 @@
             }
         }
         .share-cancel {
-            margin-top: 16px;
-            padding-top: 16px;
+            margin-top: 24px;
+            padding-top: 24px;
             border-top: 1px solid #f5f5f5;
              :deep(.t-button) {
                 font-size: 16px;
                 color: #333;
-                height: 48px;
+                --td-button-large-height: 10px;
             }
         }
     }

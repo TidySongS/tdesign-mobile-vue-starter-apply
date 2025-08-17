@@ -53,10 +53,19 @@ export const handlers = [
         },
       },
     })
-    
     return HttpResponse.json(prices)
   }),
-  
+
+  http.get('/api/share/friends', () => {
+    const friendList = db.friendList.getAll()
+    return HttpResponse.json(friendList)
+  }),
+
+  http.get('/api/share/app', () => {
+    const appList = db.shareAppIconList.getAll()
+    return HttpResponse.json(appList)
+  }),
+
   // 处理Vue开发服务器的样式请求
   http.get(/\.vue\?vue&type=style/, () => {
     return new HttpResponse(null, { status: 200 })
