@@ -1,26 +1,28 @@
 <script setup lang="ts">
 import type { Activity, Filters } from '@/types/interface'
-import axios from '@/api/index'
+import { getActivities, getHomeSwiper } from '@/api/activity'
 import { useFilters } from '@/hooks/useFilters'
-import {
-  activityList as staticActivityList,
-  swiperList as staticSwiperList,
-} from '@/mocks/activityMocks'
+
+interface SwiperItem {
+  id: string
+  name: string
+  url: string
+}
 
 const router = useRouter()
 const searchValue = ref('')
 const currentTab = ref('latest')
+const isRefresh = ref(true)
 const isFetchSwiperList = ref(true)
 const isFetchActivityList = ref(true)
 const isLoadAllActivities = ref(false)
-const isRefreshActivityList = ref(true)
 const filterPopupVisible = ref(false)
 const pageSize = 5
 let currentPage = 1
 
 const { filters, resetFilters } = useFilters()
 
-const swiperList = ref<string[]>([])
+const swiperList = ref<SwiperItem[]>([])
 
 const activityList = ref<Activity[]>([])
 
@@ -43,59 +45,32 @@ async function fetchActivityList(isRefreshMode = true) {
   if (isLoadAllActivities.value && !isRefreshMode) {
     return
   }
-  isRefreshActivityList.value = isRefreshMode
+  isRefresh.value = isRefreshMode
   isFetchActivityList.value = true
-  if (isRefreshActivityList.value) {
+  if (isRefresh.value) {
     currentPage = 1
     isLoadAllActivities.value = false
   }
   try {
-    let result
-    if (import.meta.env.VITE_DATA_SOURCE === 'static') {
-      const total = staticActivityList.length
-      const sortedData = [...staticActivityList]
-      if (currentTab.value === 'top') {
-        sortedData.sort((a, b) => b.star - a.star)
-      }
-      else if (currentTab.value === 'latest') {
-        sortedData.sort(
-          (a, b) => b.dateRange[0].getTime() - a.dateRange[0].getTime(),
-        )
-      }
-      result = { data: sortedData, total }
+    const payload = {
+      sort: currentTab.value,
+      page: currentPage,
+      pageSize,
+      filters: JSON.stringify(filters),
+    }
+    const res = await getActivities(payload)
+    if (isRefresh.value) {
+      activityList.value = res.data.paginatedData
     }
     else {
-      const payload = {
-        sort: currentTab.value,
-        page: currentPage,
-        pageSize,
-        filters: JSON.stringify(filters),
-      }
-      const { data: axiosResult } = await axios.get(
-        '/api/getFilteredActivity',
-        {
-          params: payload,
-        },
-      )
-      result = axiosResult
-    }
-    if (isRefreshActivityList.value) {
-      activityList.value = result.data
-    }
-    else {
-      activityList.value.push(...result.data)
+      activityList.value.push(...res.data.paginatedData)
     }
     currentPage++
-
-    if (activityList.value.length >= result.total) {
+    if (activityList.value.length >= res.data.total) {
       isLoadAllActivities.value = true
     }
   }
   catch (error: any) {
-    if (error?.name === 'AbortError') {
-      console.log('请求被取消')
-      return
-    }
     console.error('获取活动列表失败:', error)
   }
   finally {
@@ -105,13 +80,8 @@ async function fetchActivityList(isRefreshMode = true) {
 
 async function fetchSwiperList() {
   try {
-    if (import.meta.env.VITE_DATA_SOURCE === 'static') {
-      swiperList.value = staticSwiperList
-    }
-    else {
-      const { data: result } = await axios.get('/api/getHomeSwiper')
-      swiperList.value = result.data
-    }
+    const res = await getHomeSwiper()
+    swiperList.value = res.data
   }
   catch (error: any) {
     console.error('获取轮播图列表失败:', error)
@@ -132,6 +102,18 @@ function handleFiltersUpdate(newFilters: Filters) {
   fetchActivityList()
 }
 
+function throttle(fn: any, delay: number) {
+  let timer: ReturnType<typeof setTimeout> | null = null
+  return function (this: any, ...args: any[]) {
+    if (!timer) {
+      timer = setTimeout(() => {
+        fn.apply(this, args)
+        timer = null
+      }, delay)
+    }
+  }
+}
+
 function handlePageScroll() {
   if (isLoadAllActivities.value)
     return
@@ -145,14 +127,16 @@ function handlePageScroll() {
   }
 }
 
+const throttledScrollHandler = throttle(handlePageScroll, 200)
+
 onMounted(() => {
   fetchSwiperList()
   fetchActivityList()
-  window.addEventListener('scroll', handlePageScroll)
+  window.addEventListener('scroll', throttledScrollHandler)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handlePageScroll)
+  window.removeEventListener('scroll', throttledScrollHandler)
 })
 
 function formatPrice(priceRange: number[]): string {
@@ -210,11 +194,8 @@ function formatPrice(priceRange: number[]): string {
           :navigation="{ type: 'dots', placement: 'outside' }"
           class="swiper"
         >
-          <t-swiper-item
-            v-for="(item, index) in swiperList"
-            :key="`swiper-${index}`"
-          >
-            <img :src="item">
+          <t-swiper-item v-for="item in swiperList" :key="item.id">
+            <img :src="item.url" :alt="item.name">
           </t-swiper-item>
         </t-swiper>
       </Transition>
@@ -249,69 +230,63 @@ function formatPrice(priceRange: number[]): string {
         </div>
       </t-sticky>
       <t-divider style="margin: 0" />
-
-      <Transition name="fade" mode="out-in">
+      <!-- <Transition name="fade" mode="out-in"> -->
+      <div
+        v-if="!isFetchActivityList && activityList.length === 0"
+        key="empty"
+        class="empty-result-container slide-in-animation"
+      >
+        <t-result>
+          <template #image>
+            <t-image src="/imgs/result1.png" />
+          </template>
+          <template #title>
+            <div style="font-size: large">
+              暂无相关活动
+            </div>
+          </template>
+          <template #description>
+            <div>换个筛选条件试试，或许有惊喜哦～</div>
+          </template>
+        </t-result>
+      </div>
+      <div
+        v-else-if="isFetchActivityList && isRefresh"
+        key="skeleton"
+        class="card-container"
+      >
+        <ActivityCardSkeleton />
+      </div>
+      <div v-else class="card-container">
         <div
-          v-if="!isFetchActivityList && activityList.length === 0"
-          key="empty"
-          class="empty-result-container"
+          v-for="item in activityList"
+          :key="`activity-${item.id}`"
+          class="card"
+          @click="goToActivityDetail(item.id)"
         >
-          <t-result>
-            <template #image>
-              <t-image
-                src="https://tdesign.gtimg.com/mobile/demos/result1.png"
+          <div class="card__cover">
+            <img :src="item.cover" :alt="item.name">
+          </div>
+          <div class="card__content">
+            <h3>{{ item.name }}</h3>
+            <div class="rate-container">
+              <t-rate
+                v-model="item.score"
+                size="16"
+                variant="filled"
+                allow-half
+                disabled
               />
-            </template>
-            <template #title>
-              <div style="font-size: large">
-                暂无相关活动
-              </div>
-            </template>
-            <template #description>
-              <div>换个筛选条件试试，或许有惊喜哦～</div>
-            </template>
-          </t-result>
-        </div>
-        <div
-          v-else-if="isFetchActivityList && isRefreshActivityList"
-          key="skeleton"
-          class="card-container"
-        >
-          <ActivityCardSkeleton />
-        </div>
-        <div v-else class="card-container">
-          <div
-            v-for="item in activityList"
-            :key="`activity-${item.id}`"
-            class="card"
-            @click="goToActivityDetail(item.id)"
-          >
-            <div class="card__cover">
-              <img :src="item.cover" :alt="item.name">
+              <span>{{ item.score }}分</span>
             </div>
-            <div class="card__content">
-              <h3>{{ item.name }}</h3>
-              <div class="rate-container">
-                <t-rate
-                  v-model="item.star"
-                  size="16"
-                  variant="filled"
-                  allow-half
-                  disabled
-                />
-                <span>{{ item.star }}分</span>
-              </div>
-              <span class="price">{{ formatPrice(item.priceRange) }}</span>
-            </div>
-          </div>
-          <div
-            v-if="!isRefreshActivityList && isFetchActivityList"
-            key="skeleton-more"
-          >
-            <ActivityCardSkeleton :count="1" />
+            <span class="price">{{ formatPrice(item.priceRange) }}</span>
           </div>
         </div>
-      </Transition>
+        <div v-if="!isRefresh && isFetchActivityList" key="skeleton-more">
+          <ActivityCardSkeleton :count="1" />
+        </div>
+      </div>
+      <!-- </Transition> -->
     </div>
 
     <ActivityFilterPopup
@@ -402,25 +377,40 @@ function formatPrice(priceRange: number[]): string {
 }
 
 .swiper-fade-enter-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 1s ease;
 }
 
 .swiper-fade-enter-from {
   opacity: 0;
 }
 
-.fade-enter-active {
-  transition: opacity 0.24s ease-in-out, transform 0.24s ease-in-out;
-}
-.fade-enter-from {
-  opacity: 0;
-  transform: translateY(4px);
-}
+// .fade-enter-active {
+//   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+// }
+// .fade-enter-from {
+//   opacity: 0;
+//   transform: translateY(4px);
+// }
 
 .empty-result-container {
   .flex-center();
   margin-bottom: 4px;
   flex: 1;
+}
+
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-animation {
+  animation: slide-in 0.5s ease-in-out forwards;
 }
 
 .card-container {

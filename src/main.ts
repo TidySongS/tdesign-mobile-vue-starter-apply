@@ -1,19 +1,29 @@
 import { createApp } from 'vue'
-import { enableMocking } from '@/mocks/browser'
 import App from './App.vue'
 import router from './router'
 import 'tdesign-mobile-vue/es/style/index.css'
 import '@/style/main.less'
 
-const app = createApp(App)
-app.use(router);
+async function enableMocking() {
+  if (import.meta.env.DEV) {
+    const { worker } = await import('./mocks/browser')
+    return worker.start()
+  }
+}
 
-(async () => {
-  if (import.meta.env.MODE === 'mock') {
-    await enableMocking()
-    app.mount('#app')
-  }
-  else {
-    app.mount('#app')
-  }
-})()
+const app = createApp(App)
+app.use(router)
+
+// (async () => {
+//   if (import.meta.env.MODE === 'mock') {
+//     await enableMocking()
+//     app.mount('#app')
+//   }
+//   else {
+//     app.mount('#app')
+//   }
+// })()
+
+enableMocking().then(() => {
+  app.mount('#app')
+})

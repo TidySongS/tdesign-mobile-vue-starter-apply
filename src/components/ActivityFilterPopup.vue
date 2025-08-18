@@ -109,14 +109,14 @@ function formatDateRange(dateRange: Date[]) {
           <div class="filter-popup__content">
             <div class="checktag-group">
               <TagFilter
-                v-model:model-value="tmpFilters.fields"
+                v-model:model-value="tmpFilters.domain"
                 title="面向领域"
-                :options="options.fields"
+                :options="options.domain"
               />
               <TagFilter
-                v-model:model-value="tmpFilters.formats"
+                v-model:model-value="tmpFilters.type"
                 title="活动形式"
-                :options="options.formats"
+                :options="options.type"
               />
             </div>
             <div class="filter">

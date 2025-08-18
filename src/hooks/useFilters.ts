@@ -3,8 +3,8 @@ import { defaultFilterOptions } from '@/constant/filters'
 
 function createInitialFilters(options: Filters): Filters {
   return {
-    fields: [],
-    formats: [],
+    domain: [],
+    type: [],
     priceRange: [...options.priceRange],
     dateRange: options.dateRange.map((d: Date) => new Date(d)),
   }

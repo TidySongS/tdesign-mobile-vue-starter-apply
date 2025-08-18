@@ -1,6 +1,6 @@
 export interface Filters {
-  fields: string[]
-  formats: string[]
+  domain: string[]
+  type: string[]
   priceRange: number[]
   dateRange: Date[]
 }
@@ -9,6 +9,9 @@ export interface Activity {
   id: number
   name: string
   cover: string
-  star: number
+  score: number
+  dateRange: Date[]
   priceRange: number[]
+  fieldOriented: string[]
+  format: string
 }
