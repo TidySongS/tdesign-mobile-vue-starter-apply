@@ -1,5 +1,15 @@
 const userInfo = reactive({
-  locationName: '深圳市',
+  locationName: localStorage.getItem('userLocationName') || '深圳市',
 })
+
+watch(
+  () => userInfo.locationName,
+  (newLocationName) => {
+    localStorage.setItem('userLocationName', newLocationName)
+  },
+  {
+    immediate: true,
+  },
+)
 
 export default userInfo

@@ -21,10 +21,7 @@ export default defineConfig({
           library: 'mobile-vue',
         }),
       ],
-      imports: [
-        VueRouterAutoImports,
-        'vue',
-      ],
+      imports: [VueRouterAutoImports, 'vue'],
     }),
     Components({
       resolvers: [
@@ -37,6 +34,15 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  server: {
+    proxy: {
+      '/api/tencent-map': {
+        target: 'https://apis.map.qq.com',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api\/tencent-map/, ''),
+      },
     },
   },
 })
