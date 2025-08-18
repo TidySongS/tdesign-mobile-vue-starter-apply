@@ -6,7 +6,15 @@ interface ActivityParams {
   minPrice?: number
   maxPrice?: number
   isHighScore?: boolean
-  domain?: 'IT互联网' | '艺术设计' | '科技' | '电商' | '教育' | '医疗健康' | '心理学' | '摄影'
+  domain?:
+    | 'IT互联网'
+    | '艺术设计'
+    | '科技'
+    | '电商'
+    | '教育'
+    | '医疗健康'
+    | '心理学'
+    | '摄影'
   type?: '讲座' | '展览' | '工作坊'
   date?: Date
 }
@@ -26,6 +34,12 @@ export function getActivities(params: ActivityParams & PaginationParams) {
   return axios.get('/activities', { params })
 }
 
-export function getPersonActivities(params: PaginationParams & PersonActivityParams) {
+export function getHomeSwiper() {
+  return axios.get('/homeSwiper')
+}
+
+export function getPersonActivities(
+  params: PaginationParams & PersonActivityParams,
+) {
   return axios.get('/personActivities', { params })
 }

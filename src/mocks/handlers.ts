@@ -1,64 +1,81 @@
-import { http, HttpResponse } from 'msw'
+import { delay, http, HttpResponse } from 'msw'
+import { defaultFilterOptions } from '@/constant/filters'
+import { swiperList } from './activityMocks'
 import { db } from './db'
 
 export const handlers = [
-  http.get('/api/activities', ({ request }) => {
+  http.get('/api/homeSwiper', () => {
+    return HttpResponse.json(
+      {
+        data: swiperList,
+      },
+      { status: 200 },
+    )
+  }),
+  http.get('/api/activities', async ({ request }) => {
+    await delay(500)
     const url = new URL(request.url)
-    const page = Number(url.searchParams.get('page') ?? 1)
-    const pageSize = Number(url.searchParams.get('pageSize') ?? 10)
-    const highScoreParam = url.searchParams.get('highScore')
-    const domainParam = url.searchParams.get('domain')
-    const typeParam = url.searchParams.get('type')
-    const startDateParam = url.searchParams.get('startDate')
-    const endDateParam = url.searchParams.get('endDate')
-    const titleParam = url.searchParams.get('title')
+    const sort = url.searchParams.get('sort') || ''
+    const page = Number(url.searchParams.get('page')) || 1
+    const pageSize = Number(url.searchParams.get('pageSize')) || 5
+    const filters = url.searchParams.get('filters')
+      ? JSON.parse(url.searchParams.get('filters') as string)
+      : defaultFilterOptions
+    let filteredResult = db.activity.getAll()
 
-    let all = db.activity.getAll()
-    // 如果有 highScore 参数，就做过滤
-    if (highScoreParam !== null) {
-      const flag = highScoreParam === 'true'
-      all = all.filter(item => item.isHighScore === flag)
+    if (filters.domain.length > 0) {
+      filteredResult = filteredResult.filter(activity =>
+        filters.domain.some((field: string) => activity.domain.includes(field)),
+      )
     }
 
-    // Filter by domain
-    if (domainParam) {
-      all = all.filter(item => item.domain === domainParam)
+    if (filters.type.length > 0) {
+      filteredResult = filteredResult.filter(activity =>
+        filters.type.includes(activity.type),
+      )
     }
 
-    // Filter by type
-    if (typeParam) {
-      all = all.filter(item => item.type === typeParam)
-    }
-
-    // Filter by title
-    if (titleParam) {
-      all = all.filter(item => item.title.includes(titleParam))
-    }
-
-    // Filter by date range
-    if (startDateParam && endDateParam) {
-      const startDate = new Date(startDateParam)
-      const endDate = new Date(endDateParam)
-      all = all.filter((item) => {
-        const itemDate = new Date(item.date)
-        return itemDate >= startDate && itemDate <= endDate
+    const [minPrice, maxPrice] = filters.priceRange
+    if (
+      minPrice !== defaultFilterOptions.priceRange[0]
+      || maxPrice !== defaultFilterOptions.priceRange[1]
+    ) {
+      filteredResult = filteredResult.filter((activity) => {
+        return activity.minPrice <= maxPrice && activity.maxPrice >= minPrice
       })
     }
-    const total = all.length
 
+    const startDate = new Date(filters.dateRange[0])
+    const endDate = new Date(filters.dateRange[1])
+    if (
+      startDate.getTime() !== defaultFilterOptions.dateRange[0].getTime()
+      || endDate.getTime() !== defaultFilterOptions.dateRange[1].getTime()
+    ) {
+      filteredResult = filteredResult.filter((activity) => {
+        return activity.date >= startDate && activity.date <= endDate
+      })
+    }
+
+    if (sort === 'top') {
+      filteredResult.sort((a, b) => b.score - a.score)
+    }
+    else if (sort === 'latest') {
+      filteredResult.sort((a, b) => b.date.getTime() - a.date.getTime())
+    }
+
+    const total = filteredResult.length
     const start = (page - 1) * pageSize
     const end = start + pageSize
-    const pageData = all.slice(start, end)
+    const paginatedData = filteredResult.slice(start, end)
 
-    return HttpResponse.json({
-      data: pageData,
-      pagination: {
-        page,
-        pageSize,
-        total,
-        totalPages: Math.ceil(total / pageSize),
+    return HttpResponse.json(
+      {
+        data: { paginatedData, total },
       },
-    })
+      {
+        status: 200,
+      },
+    )
   }),
 
   http.get('/api/personActivities', ({ request }) => {
