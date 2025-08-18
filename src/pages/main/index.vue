@@ -41,14 +41,12 @@ function goToActivityDetail(id: number | string) {
   router.push(`/activity-detail/${id}`)
 }
 
-function formatPrice(priceRange: number[]): string {
-  if (priceRange.length === 2 && priceRange[1] !== 0) {
-    return `¥${priceRange[0].toFixed(2)}-¥${priceRange[1].toFixed(2)}`
-  }
-  else if (priceRange.length === 1 && priceRange[0] !== 0) {
-    return `¥${priceRange[0].toFixed(2)}`
-  }
-  return '免费活动'
+function formatPrice(minPrice: number, maxPrice: number): string {
+  if (minPrice === 0 && maxPrice === 0)
+    return '免费活动'
+  if (minPrice === maxPrice)
+    return `¥${minPrice.toFixed(2)}`
+  return `¥${minPrice.toFixed(2)}-¥${maxPrice.toFixed(2)}`
 }
 
 async function fetchActivityList(isRefreshMode = true) {
@@ -245,15 +243,15 @@ onMounted(() => {
       </template>
       <div
         v-for="item in activityList"
-        :key="`activity-${item.id}`"
+        :key="item.id"
         class="card"
         @click="goToActivityDetail(item.id)"
       >
         <div class="card__cover">
-          <img :src="item.cover" :alt="item.name">
+          <img :src="item.cover" :alt="item.title">
         </div>
         <div class="card__content">
-          <h3>{{ item.name }}</h3>
+          <h3>{{ item.title }}</h3>
           <div class="rate-container">
             <t-rate
               v-model="item.score"
@@ -264,7 +262,9 @@ onMounted(() => {
             />
             <span>{{ item.score }}分</span>
           </div>
-          <span class="price">{{ formatPrice(item.priceRange) }}</span>
+          <span class="price">{{
+            formatPrice(item.minPrice, item.maxPrice)
+          }}</span>
         </div>
       </div>
       <div v-if="!isRefresh && isFetchActivityList" key="skeleton-more">
@@ -395,8 +395,13 @@ h2 {
   }
 
   &__content {
+    flex: 1;
+    min-width: 0;
     h3 {
       .font();
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       margin-bottom: 8px;
     }
   }

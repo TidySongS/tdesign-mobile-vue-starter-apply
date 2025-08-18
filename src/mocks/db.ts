@@ -1,29 +1,29 @@
 import { fakerZH_CN as faker } from '@faker-js/faker'
 import { factory, manyOf, primaryKey } from '@mswjs/data'
 import dayjs from 'dayjs'
+import { defaultFilterOptions } from '@/constant/filters'
+import { covers } from './activityMocks'
 
 const twoYearsFromNow = dayjs().add(2, 'year').toDate()
 
 export const db = factory({
   activity: {
     id: primaryKey(faker.string.uuid), // 主键 ID
-    title: () => `${faker.company.name()}活动`, // 活动标题
-    score: () => faker.number.int({ min: 0, max: 5 }), // 活动得分
-    minPrice: () => faker.number.int({ min: 50, max: 200 }), // 活动最低价
-    maxPrice: () => faker.number.int({ min: 200, max: 1000 }), // 活动最高价
-    isHighScore: () => false,
-    domain: () =>
-      faker.helpers.arrayElement([
-        'IT互联网',
-        '艺术设计',
-        '科技',
-        '电商',
-        '教育',
-        '医疗健康',
-        '心理学',
-        '摄影',
-      ]),
-    type: () => faker.helpers.arrayElement(['讲座', '展览', '工作坊']),
+    title: () => `${faker.company.name()}活动`,
+    cover: () => faker.helpers.arrayElement(covers),
+    score: () => faker.number.float({ min: 0, max: 5, multipleOf: 0.5 }),
+    minPrice: () =>
+      faker.number.int({
+        min: defaultFilterOptions.priceRange[0],
+        max: defaultFilterOptions.priceRange[1] / 2,
+      }),
+    maxPrice: () =>
+      faker.number.int({
+        min: defaultFilterOptions.priceRange[1] / 2,
+        max: defaultFilterOptions.priceRange[1],
+      }),
+    domain: () => faker.helpers.arrayElement(defaultFilterOptions.domain),
+    type: () => faker.helpers.arrayElement(defaultFilterOptions.type),
     date: () => faker.date.between({ from: new Date(), to: twoYearsFromNow }), // 未来两年
     address: () => faker.location.streetAddress(),
     introduce: () => faker.lorem.paragraphs(1),

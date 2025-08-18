@@ -7,11 +7,12 @@ export interface Filters {
 
 export interface Activity {
   id: number
-  name: string
+  title: string
   cover: string
   score: number
-  dateRange: Date[]
-  priceRange: number[]
-  fieldOriented: string[]
-  format: string
+  minPrice: number
+  maxPrice: number
+  date: Date
+  domain: string[]
+  type: string
 }
