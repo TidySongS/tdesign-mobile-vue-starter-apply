@@ -6,6 +6,32 @@ import { covers } from './activityMocks'
 
 const twoYearsFromNow = dayjs().add(2, 'year').toDate()
 
+function generatePrice() {
+  const priceType = faker.helpers.arrayElement(['free', 'single', 'range'])
+
+  if (priceType === 'free') {
+    return { minPrice: 0, maxPrice: 0 }
+  }
+  else if (priceType === 'single') {
+    const singlePrice = faker.number.int({
+      min: defaultFilterOptions.priceRange[0],
+      max: defaultFilterOptions.priceRange[1],
+    })
+    return { minPrice: singlePrice, maxPrice: singlePrice }
+  }
+  else {
+    const min = faker.number.int({
+      min: defaultFilterOptions.priceRange[0],
+      max: defaultFilterOptions.priceRange[1] / 2,
+    })
+    const max = faker.number.int({
+      min,
+      max: defaultFilterOptions.priceRange[1],
+    })
+    return { minPrice: min, maxPrice: max }
+  }
+}
+
 export const db = factory({
   activity: {
     id: primaryKey(faker.string.uuid), // 主键 ID
@@ -67,7 +93,8 @@ const interestedPeople = Array.from({ length: 66 })
 
 // 预生成一些假数据
 for (let i = 0; i < 100; i++) {
-  db.activity.create({ comments, interestedPeople })
+  const price = generatePrice()
+  db.activity.create({ ...price, comments, interestedPeople })
 }
 
 for (let i = 0; i < 20; i++) {
