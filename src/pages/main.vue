@@ -107,7 +107,8 @@ function handleTabbarChange(name: string | number) {
 }
 
 .main-content {
-  margin-top: var(--navbar-height);
+  padding-top: var(--navbar-height);
+  padding-bottom: var(--tabbar-height);
 }
 </style>
 

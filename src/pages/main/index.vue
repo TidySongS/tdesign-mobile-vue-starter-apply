@@ -41,6 +41,16 @@ function goToActivityDetail(id: number | string) {
   router.push(`/activity-detail/${id}`)
 }
 
+function formatPrice(priceRange: number[]): string {
+  if (priceRange.length === 2 && priceRange[1] !== 0) {
+    return `¥${priceRange[0].toFixed(2)}-¥${priceRange[1].toFixed(2)}`
+  }
+  else if (priceRange.length === 1 && priceRange[0] !== 0) {
+    return `¥${priceRange[0].toFixed(2)}`
+  }
+  return '免费活动'
+}
+
 async function fetchActivityList(isRefreshMode = true) {
   if (isLoadAllActivities.value && !isRefreshMode) {
     return
@@ -102,56 +112,24 @@ function handleFiltersUpdate(newFilters: Filters) {
   fetchActivityList()
 }
 
-function throttle(fn: any, delay: number) {
-  let timer: ReturnType<typeof setTimeout> | null = null
-  return function (this: any, ...args: any[]) {
-    if (!timer) {
-      timer = setTimeout(() => {
-        fn.apply(this, args)
-        timer = null
-      }, delay)
-    }
-  }
-}
-
-function handlePageScroll() {
-  if (isLoadAllActivities.value)
-    return
-  const scrollHeight = document.documentElement.scrollHeight
-  const scrollTop
-    = document.documentElement.scrollTop || document.body.scrollTop
-  const clientHeight = document.documentElement.clientHeight
-  const scrollBottom = scrollHeight - scrollTop - clientHeight
-  if (scrollBottom < scrollHeight * 0.2 && !isFetchActivityList.value) {
+function onScroll(scrollBottom: number) {
+  if (
+    !isFetchActivityList.value
+    && !isLoadAllActivities.value
+    && scrollBottom < 56
+  ) {
     fetchActivityList(false)
   }
 }
 
-const throttledScrollHandler = throttle(handlePageScroll, 200)
-
 onMounted(() => {
   fetchSwiperList()
   fetchActivityList()
-  window.addEventListener('scroll', throttledScrollHandler)
 })
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', throttledScrollHandler)
-})
-
-function formatPrice(priceRange: number[]): string {
-  if (priceRange.length === 2 && priceRange[1] !== 0) {
-    return `¥${priceRange[0].toFixed(2)}-¥${priceRange[1].toFixed(2)}`
-  }
-  else if (priceRange.length === 1 && priceRange[0] !== 0) {
-    return `¥${priceRange[0].toFixed(2)}`
-  }
-  return '免费活动'
-}
 </script>
 
 <template>
-  <div class="page-container flex-col">
+  <div class="page-container">
     <t-sticky :offset-top="48" :z-index="99">
       <div class="search-container">
         <t-search
@@ -163,7 +141,7 @@ function formatPrice(priceRange: number[]): string {
       </div>
     </t-sticky>
 
-    <div class="recommend-container">
+    <div>
       <h2>热门推荐</h2>
       <Transition name="swiper-fade" mode="out-in">
         <div
@@ -201,12 +179,12 @@ function formatPrice(priceRange: number[]): string {
       </Transition>
     </div>
 
-    <div class="activity-container flex-fill-col">
+    <div>
       <h2 style="padding-bottom: 0">
         全部活动
       </h2>
       <t-sticky :offset-top="104" :z-index="99">
-        <div class="tab-wrapper flex-center">
+        <div class="tab-container flex-center">
           <t-tabs
             v-model:value="currentTab"
             :split="false"
@@ -229,65 +207,70 @@ function formatPrice(priceRange: number[]): string {
           </div>
         </div>
       </t-sticky>
-      <t-divider style="margin: 0" />
-      <!-- <Transition name="fade" mode="out-in"> -->
-      <div
-        v-if="!isFetchActivityList && activityList.length === 0"
-        key="empty"
-        class="empty-result-container slide-in-animation"
-      >
-        <t-result>
-          <template #image>
-            <t-image src="/imgs/result1.png" />
-          </template>
-          <template #title>
-            <div style="font-size: large">
-              暂无相关活动
-            </div>
-          </template>
-          <template #description>
-            <div>换个筛选条件试试，或许有惊喜哦～</div>
-          </template>
-        </t-result>
-      </div>
-      <div
-        v-else-if="isFetchActivityList && isRefresh"
-        key="skeleton"
-        class="card-container"
-      >
-        <ActivityCardSkeleton />
-      </div>
-      <div v-else class="card-container">
-        <div
-          v-for="item in activityList"
-          :key="`activity-${item.id}`"
-          class="card"
-          @click="goToActivityDetail(item.id)"
-        >
-          <div class="card__cover">
-            <img :src="item.cover" :alt="item.name">
-          </div>
-          <div class="card__content">
-            <h3>{{ item.name }}</h3>
-            <div class="rate-container">
-              <t-rate
-                v-model="item.score"
-                size="16"
-                variant="filled"
-                allow-half
-                disabled
-              />
-              <span>{{ item.score }}分</span>
-            </div>
-            <span class="price">{{ formatPrice(item.priceRange) }}</span>
-          </div>
-        </div>
-        <div v-if="!isRefresh && isFetchActivityList" key="skeleton-more">
-          <ActivityCardSkeleton :count="1" />
-        </div>
-      </div>
-      <!-- </Transition> -->
     </div>
+
+    <t-divider style="margin: 0" />
+    <div
+      v-if="!isFetchActivityList && activityList.length === 0"
+      key="empty"
+      class="empty-result-container slide-in-animation"
+    >
+      <t-result>
+        <template #image>
+          <t-image src="/imgs/result1.png" />
+        </template>
+        <template #title>
+          <div style="font-size: large">
+            暂无相关活动
+          </div>
+        </template>
+        <template #description>
+          <div>换个筛选条件试试，或许有惊喜哦～</div>
+        </template>
+      </t-result>
+    </div>
+    <div
+      v-else-if="isFetchActivityList && isRefresh"
+      key="skeleton"
+      class="card-container"
+    >
+      <ActivityCardSkeleton />
+    </div>
+
+    <t-list v-else @scroll="onScroll">
+      <template #footer>
+        <div v-if="isLoadAllActivities" class="flex-center">
+          没有更多活动了哦～
+        </div>
+      </template>
+      <div
+        v-for="item in activityList"
+        :key="`activity-${item.id}`"
+        class="card"
+        @click="goToActivityDetail(item.id)"
+      >
+        <div class="card__cover">
+          <img :src="item.cover" :alt="item.name">
+        </div>
+        <div class="card__content">
+          <h3>{{ item.name }}</h3>
+          <div class="rate-container">
+            <t-rate
+              v-model="item.score"
+              size="16"
+              variant="filled"
+              allow-half
+              disabled
+            />
+            <span>{{ item.score }}分</span>
+          </div>
+          <span class="price">{{ formatPrice(item.priceRange) }}</span>
+        </div>
+      </div>
+      <div v-if="!isRefresh && isFetchActivityList" key="skeleton-more">
+        <ActivityCardSkeleton :count="1" />
+      </div>
+    </t-list>
 
     <ActivityFilterPopup
       v-model:visible="filterPopupVisible"
@@ -304,8 +287,10 @@ function formatPrice(priceRange: number[]): string {
 .page-container {
   touch-action: pan-y;
   overflow-x: hidden;
-  overflow-y: auto;
-  min-height: calc(100vh - var(--navbar-height) - var(--tabbar-height));
+  max-height: calc(100vh - var(--navbar-height) - var(--tabbar-height));
+  .t-list {
+    margin-bottom: 16px;
+  }
 }
 
 .search-container {
@@ -313,12 +298,9 @@ function formatPrice(priceRange: number[]): string {
   background: var(--bg-color-page);
 }
 
-.recommend-container,
-.activity-container {
-  h2 {
-    .p-16();
-    .font(20px, 600);
-  }
+h2 {
+  .p-16();
+  .font(20px, 600);
 }
 
 .swiper-placeholder-container {
@@ -363,39 +345,25 @@ function formatPrice(priceRange: number[]): string {
   }
 }
 
-.tab-wrapper {
+.tab-container {
+  height: 48px;
   background: var(--bg-color-page);
 
-  :deep(.t-tabs) {
+  .t-tabs {
     flex: 2;
   }
 
   .filter-container {
     flex: 1;
+    margin: 16px 0;
+    box-sizing: border-box;
     border-left: 1px solid var(--td-border-level-1-color);
   }
 }
 
-.swiper-fade-enter-active {
-  transition: opacity 1s ease;
-}
-
-.swiper-fade-enter-from {
-  opacity: 0;
-}
-
-// .fade-enter-active {
-//   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-// }
-// .fade-enter-from {
-//   opacity: 0;
-//   transform: translateY(4px);
-// }
-
 .empty-result-container {
   .flex-center();
-  margin-bottom: 4px;
-  flex: 1;
+  margin-top: 16px;
 }
 
 @keyframes slide-in {
@@ -411,10 +379,6 @@ function formatPrice(priceRange: number[]): string {
 
 .slide-in-animation {
   animation: slide-in 0.5s ease-in-out forwards;
-}
-
-.card-container {
-  margin-bottom: 56px;
 }
 
 .card {

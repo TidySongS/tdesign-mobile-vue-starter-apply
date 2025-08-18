@@ -18,7 +18,7 @@ const swiperList = [
   {
     id: '3',
     name: '第一届SICC服务创新大会',
-    url: '/imgs/activity/sicc-2021.png',
+    url: '/imgs/activity/sicc-2019.png',
   },
   {
     id: '4',
@@ -28,7 +28,7 @@ const swiperList = [
   {
     id: '5',
     name: '2019年SICC服务设计创新大会',
-    url: '/imgs/activity/sicc-2021.png',
+    url: '/imgs/activity/sicc-2019.png',
   },
   {
     id: '6',
@@ -169,7 +169,7 @@ export const handlers = [
     }
 
     if (sort === 'top') {
-      filteredResult.sort((a, b) => b.star - a.star)
+      filteredResult.sort((a, b) => b.score - a.score)
     }
     else if (sort === 'latest') {
       filteredResult.sort(

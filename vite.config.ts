@@ -43,12 +43,6 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api\/tencent-map/, ''),
       },
-      '/api': {
-        // 请在这里改为你真实的后端 API 地址
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, ''),
-      },
     },
   },
 })
