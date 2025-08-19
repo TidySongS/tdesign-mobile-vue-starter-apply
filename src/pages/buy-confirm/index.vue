@@ -1,4 +1,6 @@
 <script setup lang="ts">
+    import userInfo from '@/store/userInfo'
+
     const route = useRoute()
     const router = useRouter()
 
@@ -15,16 +17,16 @@
     const loading = ref(true)
     const error = ref(false)
 
-    // 人员信息
-    const persons = reactive([{
-            id: '1',
-            name: '蔡宣轩'
-        }, {
-            id: '2',
-            name: '蔡晓萱'
-        }])
-        // 选中的人员ID数组
-    const selectedPersonIds = ref(['1'])
+    // 人员信息 - 从store中获取
+    const persons = computed(() => userInfo.persons)
+
+    // 选中的人员ID数组 - 从store中获取
+    const selectedPersonIds = computed({
+        get: () => userInfo.selectedPersonIds,
+        set: (value) => {
+            userInfo.selectedPersonIds = value
+        }
+    })
 
     // 票类场次
     const tickets = reactive([])

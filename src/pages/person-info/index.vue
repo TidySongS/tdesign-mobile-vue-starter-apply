@@ -1,5 +1,8 @@
 <script setup lang="ts">
+    import userInfo from '@/store/userInfo'
+
     const form = ref(null)
+    const router = useRouter()
 
     // 表单数据
     const formData = reactive({
@@ -119,6 +122,18 @@
         form.value.validate().then((result: boolean) => {
             if (result === true) {
                 console.log('保存个人信息:', formData)
+
+                // 添加到userInfo store
+                userInfo.addPerson({
+                    name: formData.name,
+                    birthday: formData.birthday,
+                    phone: formData.phone,
+                    idCard: formData.idCard,
+                    email: formData.email,
+                    profession: formData.profession,
+                    isDefault: isDefault.value
+                })
+
                 router.back()
             }
         })

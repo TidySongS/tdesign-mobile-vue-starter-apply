@@ -118,6 +118,8 @@
         fetchActivityData()
         fetchFrendandAppdata()
     })
+
+    const imgUrl = 'https://tdesign.gtimg.com/mobile/demos/example1.png';
 </script>
 
 <template>
@@ -198,8 +200,7 @@
     <div class="share-popup">
       <div class="share-section">
         <h3 class="share-title">分享给朋友</h3>
-        <t-grid :column="0" class="share-friends">
-          <!-- 朋友头像列表（暂不实现） -->
+        <t-grid :column="0" class="grid-scroll">
           <t-grid-item v-for="frend in frendList" :key="frend.id" :text="frend.name">
             <template #image>
               <t-avatar :image="frend.avatar" />
@@ -210,12 +211,10 @@
 
 <div class="share-section">
     <h3 class="share-title">分享到社媒</h3>
-    <t-grid :column="0" class="share-friends">
-        <!-- 朋友头像列表（暂不实现） -->
+    <t-grid :column="0" class="grid-scroll">
         <t-grid-item v-for="app in appList" :key="app.id" :text="app.appname" :image="app.icon" />
     </t-grid>
 </div>
-
 <div class="share-cancel">
     <t-button block size="large" variant="text" @click="closeSharePopup">
         取消
@@ -365,12 +364,38 @@
                 color: #333;
                 margin: 0 0 16px 0;
             }
-            .share-friends,
-            .share-social {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 16px;
-                min-height: 60px;
+            .grid-scroll {
+                overflow-x: auto;
+                white-space: nowrap;
+                scrollbar-width: none;
+                /* Firefox */
+                -ms-overflow-style: none;
+                /* IE and Edge */
+                &::-webkit-scrollbar {
+                    display: none;
+                    /* Chrome, Safari, Opera */
+                }
+                 :deep(.t-grid__content) {
+                    flex-wrap: nowrap;
+                    padding: 4px 0;
+                }
+                 :deep(.t-grid-item) {
+                    min-width: 70px;
+                    flex-shrink: 0;
+                }
+                /* 调整社交媒体图标大小 */
+                /* &:nth-child(2) {
+                     :deep(.t-grid-item) {
+                        --td-grid-item-image-width: 50px;
+                        --td-grid-item-image-border-radius: 8px;
+                        .t-image {
+                            width: 50px !important;
+                            height: 50px !important;
+                            border-radius: 8px;
+                            object-fit: contain;
+                        }
+                    }
+                } */
             }
         }
         .share-cancel {
