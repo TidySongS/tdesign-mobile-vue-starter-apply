@@ -4,7 +4,8 @@ import { swiperList } from './activityMocks'
 import { db } from './db'
 
 export const handlers = [
-  http.get('/api/homeSwiper', () => {
+  http.get('/api/homeSwiper', async () => {
+    await delay(200)
     return HttpResponse.json(
       {
         data: swiperList,

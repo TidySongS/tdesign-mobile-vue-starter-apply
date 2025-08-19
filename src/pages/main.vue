@@ -2,6 +2,10 @@
 import { useRoute, useRouter } from 'vue-router'
 import userInfo from '@/store/userInfo'
 
+defineOptions({
+  name: 'MainPage',
+})
+
 const route = useRoute()
 const router = useRouter()
 
@@ -73,7 +77,11 @@ function handleTabbarChange(name: string | number) {
     </t-navbar>
   </header>
   <main class="main-content">
-    <RouterView />
+    <RouterView v-slot="{ Component }">
+      <KeepAlive :include="['MainIndex']">
+        <component :is="Component" />
+      </KeepAlive>
+    </RouterView>
   </main>
   <footer>
     <t-tab-bar

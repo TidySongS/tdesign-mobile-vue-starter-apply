@@ -3,16 +3,23 @@ import type { Activity, Filters } from '@/types/interface'
 import { getActivities, getHomeSwiper } from '@/api/activity'
 import { useFilters } from '@/hooks/useFilters'
 
+defineOptions({
+  name: 'MainIndex',
+})
+
 interface SwiperItem {
   id: string
   name: string
   url: string
 }
 
-const router = useRouter()
 const searchValue = ref('')
 const currentTab = ref('latest')
 const isRefresh = ref(true)
+const pageContainerRef = ref<any | null>(null)
+const scrollPosition = ref(0)
+const lastKnownScrollPosition = ref(0)
+const swiperReady = ref(false)
 const isFetchSwiperList = ref(true)
 const isFetchActivityList = ref(true)
 const isLoadAllActivities = ref(false)
@@ -36,10 +43,6 @@ const tabPanels = [
     label: '高分活动',
   },
 ]
-
-function goToActivityDetail(id: number | string) {
-  router.push(`/activity-detail/${id}`)
-}
 
 function formatPrice(minPrice: number, maxPrice: number): string {
   if (minPrice === 0 && maxPrice === 0)
@@ -110,7 +113,8 @@ function handleFiltersUpdate(newFilters: Filters) {
   fetchActivityList()
 }
 
-function onScroll(scrollBottom: number) {
+function onScroll(scrollBottom: number, scrollTop: number) {
+  lastKnownScrollPosition.value = scrollTop
   if (
     !isFetchActivityList.value
     && !isLoadAllActivities.value
@@ -121,13 +125,36 @@ function onScroll(scrollBottom: number) {
 }
 
 onMounted(() => {
-  fetchSwiperList()
   fetchActivityList()
+})
+
+onDeactivated(() => {
+  swiperReady.value = false
+  scrollPosition.value = lastKnownScrollPosition.value
+})
+
+onActivated(() => {
+  if (swiperList.value.length === 0) {
+    fetchSwiperList()
+  }
+  nextTick(() => {
+    swiperReady.value = true
+    if (scrollPosition.value > 0) {
+      if (pageContainerRef.value) {
+        const offsetHeight = 104
+        let scrollTop = 0
+        if (scrollPosition.value < offsetHeight)
+          scrollTop = scrollPosition.value
+        else scrollTop = scrollPosition.value - offsetHeight
+        pageContainerRef.value.scrollTop = scrollTop
+      }
+    }
+  })
 })
 </script>
 
 <template>
-  <div class="page-container">
+  <div ref="pageContainerRef" class="page-container">
     <t-sticky :offset-top="48" :z-index="99">
       <div class="search-container">
         <t-search
@@ -141,13 +168,10 @@ onMounted(() => {
 
     <div>
       <h2>热门推荐</h2>
-      <Transition name="swiper-fade" mode="out-in">
-        <div
-          v-if="isFetchSwiperList"
-          key="swiper-placeholder"
-          class="swiper-placeholder-container flex-col"
-        >
-          <div class="swiper-placeholder flex-center">
+      <!-- <Transition name="swiper-fade" mode="out-in"> -->
+      <div class="swiper-container">
+        <div v-if="isFetchSwiperList" key="swiper-placeholder" class="flex-col">
+          <div class="swiper-placeholder">
             <div
               class="swiper-placeholder__side swiper-img"
               style="border-radius: 0 9px 9px 0"
@@ -159,11 +183,26 @@ onMounted(() => {
             />
           </div>
           <div class="dots-placeholder">
-            <t-loading theme="dots" :duration="5000" size="30px" />
+            <t-loading
+              :pause="swiperReady"
+              theme="dots"
+              :duration="5000"
+              size="30px"
+            />
           </div>
         </div>
+        <div
+          v-else-if="swiperList.length === 0"
+          key="empty-swiper-placeholder"
+          class="swiper-placeholder"
+        >
+          <div class="swiper-placeholder__main swiper-img">
+            <span>暂无轮播图数据</span>
+          </div>
+        </div>
+
         <t-swiper
-          v-else
+          v-else-if="swiperReady"
           key="swiper"
           :height="159.2"
           :autoplay="true"
@@ -171,10 +210,11 @@ onMounted(() => {
           class="swiper"
         >
           <t-swiper-item v-for="item in swiperList" :key="item.id">
-            <img :src="item.url" :alt="item.name">
+            <t-image :src="item.url" :alt="item.name" fit="cover" />
           </t-swiper-item>
         </t-swiper>
-      </Transition>
+      </div>
+      <!-- </Transition> -->
     </div>
 
     <div>
@@ -241,14 +281,14 @@ onMounted(() => {
           没有更多活动了哦～
         </div>
       </template>
-      <div
+      <router-link
         v-for="item in activityList"
         :key="item.id"
         class="card"
-        @click="goToActivityDetail(item.id)"
+        :to="`/activity-detail/${item.id}`"
       >
         <div class="card__cover">
-          <img :src="item.cover" :alt="item.title">
+          <t-image :src="item.cover" :alt="item.title" fit="cover" />
         </div>
         <div class="card__content">
           <h3>{{ item.title }}</h3>
@@ -266,7 +306,7 @@ onMounted(() => {
             formatPrice(item.minPrice, item.maxPrice)
           }}</span>
         </div>
-      </div>
+      </router-link>
       <div v-if="!isRefresh && isFetchActivityList" key="skeleton-more">
         <ActivityCardSkeleton :count="1" />
       </div>
@@ -303,7 +343,7 @@ h2 {
   .font(20px, 600);
 }
 
-.swiper-placeholder-container {
+.swiper-container {
   height: calc(var(--swiper-height) + 18px);
 }
 
@@ -317,8 +357,11 @@ h2 {
 }
 
 .swiper-placeholder {
+  height: var(--swiper-height);
+  .flex-center();
   flex-grow: 1;
   &__main {
+    .flex-center();
     width: var(--swiper-width);
     margin: 0 12px;
   }
@@ -336,11 +379,9 @@ h2 {
   overflow: visible;
   margin: 0 calc((100vw - var(--swiper-width)) / 2 - 12px) 0
     calc((100vw - var(--swiper-width)) / 2);
-  img {
+  .t-image {
     width: var(--swiper-width);
     height: 100%;
-    object-fit: cover;
-    border-radius: var(--td-radius-large);
     box-shadow: var(--shadow);
   }
 }
@@ -355,9 +396,22 @@ h2 {
 
   .filter-container {
     flex: 1;
-    margin: 16px 0;
+    position: relative;
     box-sizing: border-box;
-    border-left: 1px solid var(--td-border-level-1-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 22px;
+      background-color: var(--td-border-level-1-color);
+    }
   }
 }
 
@@ -387,10 +441,9 @@ h2 {
     width: var(--card-height);
     height: 100%;
 
-    img {
+    .t-image {
+      height: var(--card-height);
       width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
   }
 
