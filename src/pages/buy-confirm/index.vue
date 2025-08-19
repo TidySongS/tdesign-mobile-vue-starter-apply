@@ -1,12 +1,15 @@
 <script setup lang="ts">
     import userInfo from '@/store/userInfo'
+    import {
+        Message
+    } from 'tdesign-mobile-vue';
 
     const route = useRoute()
     const router = useRouter()
 
     // 活动ID
     const activityId = computed(() => {
-            return route.query.eventId ? Number(route.query.eventId) : null
+            return route.query.eventId || null
         })
         // 活动信息
     const eventTitle = ref('')
@@ -41,8 +44,57 @@
     // 计算总价
     const totalPrice = computed(() => {
         const selectedPrice = prices.find(p => p.id === selectedPriceId.value)
-        return selectedPrice ? selectedPrice.price : 0
+        if (!selectedPrice) return 0
+
+        const personCount = selectedPersonIds.value.length
+        const ticketPersonCount = selectedPrice.person
+
+        // 如果是单人票，直接计算票价乘人数
+        if (ticketPersonCount === 1) {
+            return selectedPrice.price * personCount
+        }
+
+        // 如果选择的人数可以被票的person属性整除，计算对应的总价
+        if (personCount >= ticketPersonCount && personCount % ticketPersonCount === 0) {
+            return selectedPrice.price * (personCount / ticketPersonCount)
+        }
+
+        // 默认返回单张票价
+        return selectedPrice.price
     })
+
+    // 验证购买条件
+    const validatePurchase = () => {
+        const selectedPrice = prices.find(p => p.id === selectedPriceId.value)
+        if (!selectedPrice) return {
+            valid: false,
+            message: '请选择票档'
+        }
+
+        const personCount = selectedPersonIds.value.length
+        const ticketPersonCount = selectedPrice.person
+
+        // 如果选择的人数少于票的person属性个数
+        if (personCount < ticketPersonCount) {
+            return {
+                valid: false,
+                message: `当前票档需要至少${ticketPersonCount}人，您只选择了${personCount}人`
+            }
+        }
+
+        // 如果选择的人数不能被票的person属性整除（多人票情况）
+        if (ticketPersonCount > 1 && personCount % ticketPersonCount !== 0) {
+            return {
+                valid: false,
+                message: `当前票档为${ticketPersonCount}人票，您选择的人数需要是${ticketPersonCount}的倍数`
+            }
+        }
+
+        return {
+            valid: true,
+            message: ''
+        }
+    }
 
     // 是否可以购买
     const canPurchase = computed(() => {
@@ -52,6 +104,7 @@
     // 获取活动信息
     async function fetchActivityData() {
         if (!activityId.value) {
+            console.log(activityId.value)
             error.value = true
             loading.value = false
             return
@@ -64,11 +117,16 @@
                 throw new Error('Failed to fetch activity')
             }
             const activityData = await activityResponse.json()
+            console.log("qnfoqojvnq", activityData)
 
-            // 设置活动信息
-            eventTitle.value = activityData.name
-            eventDate.value = activityData.date
-            eventLocation.value = activityData.location
+            // 设置活动信息console.log(activityData)
+            eventTitle.value = activityData.title
+            const date = new Date(activityData.date)
+            const year = date.getFullYear()
+            const month = date.getMonth() + 1
+            const day = date.getDate()
+            eventDate.value = `${year}年${month}月${day}日`
+            eventLocation.value = activityData.address
 
             // 获取票类场次
             const ticketsResponse = await fetch(`/api/activities/${activityId.value}/tickets`)
@@ -128,6 +186,17 @@
 
     // 确认购买
     function handleConfirmPurchase() {
+        // 验证购买条件
+        const validation = validatePurchase()
+        if (!validation.valid) {
+            // 使用TDesign的Message组件显示提示信息
+            Message.warning({
+                content: validation.message,
+                duration: 3000
+            })
+            return
+        }
+
         console.log(activityId.value);
         setTimeout(() => 0, 2000)
             // 跳转到购买结果页面并传递订单信息
@@ -135,6 +204,7 @@
             path: '/buy-result',
             query: {
                 eventId: activityId.value,
+                totalPrice: totalPrice.value.toString()
             }
         })
     }
@@ -261,57 +331,34 @@
       </div>
     </template>
 
-<t-empty v-if="!loading && error" description="加载失败，请重试" />
+<!-- <t-empty v-if="!loading && error" description="加载失败，请重试">{{ error }}</t-empty> -->
+<div v-if="!loading && error">{{ error }}</div>
 </div>
 </template>
 
 <style lang="less" scoped>
-    @import "@/style/home.less";
+    @import "@/style/main.less";
     header {
         top: 0;
         z-index: 99;
-        height: 104px;
+        height: 120px;
         position: sticky;
         background: white;
         .event-container {
-            .p-16();
-            .flex-center();
-            .font-templet(400, 16px, 24px);
+            margin-top: 10px;
+            padding: 16px;
             flex-direction: column;
             top: 48px;
-            height: 74px;
-            width: calc(100% - 32px);
             position: fixed;
             background: white;
-            justify-content: space-between;
+            width: 100%;
+            box-sizing: border-box;
             align-items: flex-start;
-            margin-left: 16px;
-            .event-details {
-                display: flex;
-                align-items: center;
-                .detail-item {
-                    display: flex;
-                    align-items: center;
-                    span {
-                        margin-left: 4px; // 图标和文字之间的间距
-                        color: #000000e6;
-                        font-size: 14px;
-                        font-weight: 400;
-                    }
-                    .t-icon {
-                        color: #0052D9;
-                    }
-                }
-            }
-            span {
-                font-size: 16px;
-                color: #333;
-                margin-left: 4px; // 如果需要调整事件标题的文字间距
-            }
         }
     }
     
     .buy-confirm-page {
+        margin-top: 10px;
         min-height: 100vh;
         background-color: #fff;
         padding-bottom: 80px;
@@ -319,16 +366,34 @@
     
     .flex-center {
         display: flex;
-        align-items: center;
-        gap: 8px;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 12px;
         span {
-            opacity: 1;
-            color: #000000e6;
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 600;
-            font-family: "PingFang SC";
-            text-align: left;
-            line-height: 28px;
+            color: #000000;
+            line-height: 32px;
+        }
+    }
+    
+    .event-details {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        margin-bottom: 12px;
+        .detail-item {
+            display: flex;
+            align-items: center;
+            span {
+                margin-left: 8px;
+                color: #666666;
+                font-size: 14px;
+                font-weight: 400;
+            }
+            .t-icon {
+                color: #0052D9;
+            }
         }
     }
     

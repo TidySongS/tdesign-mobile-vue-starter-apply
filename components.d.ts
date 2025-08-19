@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ActivityCardSkeleton: typeof import('./src/components/ActivityCardSkeleton.vue')['default']
     ActivityFilterPopup: typeof import('./src/components/ActivityFilterPopup.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -28,6 +29,7 @@ declare module 'vue' {
     TGrid: typeof import('tdesign-mobile-vue')['Grid']
     TGridItem: typeof import('tdesign-mobile-vue')['GridItem']
     TIcon: typeof import('tdesign-mobile-vue')['Icon']
+    TImage: typeof import('tdesign-mobile-vue')['Image']
     TIndexes: typeof import('tdesign-mobile-vue')['Indexes']
     TIndexesAnchor: typeof import('tdesign-mobile-vue')['IndexesAnchor']
     TInput: typeof import('tdesign-mobile-vue')['Input']
@@ -40,7 +42,9 @@ declare module 'vue' {
     TRadio: typeof import('tdesign-mobile-vue')['Radio']
     TRadioGroup: typeof import('tdesign-mobile-vue')['RadioGroup']
     TRate: typeof import('tdesign-mobile-vue')['Rate']
+    TResult: typeof import('tdesign-mobile-vue')['Result']
     TSearch: typeof import('tdesign-mobile-vue')['Search']
+    TSkeleton: typeof import('tdesign-mobile-vue')['Skeleton']
     TSlider: typeof import('tdesign-mobile-vue')['Slider']
     TSticky: typeof import('tdesign-mobile-vue')['Sticky']
     TSwiper: typeof import('tdesign-mobile-vue')['Swiper']

@@ -1,40 +1,231 @@
-import { faker } from '@faker-js/faker'
-import { factory, primaryKey } from '@mswjs/data'
-import { Swiper } from 'tdesign-mobile-vue'
+import { fakerZH_CN as faker } from '@faker-js/faker'
+import { factory, manyOf, primaryKey } from '@mswjs/data'
+import dayjs from 'dayjs'
+import { defaultFilterOptions } from '@/constant/filters'
+import { covers } from './activityMocks'
+
+const twoYearsFromNow = dayjs().add(2, 'year').toDate()
+
+function generatePrice() {
+  const priceType = faker.helpers.arrayElement(['free', 'single', 'range'])
+
+  if (priceType === 'free') {
+    return { minPrice: 0, maxPrice: 0, priceType }
+  }
+  else if (priceType === 'single') {
+    const singlePrice = faker.number.int({
+      min: defaultFilterOptions.priceRange[0],
+      max: defaultFilterOptions.priceRange[1],
+    })
+    return { minPrice: singlePrice, maxPrice: singlePrice, priceType }
+  }
+  else {
+    const min = faker.number.int({
+      min: defaultFilterOptions.priceRange[0],
+      max: defaultFilterOptions.priceRange[1] / 2,
+    })
+    const max = faker.number.int({
+      min,
+      max: defaultFilterOptions.priceRange[1],
+    })
+    return { minPrice: min, maxPrice: max, priceType }
+  }
+}
+
+// 生成票类场次数据
+function generateTickets(activityId: string) {
+  const ticketCount = faker.number.int({ min: 1, max: 5 })
+  const tickets = []
+  
+  for (let i = 0; i < ticketCount; i++) {
+    tickets.push({
+      id: faker.string.uuid(),
+      activityId,
+      date: faker.date.between({ 
+        from: new Date(), 
+        to: dayjs().add(1, 'year').toDate() 
+      }).toLocaleDateString('zh-CN', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      })
+    })
+  }
+  
+  return tickets
+}
+
+// 生成票档价格数据
+function generatePrices(activityId: string, minPrice: number, maxPrice: number, priceType: string) {
+  const prices = []
+  
+  if (priceType === 'free') {
+    prices.push({
+      id: faker.string.uuid(),
+      activityId,
+      description: '免费活动',
+      price: 0,
+      originalPrice: 0,
+      person: 1
+    })
+  } else if (priceType === 'single') {
+    // 早鸟价
+    const earlyBirdPrice = Math.max(0, minPrice - faker.number.int({ min: 5, max: 20 }))
+    prices.push({
+      id: faker.string.uuid(),
+      activityId,
+      description: '早鸟价-单人票',
+      price: earlyBirdPrice,
+      originalPrice: minPrice,
+      person: 1
+    })
+    
+    // 正价
+    prices.push({
+      id: faker.string.uuid(),
+      activityId,
+      description: '正价-单人票',
+      price: minPrice,
+      originalPrice: minPrice,
+      person: 1
+    })
+    
+    // 双人票早鸟价
+    const duoEarlyBirdPrice = Math.max(0, minPrice * 2 - faker.number.int({ min: 10, max: 40 }))
+    prices.push({
+      id: faker.string.uuid(),
+      activityId,
+      description: '早鸟价-双人票',
+      price: duoEarlyBirdPrice,
+      originalPrice: minPrice * 2,
+      person: 2
+    })
+
+    // 双人票正价
+    prices.push({
+      id: faker.string.uuid(),
+      activityId,
+      description: '正价-双人票',
+      price: minPrice * 2,
+      originalPrice: minPrice * 2,
+      person: 2
+    })
+  } else {
+    // 早鸟价-最低价
+    const earlyBirdMinPrice = Math.max(0, minPrice - faker.number.int({ min: 5, max: 20 }))
+    prices.push({
+      id: faker.string.uuid(),
+      activityId,
+      description: '早鸟价-单人票',
+      price: earlyBirdMinPrice,
+      originalPrice: minPrice,
+      person: 1
+    })
+    
+    // 正价-最低价
+    prices.push({
+      id: faker.string.uuid(),
+      activityId,
+      description: '正价-单人票',
+      price: minPrice,
+      originalPrice: minPrice,
+      person: 1
+    })
+    
+    // 早鸟价-最高价
+    const earlyBirdMaxPrice = Math.max(0, maxPrice - faker.number.int({ min: 5, max: 20 }))
+    prices.push({
+      id: faker.string.uuid(),
+      activityId,
+      description: '早鸟价-单人票(高价)',
+      price: earlyBirdMaxPrice,
+      originalPrice: maxPrice,
+      person: 1
+    })
+    
+    // 正价-最高价
+    prices.push({
+      id: faker.string.uuid(),
+      activityId,
+      description: '正价-单人票(高价)',
+      price: maxPrice,
+      originalPrice: maxPrice,
+      person: 1
+    })
+  }
+  
+  return prices
+}
 
 export const db = factory({
-  user: {
-    id: primaryKey(Number),
-    name: () => faker.person.fullName(),
-    email: () => faker.internet.email(),
-  },
   activity: {
-    id: primaryKey(Number),
-    name: String,
-    cover: String,
-    star: Number,
-    price: String,
-    location: String,
-    date: String,
-    swiper: String,
+    id: primaryKey(faker.string.uuid), // 主键 ID
+    title: () => `${faker.company.name()}活动`,
+    cover: () => faker.helpers.arrayElement(covers),
+    score: () => faker.number.float({ min: 0, max: 5, multipleOf: 0.5 }),
+    minPrice: () =>
+      faker.number.int({
+        min: defaultFilterOptions.priceRange[0],
+        max: defaultFilterOptions.priceRange[1] / 2,
+      }),
+    maxPrice: () =>
+      faker.number.int({
+        min: defaultFilterOptions.priceRange[1] / 2,
+        max: defaultFilterOptions.priceRange[1],
+      }),
+    domain: () => faker.helpers.arrayElement(defaultFilterOptions.domain),
+    type: () => faker.helpers.arrayElement(defaultFilterOptions.type),
+    date: () => faker.date.between({ from: new Date(), to: twoYearsFromNow }), // 未来两年
+    address: () => faker.location.streetAddress(),
+    introduce: () => faker.lorem.paragraphs(1),
+    comments: manyOf('comment'), // 嵌套评论
+    interestedPeople: manyOf('interestedPerson'), // 嵌套感兴趣的人
   },
+  // 独立的评论模型
+  comment: {
+    id: primaryKey(faker.string.uuid),
+    user: () => faker.person.fullName(),
+    rating: () => faker.number.int({ min: 1, max: 5 }),
+    content: () => faker.lorem.sentence(),
+  },
+
+  // 独立的感兴趣的人模型
+  interestedPerson: {
+    id: primaryKey(faker.string.uuid),
+    name: () => faker.person.fullName(),
+    avatar: () => faker.image.avatar(),
+  },
+  personActivity: {
+    id: primaryKey(faker.string.uuid), // 主键 ID
+    personId: () => faker.string.uuid(), // 个人 ID
+    title: () => `${faker.company.name()}活动`, // 活动标题
+    status: () => faker.helpers.arrayElement(['已完成', '待参加']),
+    date: () => faker.date.between({ from: new Date(), to: twoYearsFromNow }), // 未来两年
+  },
+  // 职业
+  occupation: {
+    id: primaryKey(faker.string.uuid),
+    title: () => faker.person.jobTitle(),
+  },
+
+  friendList: {
+    id: primaryKey(faker.string.uuid),
+    name: () => faker.person.fullName(),
+    avatar: () => faker.image.avatar(),
+  },
+
   ticket: {
-    id: primaryKey(String),
-    activityId: Number,
+    id: primaryKey(faker.string.uuid),
+    activityId: String,
     date: String,
   },
   price: {
-    id: primaryKey(String),
-    activityId: Number,
+    id: primaryKey(faker.string.uuid),
+    activityId: String,
     description: String,
     price: Number,
     originalPrice: Number,
     person: Number,
-  },
-  friendList: {
-    id: primaryKey(String),
-    name: String,
-    avatar: String,
   },
   shareAppIconList: {
     id: primaryKey(String),
@@ -43,119 +234,41 @@ export const db = factory({
   },
 })
 
+const comments = Array.from({ length: 66 })
+  .fill(null)
+  .map(() => db.comment.create())
+const interestedPeople = Array.from({ length: 66 })
+  .fill(null)
+  .map(() => db.interestedPerson.create())
+
+Array.from({ length: 5 })
+  .fill(null)
+  .map(() => db.friendList.create())
+
 // 预生成一些假数据
-for (let i = 1; i <= 10; i++) {
-  db.user.create({
-    id: i,
+for (let i = 0; i < 100; i++) {
+  const priceInfo = generatePrice()
+  const activity = db.activity.create({ ...priceInfo, comments, interestedPeople })
+  
+  // 为每个活动生成票类场次数据
+  const activityTickets = generateTickets(activity.id)
+  activityTickets.forEach((ticket) => {
+    db.ticket.create(ticket)
+  })
+  
+  // 为每个活动生成票档价格数据
+  const activityPrices = generatePrices(activity.id, activity.minPrice, activity.maxPrice, priceInfo.priceType)
+  activityPrices.forEach((price) => {
+    db.price.create(price)
   })
 }
 
-// 活动数据
-const activities = [
-  {
-    id: 1,
-    name: '少年与星空 插画巡展',
-    cover: '/imgs/activity/cover-3.png',
-    star: 4.5,
-    price: '¥98.00-¥118.00',
-    location: '深圳市南山区科技园',
-    date: '2023年5月15日',
-    swiper: '/imgs/activity/sicc-2019.png',
-  },
-  {
-    id: 2,
-    name: 'Universe AI艺术展',
-    cover: '/imgs/activity/cover-4.png',
-    star: 3.5,
-    price: '¥128.00-¥228.00',
-    location: '深圳市福田区会展中心',
-    date: '2023年6月20日',
-    swiper: '/imgs/activity/sicc-2021.png',
-  },
-  {
-    id: 3,
-    name: '2019 SICC服务设计创新大会',
-    cover: '/imgs/activity/cover-1.png',
-    star: 5,
-    price: '免费活动',
-    location: '深圳市腾讯滨海大厦',
-    date: '2019年11月10日',
-    swiper: '/imgs/activity/sicc-2019.png',
-  },
-  {
-    id: 4,
-    name: '2021 SICC服务设计创新大会',
-    cover: '/imgs/activity/cover-2.png',
-    star: 4.5,
-    price: '¥88.00-¥228.00',
-    location: '深圳市腾讯滨海大厦',
-    date: '2021年3月16日',
-    swiper: '/imgs/activity/sicc-2021.png',
-  },
-]
-
-// 创建活动数据
-activities.forEach((activity) => {
-  db.activity.create(activity)
-})
-
-// 票类场次数据
-const tickets = [
-  { id: '1', activityId: 1, date: '2023年5月15日' },
-  { id: '2', activityId: 1, date: '2023年5月16日' },
-  { id: '3', activityId: 1, date: '2023年5月17日' },
-  { id: '4', activityId: 2, date: '2023年6月20日' },
-  { id: '5', activityId: 2, date: '2023年6月21日' },
-  { id: '6', activityId: 3, date: '2019年11月10日' },
-  { id: '7', activityId: 4, date: '2021年3月16日' },
-  { id: '8', activityId: 4, date: '2021年3月17日' },
-]
-
-// 创建票类场次数据
-tickets.forEach((ticket) => {
-  db.ticket.create(ticket)
-})
-
-// 票档价格数据
-const prices = [
-  { id: '1', activityId: 1, description: '早鸟价-单人票', price: 98, originalPrice: 118, person: 1 },
-  { id: '2', activityId: 1, description: '早鸟价-双人票', price: 178, originalPrice: 218, person: 2 },
-  { id: '3', activityId: 1, description: '正价-单人票', price: 118, originalPrice: 118, person: 1 },
-  { id: '4', activityId: 1, description: '正价-双人票', price: 218, originalPrice: 218, person: 2 },
-
-  { id: '5', activityId: 2, description: '早鸟价-单人票', price: 128, originalPrice: 168, person: 1 },
-  { id: '6', activityId: 2, description: '早鸟价-双人票', price: 228, originalPrice: 288, person: 2 },
-  { id: '7', activityId: 2, description: '正价-单人票', price: 168, originalPrice: 168, person: 1 },
-  { id: '8', activityId: 2, description: '正价-双人票', price: 288, originalPrice: 288, person: 2 },
-  
-  { id: '9', activityId: 3, description: '免费活动', price: 0, originalPrice: 0, person: 1 },
-  
-  { id: '10', activityId: 4, description: '早鸟价-单人票', price: 88, originalPrice: 128, person: 1 },
-  { id: '11', activityId: 4, description: '早鸟价-双人票', price: 168, originalPrice: 228, person: 2 },
-  { id: '12', activityId: 4, description: '正价-单人票', price: 128, originalPrice: 128, person: 1 },
-  { id: '13', activityId: 4, description: '正价-双人票', price: 228, originalPrice: 228, person: 2 },
-]
-
-// 创建票档价格数据
-prices.forEach((price) => {
-  db.price.create(price)
-})
-
-function rName() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  const s: number = Math.floor(Math.random() * 10) + 1
-  let res = ''
-  for (let i = 0; i < s; i++)
-    res += chars[Math.floor(Math.random() * chars.length)]
-  return res
+for (let i = 0; i < 20; i++) {
+  db.personActivity.create()
 }
 
-for (let i = 1; i <= 5; i++) {
-  db.friendList.create({
-    id: i.toString(),
-    name: rName(),
-    avatar: `/imgs/avatar/avatar${i !== 1 ? i : ''}.png`,
-  })
+for (let i = 0; i < 20; i++) {
+  db.occupation.create()
 }
 
 const appList = [

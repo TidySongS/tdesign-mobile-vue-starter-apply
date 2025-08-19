@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import type { Filters } from '@/types/interface'
+import { defaultFilterOptions } from '@/constant/filters'
+import { copyFilters } from '@/hooks/useFilters'
+
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -10,39 +14,69 @@ const props = defineProps({
   },
   options: {
     type: Object,
-    default: () => ({
-      fieldOriented: [],
-      activityFormat: [],
-      minPrice: 0,
-      maxPrice: 1000,
-      minDate: new Date(2025, 8, 1),
-      maxDate: new Date(),
-    }),
+    default: defaultFilterOptions,
   },
+  onReset: { type: Function, required: true },
 })
 
-const emit = defineEmits(['update:visible', 'update:filters'])
+const emit = defineEmits(['update:visible', 'update:filters', 'reset'])
 const calendarVisible = ref(false)
 const tmpFilters = ref({ ...props.filters })
 const tmpDateRange = ref(props.filters.dateRange)
 
+watch(
+  () => props.filters,
+  (newFilters) => {
+    tmpFilters.value = { ...newFilters }
+    tmpDateRange.value = newFilters.dateRange.map((d: Date) => new Date(d))
+  },
+  { deep: true, immediate: true },
+)
+
 function resetFilters() {
-  tmpFilters.value = { ...props.filters }
-  tmpDateRange.value = props.filters.dateRange
+  emit('reset')
+}
+
+function resetTmpFilters() {
+  tmpFilters.value = copyFilters(props.filters as Filters)
+  tmpDateRange.value = props.filters.dateRange.map((d: Date) => new Date(d))
 }
 
 function onPopupUpdate(value: boolean) {
   if (value === false)
-    resetFilters()
+    resetTmpFilters()
   emit('update:visible', value)
 }
 
 function closePopup() {
-  resetFilters()
+  resetTmpFilters()
   emit('update:visible', false)
 }
 
-function formatDateRange(dateRange: any) {
+function closeCalendar() {
+  calendarVisible.value = false
+  tmpDateRange.value = tmpFilters.value.dateRange.map((d: Date) => new Date(d))
+}
+
+function handlePriceLabel(value: any) {
+  return value
+}
+
+function handleDateSelect(newDateRange: Date) {
+  tmpDateRange.value = newDateRange
+}
+
+function handleDateConfirm() {
+  tmpFilters.value.dateRange = tmpDateRange.value
+  calendarVisible.value = false
+}
+
+function applyFilters() {
+  emit('update:filters', tmpFilters.value)
+  emit('update:visible', false)
+}
+
+function formatDateRange(dateRange: Date[]) {
   const formatDate = (date: Date) => {
     const year = date.getFullYear()
     const month = date.getMonth() + 1
@@ -57,29 +91,6 @@ function formatDateRange(dateRange: any) {
     return `${startYear}年${startMonth}月${startDay}日-${endMonth}月${endDay}日`
   return `${startYear}年${startMonth}月${startDay}日-${endYear}年${endMonth}月${endDay}日`
 }
-
-function handlePriceLabel(value: any) {
-  return value
-}
-
-function closeCalendar() {
-  tmpDateRange.value = tmpFilters.value.dateRange
-  calendarVisible.value = false
-}
-
-function handleDateSelect(newDateRange: any) {
-  tmpDateRange.value = newDateRange
-}
-
-function handleDateConfirm() {
-  tmpFilters.value.dateRange = tmpDateRange.value
-  calendarVisible.value = false
-}
-
-function applyFilters() {
-  emit('update:filters', tmpFilters.value)
-  emit('update:visible', false)
-}
 </script>
 
 <template>
@@ -89,71 +100,70 @@ function applyFilters() {
       placement="bottom"
       @update:visible="onPopupUpdate"
     >
-      <div class="popup-container popup-wrapper">
-        <div class="popup-title">
-          <span> 全部筛选 </span>
-          <t-icon name="close" size="24" @click="closePopup" />
-        </div>
-
-        <TagFilter
-          v-model:model-value="tmpFilters.fields"
-          title="面向领域"
-          :options="options.fieldOriented"
-        />
-        <TagFilter
-          v-model:model-value="tmpFilters.formats"
-          title="活动形式"
-          :options="options.activityFormat"
-        />
-
-        <t-divider />
-
-        <div>
-          <h4>活动日期</h4>
-          <div class="date-range-container">
-            <span>{{ formatDateRange(tmpFilters.dateRange) }}</span>
+      <div class="popup-container">
+        <div class="filter-popup flex-fill-col">
+          <div class="filter-popup__header flex-center">
+            <span> 全部筛选 </span>
+            <t-icon name="close" size="24" @click="closePopup" />
+          </div>
+          <div class="filter-popup__content">
+            <div class="checktag-group">
+              <TagFilter
+                v-model:model-value="tmpFilters.domain"
+                title="面向领域"
+                :options="options.domain"
+              />
+              <TagFilter
+                v-model:model-value="tmpFilters.type"
+                title="活动形式"
+                :options="options.type"
+              />
+            </div>
+            <div class="filter">
+              <h4>活动日期</h4>
+              <div class="date-range-container flex-center">
+                <span>{{ formatDateRange(tmpFilters.dateRange) }}</span>
+                <t-button
+                  theme="default"
+                  size="extra-small"
+                  shape="round"
+                  @click="calendarVisible = true"
+                >
+                  选择日期
+                </t-button>
+              </div>
+            </div>
+            <div class="filter">
+              <h4>价格范围(元)</h4>
+              <t-slider
+                v-model="tmpFilters.priceRange"
+                range
+                :min="options.priceRange[0]"
+                :max="options.priceRange[1]"
+                :label="handlePriceLabel"
+                show-extreme-value
+              />
+            </div>
+          </div>
+          <div class="filter-popup__footer flex-center">
             <t-button
-              theme="default"
-              size="extra-small"
-              shape="round"
-              @click="calendarVisible = true"
+              theme="light"
+              variant="base"
+              type="reset"
+              size="large"
+              @click="resetFilters"
             >
-              选择日期
+              重置
+            </t-button>
+            <t-button
+              theme="primary"
+              type="submit"
+              size="large"
+              @click="applyFilters"
+            >
+              完成
             </t-button>
           </div>
-        </div>
-
-        <t-divider />
-
-        <div>
-          <h4>价格范围(元)</h4>
-          <t-slider
-            v-model="tmpFilters.priceRange"
-            range
-            :min="options.minPrice"
-            :max="options.maxPrice"
-            :label="handlePriceLabel"
-            show-extreme-value
-          />
-        </div>
-        <div class="popup-button-group">
-          <t-button
-            theme="light"
-            variant="base"
-            type="reset"
-            size="large"
-            @click="resetFilters"
-          >
-            重置
-          </t-button>
-          <t-button
-            theme="primary"
-            type="submit"
-            size="large"
-            @click="applyFilters"
-          >
-            完成
-          </t-button>
         </div>
       </div>
     </t-popup>
@@ -161,18 +171,19 @@ function applyFilters() {
       v-model="calendarVisible"
       placement="bottom"
       :overlay-props="{ backgroundColor: 'transparent' }"
+      @close="closeCalendar"
     >
       <div class="popup-container calendar-container">
         <t-calendar
           :use-popup="false"
-          :min-date="options.minDate"
-          :max-date="options.maxDate"
+          :min-date="options.dateRange[0]"
+          :max-date="options.dateRange[1]"
           :value="tmpDateRange"
           type="range"
           @select="handleDateSelect"
         >
           <template #title>
-            <div class="calendar-title-wrapper">
+            <div class="calendar-title-container flex-center">
               <t-icon name="chevron-left" size="24" @click="closeCalendar" />
               <div class="calendar-title">
                 选择日期
@@ -181,7 +192,7 @@ function applyFilters() {
             </div>
           </template>
         </t-calendar>
-        <div class="confirm-date-btn">
+        <div class="confirm-date-btn flex-center">
           <t-button theme="primary" size="large" @click="handleDateConfirm">
             确定日期
           </t-button>
@@ -194,61 +205,65 @@ function applyFilters() {
 <style scoped lang="less">
 @import "@/style/home.less";
 
-.popup-wrapper {
-  .p-16();
+.popup-container {
+  .flex-col();
+  padding: 16px 0;
+  box-sizing: border-box;
+  height: min(100vh - 16px, 656px);
+}
 
-  .popup-title {
-    .flex-center();
-    .font-templet(600, 18px, 26px);
-    width: 100%;
+.filter-popup {
+  padding: 0 16px;
+  overflow: hidden;
+  &__header {
+    .font(18px, 600);
     height: 26px;
     margin-bottom: 14px;
-
     span {
-      padding-left: 24px;
-      flex: 1;
+      margin-left: 24px;
       text-align: center;
+      flex: 1;
     }
   }
 
-  h4 {
-    .font-templet(600, 14px, 22px);
-    margin: 0;
-  }
-
-  .t-divider {
-    margin: 24px 0;
-  }
-
-  .date-range-container {
-    .flex-center();
-    .font-templet(400, 16px, 24px);
-    margin-top: 8px;
-    justify-content: space-between;
-  }
-
-  .t-slider {
-    .font-templet();
-    padding-bottom: 24px;
-
-    :deep(.t-slider__range-extreme) {
-      .font-templet(400, 16px, 24px);
+  &__content {
+    flex-grow: 1;
+    height: auto;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
     }
+    scrollbar-width: none;
   }
 
-  .popup-button-group {
-    .flex-center();
-    margin-top: 16px;
-    width: 100%;
+  &__footer {
     gap: 8px;
-
+    height: 48px;
+    margin-top: 16px;
+    background: var(--bg-color-page);
     button {
-      width: 50%;
+      flex: 1;
     }
   }
 }
 
+.filter {
+  padding: 24px 0;
+  height: auto;
+  box-sizing: border-box;
+  border-top: 0.5px solid var(--gray-color-3);
+}
+
+.date-range-container {
+  .font(16px, 400);
+  margin-top: 8px;
+  justify-content: space-between;
+}
+
 .calendar-container {
+  position: relative;
+  padding-bottom: 80px;
   :deep(.t-calendar__title) {
     padding-top: 0;
   }
@@ -261,26 +276,28 @@ function applyFilters() {
     }
   }
 
-  .calendar-title-wrapper {
-    .flex-center();
-    width: 100%;
-
-    .calendar-title {
-      margin: auto;
-    }
-  }
-
   :deep(.t-calendar__months) {
-    height: 458px;
+    height: 472px;
   }
+}
 
-  .confirm-date-btn {
-    .flex-center();
-    padding: 16px;
+.calendar-title-container {
+  width: 100%;
 
-    .t-button {
-      flex: 1;
-    }
+  .calendar-title {
+    margin: auto;
+  }
+}
+
+.confirm-date-btn {
+  bottom: 0;
+  width: 100%;
+  z-index: 9999;
+  position: absolute;
+  background: var(--bg-color-page);
+  .t-button {
+    margin: 16px;
+    flex: 1;
   }
 }
 </style>

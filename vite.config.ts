@@ -42,10 +42,10 @@ export default defineConfig({
     open: '/', // 启动时自动打开首页
     // https: false,
     proxy: {
-      '/api/tencent/map': {
+      '/api/tencent-map': {
         target: 'https://apis.map.qq.com',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api\/tencent\/map/, ''),
+        rewrite: path => path.replace(/^\/api\/tencent-map/, ''),
       },
     },
   },
