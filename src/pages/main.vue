@@ -15,6 +15,7 @@ interface TabbarItem {
   icon: string
   showTitle?: boolean | undefined
   showLocation?: boolean | undefined
+  bgColor?: string | undefined
 }
 
 const tabbarList: TabbarItem[] = [
@@ -29,6 +30,7 @@ const tabbarList: TabbarItem[] = [
     name: '/main/user',
     icon: 'user',
     showTitle: true,
+    bgColor: 'var(--bg-color-secondarypage)',
   },
 ]
 
@@ -63,6 +65,9 @@ function handleTabbarChange(name: string | number) {
     <t-navbar
       :title="currentInfo.showTitle ? currentInfo.label : ''"
       class="header-navbar"
+      :style="{
+        '--navbar-bg-color': currentInfo.bgColor,
+      }"
     >
       <template #left>
         <div
@@ -125,9 +130,10 @@ function handleTabbarChange(name: string | number) {
   z-index: 99;
   .t-navbar__content {
     background-image: url("/imgs/head-bg.png");
-    background-position: top center;
+    background-position: left var(--status-bar-height);
     background-repeat: no-repeat;
     background-size: cover;
+    background-color: var(--navbar-bg-color);
   }
   .t-navbar__left {
     margin-left: 16px;
