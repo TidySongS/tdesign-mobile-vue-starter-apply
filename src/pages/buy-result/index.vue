@@ -2,9 +2,7 @@
     import {
         ShareIcon
     } from 'tdesign-icons-vue-next';
-    import {
-        ref
-    } from 'vue';
+
     const route = useRoute()
     const router = useRouter()
 
