@@ -24,6 +24,7 @@ const tabbarList: TabbarItem[] = [
     name: '/main/',
     icon: 'home',
     showLocation: true,
+    bgColor: 'var(--bg-color-page)',
   },
   {
     label: '我的',
