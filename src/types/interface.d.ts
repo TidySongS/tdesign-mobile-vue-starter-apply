@@ -16,3 +16,22 @@ export interface Activity {
   domain: string[]
   type: string
 }
+
+export interface Person {
+  id: string
+  name: string
+  birthday?: string
+  phone?: string
+  idCard?: string
+  email?: string
+  profession?: string
+  isDefault: boolean
+}
+
+export interface UserInfo {
+  locationName: string
+  persons: Person[]
+  selectedPersonIds: string[]
+  addPerson: (person: Omit<Person, 'id'>) => void
+  getDefaultPerson: () => Person | undefined
+}
