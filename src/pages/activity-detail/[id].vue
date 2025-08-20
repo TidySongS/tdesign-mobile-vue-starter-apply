@@ -1,14 +1,14 @@
 <script setup lang="ts">
-    const route = useRoute()
-    const router = useRouter()
-    const activityId = computed(() => (route.params as {
-        id: string
-    }).id)
+const route = useRoute()
+const router = useRouter()
+const activityId = computed(() => (route.params as {
+  id: string
+}).id)
 
-    // 处理购买按钮点击
-    function handleBuyClick() {
-        router.push(`/buy-confirm?eventId=${activityId.value}`)
-    }
+// 处理购买按钮点击
+function handleBuyClick() {
+  router.push(`/buy-confirm?eventId=${activityId.value}`)
+}
 </script>
 
 <template>
@@ -36,7 +36,7 @@
         background-color: #fff;
         padding-bottom: 80px;
     }
-    
+
     .bottom-action {
         position: fixed;
         bottom: 0;

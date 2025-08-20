@@ -126,7 +126,7 @@ export const handlers = [
     if (!id) {
       return new HttpResponse(null, { status: 400 })
     }
-    
+
     const activity = db.activity.findFirst({
       where: {
         id: {
@@ -147,7 +147,7 @@ export const handlers = [
     if (!id) {
       return new HttpResponse(null, { status: 400 })
     }
-    
+
     const tickets = db.ticket.findMany({
       where: {
         activityId: {
@@ -164,7 +164,7 @@ export const handlers = [
     if (!id) {
       return new HttpResponse(null, { status: 400 })
     }
-    
+
     const prices = db.price.findMany({
       where: {
         activityId: {

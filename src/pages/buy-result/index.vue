@@ -1,123 +1,125 @@
 <script setup lang="ts">
-    import {
-        ShareIcon
-    } from 'tdesign-icons-vue-next';
+import {
+  ShareIcon,
+} from 'tdesign-icons-vue-next'
 
-    const route = useRoute()
-    const router = useRouter()
+const route = useRoute()
+const router = useRouter()
 
-    const share = () => h(ShareIcon, {
-        size: '24px'
-    });
+function share() {
+  return h(ShareIcon, {
+    size: '24px',
+  })
+}
 
-    // 控制分享弹窗的显示/隐藏
-    const isSharePopupVisible = ref(false);
+// 控制分享弹窗的显示/隐藏
+const isSharePopupVisible = ref(false)
 
-    // 活动ID
-    const activityId = ref(null)
-        // 活动信息
-    const activity = ref({
-            name: '',
-            date: '',
-            location: '',
-            cover: ''
-        })
-        // 选中的人员
-    const selectedPerson = ref({
-        name: '蔡宣轩',
-        age: '29岁',
-        occupation: '设计师/艺术从业者'
-    })
+// 活动ID
+const activityId = ref(null)
+// 活动信息
+const activity = ref({
+  name: '',
+  date: '',
+  location: '',
+  cover: '',
+})
+// 选中的人员
+const selectedPerson = ref({
+  name: '蔡宣轩',
+  age: '29岁',
+  occupation: '设计师/艺术从业者',
+})
 
-    const frendList = reactive([])
-    const appList = reactive([])
-        // 加载状态
-    const loading = ref(true)
+const frendList = reactive([])
+const appList = reactive([])
+// 加载状态
+const loading = ref(true)
 
-    // 获取活动信息
-    async function fetchActivityData() {
-        // 从路由参数或state中获取活动ID
-        const id = route.query.eventId || (history.state && history.state.orderInfo && history.state.orderInfo.activityId)
-        console.log(id)
-        if (!id) {
-            loading.value = false
-            return
-        }
+// 获取活动信息
+async function fetchActivityData() {
+  // 从路由参数或state中获取活动ID
+  const id = route.query.eventId || (history.state && history.state.orderInfo && history.state.orderInfo.activityId)
+  console.log(id)
+  if (!id) {
+    loading.value = false
+    return
+  }
 
-        activityId.value = id
+  activityId.value = id
 
-        try {
-            // 获取活动详情
-            const response = await fetch(`/api/activities/${id}`)
-            if (!response.ok) {
-                throw new Error('Failed to fetch activity')
-            }
-            const data = await response.json()
-
-            // 设置活动信息
-            activity.value = {
-                name: data.name,
-                date: data.date,
-                location: data.location,
-                cover: data.swiper,
-            }
-
-            loading.value = false
-        } catch (err) {
-            console.error('Error fetching activity data:', err)
-            loading.value = false
-        }
+  try {
+    // 获取活动详情
+    const response = await fetch(`/api/activities/${id}`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch activity')
     }
-    //获取朋友\app信息
-    async function fetchFrendandAppdata() {
-        try {
-            const flresponse = await fetch('/api/share/friends')
-            if (!flresponse.ok)
-                throw new Error('Failed to fetch friemdList')
+    const data = await response.json()
 
-            const fldata = await flresponse.json()
-            frendList.length = 0
-            frendList.push(...fldata)
-
-            const apresponse = await fetch('api/share/app')
-            if (!apresponse.ok)
-                throw new Error('Failed to fetch appList')
-
-            const apdata = await apresponse.json()
-            appList.length = 0
-            appList.push(...apdata)
-            loading.value = false
-        } catch (err) {
-            console.error('Error fetching data:', err)
-                //error.value = true
-            loading.value = false
-        }
+    // 设置活动信息
+    activity.value = {
+      name: data.title,
+      date: data.date,
+      address: data.address,
+      cover: data.swiper,
     }
 
-    // 分享给朋友
-    function shareWithFriends() {
-        isSharePopupVisible.value = true;
-        console.log('打开分享弹窗');
-    }
+    loading.value = false
+  }
+  catch (err) {
+    console.error('Error fetching activity data:', err)
+    loading.value = false
+  }
+}
+// 获取朋友\app信息
+async function fetchFrendandAppdata() {
+  try {
+    const flresponse = await fetch('/api/share/friends')
+    if (!flresponse.ok)
+      throw new Error('Failed to fetch friemdList')
 
-    // 关闭分享弹窗
-    function closeSharePopup() {
-        isSharePopupVisible.value = false;
-        console.log('关闭分享弹窗');
-    }
+    const fldata = await flresponse.json()
+    frendList.length = 0
+    frendList.push(...fldata)
 
-    // 去查看
-    function goToView() {
-        router.push(`/activity-detail/${activityId.value}`)
-    }
+    const apresponse = await fetch('api/share/app')
+    if (!apresponse.ok)
+      throw new Error('Failed to fetch appList')
 
-    // 组件挂载时获取数据
-    onMounted(() => {
-        fetchActivityData()
-        fetchFrendandAppdata()
-    })
+    const apdata = await apresponse.json()
+    appList.length = 0
+    appList.push(...apdata)
+    loading.value = false
+  }
+  catch (err) {
+    console.error('Error fetching data:', err)
+    // error.value = true
+    loading.value = false
+  }
+}
 
-    const imgUrl = 'https://tdesign.gtimg.com/mobile/demos/example1.png';
+// 分享给朋友
+function shareWithFriends() {
+  isSharePopupVisible.value = true
+  console.log('打开分享弹窗')
+}
+
+// 关闭分享弹窗
+function closeSharePopup() {
+  isSharePopupVisible.value = false
+  console.log('关闭分享弹窗')
+}
+
+// 去查看
+function goToView() {
+  router.push(`/activity-detail/${activityId.value}`)
+}
+
+// 组件挂载时获取数据
+onMounted(() => {
+  fetchActivityData()
+  fetchFrendandAppdata()
+})
 </script>
 
 <template>
@@ -131,13 +133,17 @@
         <div class="status-icon">
           <t-icon name="check-circle" size="80px" color="#2BA471" />
         </div>
-        <h2 class="status-title">购买成功</h2>
+        <h2 class="status-title">
+          购买成功
+        </h2>
       </div>
 
       <!-- 活动信息卡片 -->
       <div class="activity-card">
-        <img :src="activity.cover || '/imgs/activity/sicc-2021.png'" alt="活动封面" class="activity-cover" />
-        <h3 class="activity-name">{{ activity.name }}</h3>
+        <img :src="activity.cover || '/imgs/activity/sicc-2021.png'" alt="活动封面" class="activity-cover">
+        <h3 class="activity-name">
+          {{ activity.name }}
+        </h3>
         <div class="activity-details">
           <div class="detail-item">
             <t-icon name="time" size="16" />
@@ -145,20 +151,26 @@
           </div>
           <div class="detail-item">
             <t-icon name="location" size="16" />
-            <span>{{ activity.location }}</span>
+            <span>{{ activity.address }}</span>
           </div>
         </div>
       </div>
 
       <!-- 报名人员 -->
-      <h3 class="section-title">报名人员</h3>
+      <h3 class="section-title">
+        报名人员
+      </h3>
       <div class="person-info">
         <div class="person-avatar">
-          <img src="/imgs/head-bg.png" alt="头像" />
+          <img src="/imgs/head-bg.png" alt="头像">
         </div>
         <div class="person-details">
-          <div class="person-name">{{ selectedPerson.name }}</div>
-          <div class="person-desc">{{ selectedPerson.age }} {{ selectedPerson.occupation }}</div>
+          <div class="person-name">
+            {{ selectedPerson.name }}
+          </div>
+          <div class="person-desc">
+            {{ selectedPerson.age }} {{ selectedPerson.occupation }}
+          </div>
         </div>
       </div>
 
@@ -197,49 +209,56 @@
   >
     <div class="share-popup">
       <div class="share-section">
-        <h3 class="share-title">分享给朋友</h3>
+        <h3 class="share-title">
+          分享给朋友
+        </h3>
         <t-grid :column="0" class="grid-scroll">
           <t-grid-item v-for="frend in frendList" :key="frend.id" :text="frend.name">
             <template #image>
               <t-avatar :image="frend.avatar" />
             </template>
-</t-grid-item>
-</t-grid>
-</div>
+          </t-grid-item>
+        </t-grid>
+      </div>
 
-<div class="share-section">
-    <h3 class="share-title">分享到社媒</h3>
-    <t-grid :column="0" class="grid-scroll">
-        <t-grid-item v-for="app in appList" :key="app.id" :text="app.appname" :image="app.icon" />
-    </t-grid>
-</div>
-<div class="share-cancel">
-    <t-button block size="large" variant="text" @click="closeSharePopup">
-        取消
-    </t-button>
-</div>
-</div>
-</t-popup>
+      <div class="share-section">
+        <h3 class="share-title">
+          分享到社媒
+        </h3>
+        <t-grid :column="0" class="grid-scroll">
+          <t-grid-item v-for="app in appList" :key="app.id" :text="app.appname" :image="app.icon" />
+        </t-grid>
+      </div>
+      <div class="share-cancel">
+        <t-button block size="large" variant="text" @click="closeSharePopup">
+          取消
+        </t-button>
+      </div>
+    </div>
+  </t-popup>
 </template>
 
 <style lang="less" scoped>
     .tnavbar {
         --td-navbar-bg-color: #f5f6f7;
     }
-    
+
     .buy-result-page {
-        min-height: 100vh;
+        min-height: calc(100dvh - 47px);
+        /* 减去navbar高度 */
         background-color: #F5F6F7;
-        margin-top: 47px;
+        margin-top: 0;
+        box-sizing: border-box;
     }
-    
+
     .page-content {
-        padding: 24px 16px 16px;
+        padding: 16px 16px 16px;
+        box-sizing: border-box;
     }
-    
+
     .result-status {
         text-align: center;
-        margin-top: 24px;
+        margin-top: 40px;
         margin-bottom: 24px;
         .status-icon {
             margin-bottom: 16px;
@@ -249,13 +268,12 @@
             color: #000000e6;
             font-size: 20px;
             font-weight: 600;
-            font-family: "PingFang SC";
             text-align: center;
             line-height: 28px;
             margin: 0;
         }
     }
-    
+
     .activity-card {
         background: white;
         border-radius: 12px;
@@ -296,14 +314,14 @@
             }
         }
     }
-    
+
     .section-title {
         font-size: 16px;
         font-weight: 600;
         color: #000;
         margin: 24px 0 16px 0;
     }
-    
+
     .person-info {
         background: white;
         border-radius: 8px;
@@ -340,7 +358,7 @@
             }
         }
     }
-    
+
     .action-buttons {
         display: flex;
         flex-direction: row;
@@ -348,7 +366,7 @@
         margin-top: 38px;
     }
     /* 分享弹窗样式 */
-    
+
     .share-popup {
         background-color: white;
         border-top-left-radius: 16px;
