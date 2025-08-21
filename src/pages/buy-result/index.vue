@@ -1,123 +1,125 @@
 <script setup lang="ts">
-    import {
-        ShareIcon,
-    } from 'tdesign-icons-vue-next'
+import {
+  ShareIcon,
+} from 'tdesign-icons-vue-next'
 
-    const route = useRoute()
-    const router = useRouter()
+const route = useRoute()
+const router = useRouter()
 
-    function share() {
-        return h(ShareIcon, {
-            size: '24px',
-        })
+function share() {
+  return h(ShareIcon, {
+    size: '24px',
+  })
+}
+
+// 控制分享弹窗的显示/隐藏
+const isSharePopupVisible = ref(false)
+
+// 活动ID
+const activityId = ref(null)
+// 活动信息
+const activity = ref({
+  name: '',
+  date: '',
+  location: '',
+  cover: '',
+})
+// 选中的人员
+const selectedPerson = ref({
+  name: '蔡宣轩',
+  age: '29岁',
+  occupation: '设计师/艺术从业者',
+})
+
+const frendList = reactive([])
+const appList = reactive([])
+// 加载状态
+const loading = ref(true)
+
+// 获取活动信息
+async function fetchActivityData() {
+  // 从路由参数或state中获取活动ID
+  const id = route.query.eventId || (history.state && history.state.orderInfo && history.state.orderInfo.activityId)
+  console.log(id)
+  if (!id) {
+    loading.value = false
+    return
+  }
+
+  activityId.value = id
+
+  try {
+    // 获取活动详情
+    const response = await fetch(`/api/activities/${id}`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch activity')
+    }
+    const data = await response.json()
+
+    // 设置活动信息
+    activity.value = {
+      name: data.title,
+      date: data.date,
+      address: data.address,
+      cover: data.swiper,
     }
 
-    // 控制分享弹窗的显示/隐藏
-    const isSharePopupVisible = ref(false)
+    loading.value = false
+  }
+  catch (err) {
+    console.error('Error fetching activity data:', err)
+    loading.value = false
+  }
+}
+// 获取朋友\app信息
+async function fetchFrendandAppdata() {
+  try {
+    const flresponse = await fetch('/api/share/friends')
+    if (!flresponse.ok)
+      throw new Error('Failed to fetch friemdList')
 
-    // 活动ID
-    const activityId = ref(null)
-        // 活动信息
-    const activity = ref({
-            name: '',
-            date: '',
-            location: '',
-            cover: '',
-        })
-        // 选中的人员
-    const selectedPerson = ref({
-        name: '蔡宣轩',
-        age: '29岁',
-        occupation: '设计师/艺术从业者',
-    })
+    const fldata = await flresponse.json()
+    frendList.length = 0
+    frendList.push(...fldata)
 
-    const frendList = reactive([])
-    const appList = reactive([])
-        // 加载状态
-    const loading = ref(true)
+    const apresponse = await fetch('api/share/app')
+    if (!apresponse.ok)
+      throw new Error('Failed to fetch appList')
 
-    // 获取活动信息
-    async function fetchActivityData() {
-        // 从路由参数或state中获取活动ID
-        const id = route.query.eventId || (history.state && history.state.orderInfo && history.state.orderInfo.activityId)
-        console.log(id)
-        if (!id) {
-            loading.value = false
-            return
-        }
+    const apdata = await apresponse.json()
+    appList.length = 0
+    appList.push(...apdata)
+    loading.value = false
+  }
+  catch (err) {
+    console.error('Error fetching data:', err)
+    // error.value = true
+    loading.value = false
+  }
+}
 
-        activityId.value = id
+// 分享给朋友
+function shareWithFriends() {
+  isSharePopupVisible.value = true
+  console.log('打开分享弹窗')
+}
 
-        try {
-            // 获取活动详情
-            const response = await fetch(`/api/activities/${id}`)
-            if (!response.ok) {
-                throw new Error('Failed to fetch activity')
-            }
-            const data = await response.json()
+// 关闭分享弹窗
+function closeSharePopup() {
+  isSharePopupVisible.value = false
+  console.log('关闭分享弹窗')
+}
 
-            // 设置活动信息
-            activity.value = {
-                name: data.title,
-                date: data.date,
-                address: data.address,
-                cover: data.swiper,
-            }
+// 去查看
+function goToView() {
+  router.push(`/activity-detail/${activityId.value}`)
+}
 
-            loading.value = false
-        } catch (err) {
-            console.error('Error fetching activity data:', err)
-            loading.value = false
-        }
-    }
-    // 获取朋友\app信息
-    async function fetchFrendandAppdata() {
-        try {
-            const flresponse = await fetch('/api/share/friends')
-            if (!flresponse.ok)
-                throw new Error('Failed to fetch friemdList')
-
-            const fldata = await flresponse.json()
-            frendList.length = 0
-            frendList.push(...fldata)
-
-            const apresponse = await fetch('api/share/app')
-            if (!apresponse.ok)
-                throw new Error('Failed to fetch appList')
-
-            const apdata = await apresponse.json()
-            appList.length = 0
-            appList.push(...apdata)
-            loading.value = false
-        } catch (err) {
-            console.error('Error fetching data:', err)
-                // error.value = true
-            loading.value = false
-        }
-    }
-
-    // 分享给朋友
-    function shareWithFriends() {
-        isSharePopupVisible.value = true
-        console.log('打开分享弹窗')
-    }
-
-    // 关闭分享弹窗
-    function closeSharePopup() {
-        isSharePopupVisible.value = false
-        console.log('关闭分享弹窗')
-    }
-
-    // 去查看
-    function goToView() {
-        router.push(`/activity-detail/${activityId.value}`)
-    }
-
-    // 组件挂载时获取数据
-    onMounted(() => {
-        fetchActivityData()
-        fetchFrendandAppdata()
-    })
+// 组件挂载时获取数据
+onMounted(() => {
+  fetchActivityData()
+  fetchFrendandAppdata()
+})
 </script>
 
 <template>
@@ -215,32 +217,32 @@
             <template #image>
               <t-avatar :image="frend.avatar" />
             </template>
-</t-grid-item>
-</t-grid>
-</div>
+          </t-grid-item>
+        </t-grid>
+      </div>
 
-<div class="share-section">
-    <h3 class="share-title">
-        分享到社媒
-    </h3>
-    <t-grid :column="0" class="grid-scroll">
-        <t-grid-item v-for="app in appList" :key="app.id" :text="app.appname" :image="app.icon" />
-    </t-grid>
-</div>
-<div class="share-cancel">
-    <t-button block size="large" variant="text" @click="closeSharePopup">
-        取消
-    </t-button>
-</div>
-</div>
-</t-popup>
+      <div class="share-section">
+        <h3 class="share-title">
+          分享到社媒
+        </h3>
+        <t-grid :column="0" class="grid-scroll">
+          <t-grid-item v-for="app in appList" :key="app.id" :text="app.appname" :image="app.icon" />
+        </t-grid>
+      </div>
+      <div class="share-cancel">
+        <t-button block size="large" variant="text" @click="closeSharePopup">
+          取消
+        </t-button>
+      </div>
+    </div>
+  </t-popup>
 </template>
 
 <style lang="less" scoped>
     .tnavbar {
         --td-navbar-bg-color: #f5f6f7;
     }
-    
+
     .buy-result-page {
         min-height: calc(100dvh - 47px);
         /* 减去navbar高度 */
@@ -248,12 +250,12 @@
         /* padding-top: 10px; */
         box-sizing: border-box;
     }
-    
+
     .page-content {
         padding: 16px 16px 16px;
         box-sizing: border-box;
     }
-    
+
     .result-status {
         text-align: center;
         margin-top: 40px;
@@ -271,7 +273,7 @@
             margin: 0;
         }
     }
-    
+
     .activity-card {
         background: white;
         border-radius: 12px;
@@ -313,14 +315,14 @@
             }
         }
     }
-    
+
     .section-title {
         font-size: 16px;
         font-weight: 600;
         color: #000;
         margin: 24px 0 16px 0;
     }
-    
+
     .person-info {
         background: white;
         border-radius: 8px;
@@ -357,7 +359,7 @@
             }
         }
     }
-    
+
     .action-buttons {
         display: flex;
         flex-direction: row;
@@ -366,7 +368,7 @@
         margin-bottom: 24px;
     }
     /* 分享弹窗样式 */
-    
+
     .share-popup {
         background-color: white;
         border-top-left-radius: 16px;
