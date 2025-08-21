@@ -242,7 +242,7 @@
     }
     
     .buy-result-page {
-        min-height: calc(100dvh - 47px);
+        min-height: calc(100vh);
         /* 减去navbar高度 */
         background-color: #F5F6F7;
         /* padding-top: 10px; */
