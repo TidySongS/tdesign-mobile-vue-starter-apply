@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import 'tdesign-mobile-vue/es/style/index.css'
 import '@/style/main.less'
+
 async function enableMocking() {
   if (import.meta.env.DEV) {
     const { worker } = await import('./mocks/browser')

@@ -43,6 +43,78 @@ export const swiperList = [
   },
 ]
 
+// 票类场次数据
+export const tickets = [
+  { id: '1', activityId: 1, date: '2023年5月15日' },
+  { id: '2', activityId: 1, date: '2023年5月16日' },
+  { id: '3', activityId: 1, date: '2023年5月17日' },
+  { id: '4', activityId: 2, date: '2023年6月20日' },
+  { id: '5', activityId: 2, date: '2023年6月21日' },
+  { id: '6', activityId: 3, date: '2019年11月10日' },
+  { id: '7', activityId: 4, date: '2021年3月16日' },
+  { id: '8', activityId: 4, date: '2021年3月17日' },
+  { id: '9', activityId: 5, date: '2023年7月20日' },
+  { id: '10', activityId: 5, date: '2023年7月21日' },
+  { id: '11', activityId: 6, date: '2023年6月1日' },
+  { id: '12', activityId: 6, date: '2023年6月2日' },
+  { id: '13', activityId: 7, date: '2023年5月12日' },
+  { id: '14', activityId: 7, date: '2023年5月13日' },
+  { id: '15', activityId: 8, date: '2023年11月10日' },
+  { id: '16', activityId: 9, date: '2023年8月16日' },
+  { id: '17', activityId: 10, date: '2023年4月16日' },
+  { id: '18', activityId: 11, date: '2023年4月22日' },
+  { id: '19', activityId: 12, date: '2023年3月16日' },
+]
+
+// 票档价格数据
+export const prices = [
+  { id: '1', activityId: 1, description: '早鸟价-单人票', price: 98, originalPrice: 118, person: 1 },
+  { id: '2', activityId: 1, description: '早鸟价-双人票', price: 178, originalPrice: 218, person: 2 },
+  { id: '3', activityId: 1, description: '正价-单人票', price: 118, originalPrice: 118, person: 1 },
+  { id: '4', activityId: 1, description: '正价-双人票', price: 218, originalPrice: 218, person: 2 },
+
+  { id: '5', activityId: 2, description: '早鸟价-单人票', price: 128, originalPrice: 168, person: 1 },
+  { id: '6', activityId: 2, description: '早鸟价-双人票', price: 228, originalPrice: 288, person: 2 },
+  { id: '7', activityId: 2, description: '正价-单人票', price: 168, originalPrice: 168, person: 1 },
+  { id: '8', activityId: 2, description: '正价-双人票', price: 288, originalPrice: 288, person: 2 },
+
+  { id: '9', activityId: 3, description: '早鸟价-单人票', price: 88, originalPrice: 118, person: 1 },
+  { id: '10', activityId: 3, description: '早鸟价-双人票', price: 168, originalPrice: 218, person: 2 },
+  { id: '11', activityId: 3, description: '正价-单人票', price: 118, originalPrice: 118, person: 1 },
+  { id: '12', activityId: 3, description: '正价-双人票', price: 218, originalPrice: 218, person: 2 },
+
+  { id: '13', activityId: 4, description: '早鸟价-单人票', price: 108, originalPrice: 128, person: 1 },
+  { id: '14', activityId: 4, description: '早鸟价-双人票', price: 208, originalPrice: 228, person: 2 },
+  { id: '15', activityId: 4, description: '正价-单人票', price: 128, originalPrice: 128, person: 1 },
+  { id: '16', activityId: 4, description: '正价-双人票', price: 228, originalPrice: 228, person: 2 },
+
+  { id: '17', activityId: 5, description: '早鸟价-单人票', price: 88, originalPrice: 118, person: 1 },
+  { id: '18', activityId: 5, description: '早鸟价-双人票', price: 168, originalPrice: 218, person: 2 },
+  { id: '19', activityId: 5, description: '正价-单人票', price: 118, originalPrice: 118, person: 1 },
+  { id: '20', activityId: 5, description: '正价-双人票', price: 218, originalPrice: 218, person: 2 },
+
+  { id: '21', activityId: 6, description: '免费活动', price: 0, originalPrice: 0, person: 1 },
+
+  { id: '22', activityId: 7, description: '早鸟价-单人票', price: 78, originalPrice: 128, person: 1 },
+  { id: '23', activityId: 7, description: '早鸟价-双人票', price: 158, originalPrice: 228, person: 2 },
+  { id: '24', activityId: 7, description: '正价-单人票', price: 128, originalPrice: 128, person: 1 },
+  { id: '25', activityId: 7, description: '正价-双人票', price: 228, originalPrice: 228, person: 2 },
+
+  { id: '26', activityId: 8, description: '早鸟价-单人票', price: 88, originalPrice: 118, person: 1 },
+  { id: '27', activityId: 8, description: '正价-单人票', price: 118, originalPrice: 118, person: 1 },
+
+  { id: '28', activityId: 9, description: '早鸟价-单人票', price: 108, originalPrice: 128, person: 1 },
+  { id: '29', activityId: 9, description: '正价-单人票', price: 128, originalPrice: 128, person: 1 },
+
+  { id: '30', activityId: 10, description: '免费活动', price: 0, originalPrice: 0, person: 1 },
+
+  { id: '31', activityId: 11, description: '早鸟价-单人票', price: 90, originalPrice: 100, person: 1 },
+  { id: '32', activityId: 11, description: '正价-单人票', price: 100, originalPrice: 100, person: 1 },
+
+  { id: '33', activityId: 12, description: '早鸟价-单人票', price: 300, originalPrice: 500, person: 1 },
+  { id: '34', activityId: 12, description: '正价-单人票', price: 500, originalPrice: 500, person: 1 },
+]
+
 export const activityList = [
   {
     id: 1,
