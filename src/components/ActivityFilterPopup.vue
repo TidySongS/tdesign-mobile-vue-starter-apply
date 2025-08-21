@@ -208,7 +208,6 @@ function formatDateRange(dateRange: Date[]) {
 .popup-container {
   .flex-col();
   padding: 16px 0;
-  box-sizing: border-box;
   height: min(100vh - 16px, 656px);
 }
 
@@ -251,8 +250,15 @@ function formatDateRange(dateRange: Date[]) {
 .filter {
   padding: 24px 0;
   height: auto;
-  box-sizing: border-box;
   border-top: 0.5px solid var(--gray-color-3);
+}
+
+.t-slider {
+  padding-bottom: 24px;
+  :deep(.t-slider__range-extreme) {
+    .font(16px, 400);
+    margin: 0;
+  }
 }
 
 .date-range-container {
@@ -266,6 +272,7 @@ function formatDateRange(dateRange: Date[]) {
   padding-bottom: 80px;
   :deep(.t-calendar__title) {
     padding-top: 0;
+    height: 42px;
   }
 
   :deep(.t-calendar__days) {

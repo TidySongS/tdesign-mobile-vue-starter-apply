@@ -241,7 +241,7 @@ onActivated(() => {
             @click="filterPopupVisible = true"
           >
             <t-icon name="filter" size="16" />
-            <span>筛选</span>
+            <span style="margin-left: 2px;">筛选</span>
           </div>
         </div>
       </t-sticky>
@@ -397,7 +397,6 @@ h2 {
   .filter-container {
     flex: 1;
     position: relative;
-    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;

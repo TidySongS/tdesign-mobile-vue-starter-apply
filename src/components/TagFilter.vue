@@ -62,7 +62,6 @@ h4 {
     height: 40px;
     font-size: 14px;
     line-height: 22px;
-    box-sizing: border-box;
     border-radius: 100px;
     display: flex;
     align-items: center;

@@ -217,8 +217,8 @@ header {
 }
 
 .location-container {
-  height: 24px;
-  width: calc(100% - 32px);
+  height: 56px;
+  width: 100%;
   position: fixed;
   top: var(--navbar-height);
   background: var(--bg-color-page);
@@ -244,14 +244,13 @@ header {
 
 .hot-city {
   &__header {
-    height: 22px;
+    height: 30px;
     padding: 4px 16px;
     background: var(--gray-color-1);
   }
   &__content {
     .font(16px, 400);
     height: 56px;
-    box-sizing: border-box;
     margin-left: 16px;
     padding: 16px 16px 16px 0;
     justify-content: space-between;
