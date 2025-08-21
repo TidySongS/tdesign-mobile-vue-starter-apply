@@ -405,7 +405,7 @@ onMounted(() => {
     }
 
     .page-content {
-        padding: 16px;
+        padding: 16px 0 0 0;
         margin-top: 30px;
         box-sizing: border-box;
     }
