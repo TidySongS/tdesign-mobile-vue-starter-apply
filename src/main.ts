@@ -5,7 +5,7 @@ import 'tdesign-mobile-vue/es/style/index.css'
 import '@/style/main.less'
 
 async function enableMocking() {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.VITE_APP_ENABLE_MOCKS === 'true') {
     const { worker } = await import('./mocks/browser')
     return worker.start()
   }
@@ -13,16 +13,6 @@ async function enableMocking() {
 
 const app = createApp(App)
 app.use(router)
-
-// (async () => {
-//   if (import.meta.env.MODE === 'mock') {
-//     await enableMocking()
-//     app.mount('#app')
-//   }
-//   else {
-//     app.mount('#app')
-//   }
-// })()
 
 enableMocking().then(() => {
   app.mount('#app')
