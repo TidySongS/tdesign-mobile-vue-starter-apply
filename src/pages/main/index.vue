@@ -80,6 +80,9 @@ async function fetchActivityList(isRefreshMode = true) {
     if (activityList.value.length >= res.data.total) {
       isLoadAllActivities.value = true
     }
+    if (activityList.value.length === 0) {
+      lastKnownScrollPosition.value = 0
+    }
   }
   catch (error: any) {
     console.error('获取活动列表失败:', error)
