@@ -1,6 +1,9 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <RouterView />
+  <RouterView v-slot="{ Component }">
+    <KeepAlive :include="['MainPage']">
+      <component :is="Component" />
+    </KeepAlive>
+  </RouterView>
 </template>

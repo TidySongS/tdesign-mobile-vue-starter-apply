@@ -1,4 +1,4 @@
-/* eslint-disable prefer-arrow-callback, no-restricted-globals, style/operator-linebreak, style/arrow-parens, style/brace-style, jsdoc/require-returns-description */
+/* eslint-disable */
 /* tslint:disable */
 
 /**

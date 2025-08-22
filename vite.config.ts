@@ -19,6 +19,7 @@ export default defineConfig({
       resolvers: [
         TDesignResolver({
           library: 'mobile-vue',
+          resolveIcons: true,
         }),
       ],
       imports: [VueRouterAutoImports, 'vue'],
@@ -27,6 +28,7 @@ export default defineConfig({
       resolvers: [
         TDesignResolver({
           library: 'mobile-vue',
+          resolveIcons: true,
         }),
       ],
     }),

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Toast } from 'tdesign-mobile-vue'
-import cityList from '@/constant/cityList'
+import { getCityNameFromCoords } from '@/api/location'
+import { cityList, hotCityList } from '@/constant/cityList'
 import userInfo from '@/store/userInfo'
 
-const hotCityList = ['北京市', '上海市', '广州市', '深圳市', '成都市']
 const indexList = cityList.map(item => item.index)
 const router = useRouter()
 const locationStatus = ref(false)
@@ -88,35 +88,6 @@ function updateLocation() {
     Toast('您的浏览器不支持地理位置服务')
   }
 }
-
-async function getCityNameFromCoords(
-  latitude: number,
-  longitude: number,
-): Promise<string> {
-  const tencentApiKey = import.meta.env.VITE_TENCENT_MAP_API_KEY
-  if (!tencentApiKey) {
-    throw new Error(
-      '腾讯地图 API Key 缺失，请在 .env 文件中设置 VITE_TENCENT_MAP_API_KEY',
-    )
-  }
-  const url = `/api/tencent-map/ws/geocoder/v1/?location=${latitude},${longitude}&key=${tencentApiKey}`
-  try {
-    const response = await fetch(url, { signal: AbortSignal.timeout(5000) })
-    if (!response.ok) {
-      throw new Error('无法从腾讯地图获取城市名称')
-    }
-    const data = await response.json()
-    if (data.status !== 0) {
-      throw new Error(`腾讯地图 API 返回错误: ${data.message}`)
-    }
-    const city = data.result.address_component.city
-    return city || '未知城市'
-  }
-  catch (error) {
-    console.error('逆地理编码失败', error)
-    throw error
-  }
-}
 </script>
 
 <template>
@@ -124,7 +95,7 @@ async function getCityNameFromCoords(
     <t-navbar title="选择城市" left-arrow :on-left-click="$router.back" />
     <div class="location-container p-16 flex-center">
       <div class="location flex-center">
-        <t-icon name="location" size="22" />
+        <LocationIcon size="22" />
         <t-loading
           v-if="locationStatus"
           theme="dots"
@@ -166,9 +137,8 @@ async function getCityNameFromCoords(
             >
               {{ formatCityName(item) }}
             </span>
-            <t-icon
+            <CheckIcon
               v-if="userInfo.locationName === item"
-              name="check"
               size="24"
               class="city-check--active"
             />
@@ -191,9 +161,8 @@ async function getCityNameFromCoords(
                   {{ formatCityName(val) }}
                 </span>
               </template>
-              <t-icon
+              <CheckIcon
                 v-if="userInfo.locationName === val"
-                name="check"
                 size="24"
                 class="city-check--active"
               />
@@ -217,8 +186,8 @@ header {
 }
 
 .location-container {
-  height: 24px;
-  width: calc(100% - 32px);
+  height: 56px;
+  width: 100%;
   position: fixed;
   top: var(--navbar-height);
   background: var(--bg-color-page);
@@ -244,14 +213,13 @@ header {
 
 .hot-city {
   &__header {
-    height: 22px;
+    height: 30px;
     padding: 4px 16px;
     background: var(--gray-color-1);
   }
   &__content {
     .font(16px, 400);
     height: 56px;
-    box-sizing: border-box;
     margin-left: 16px;
     padding: 16px 16px 16px 0;
     justify-content: space-between;
