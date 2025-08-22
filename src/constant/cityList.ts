@@ -1,4 +1,6 @@
-export default [
+export const hotCityList = ['北京市', '上海市', '广州市', '深圳市', '成都市']
+
+export const cityList = [
   {
     index: 'A',
     children: [
@@ -83,11 +85,7 @@ export default [
   },
   {
     index: 'E',
-    children: [
-      '鄂尔多斯市',
-      '鄂州市',
-      '恩施土家族苗族自治州',
-    ],
+    children: ['鄂尔多斯市', '鄂州市', '恩施土家族苗族自治州'],
   },
   {
     index: 'F',
@@ -228,14 +226,7 @@ export default [
   },
   {
     index: 'M',
-    children: [
-      '马鞍山市',
-      '茂名市',
-      '眉山市',
-      '梅州市',
-      '绵阳市',
-      '牡丹江市',
-    ],
+    children: ['马鞍山市', '茂名市', '眉山市', '梅州市', '绵阳市', '牡丹江市'],
   },
   {
     index: 'N',
@@ -287,10 +278,7 @@ export default [
   },
   {
     index: 'R',
-    children: [
-      '日喀则市',
-      '日照市',
-    ],
+    children: ['日喀则市', '日照市'],
   },
   {
     index: 'S',

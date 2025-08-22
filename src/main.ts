@@ -7,7 +7,9 @@ import '@/style/main.less'
 async function enableMocking() {
   if (import.meta.env.VITE_APP_ENABLE_MOCKS === 'true') {
     const { worker } = await import('./mocks/browser')
-    return worker.start()
+    return worker.start({
+      onUnhandledRequest: 'bypass',
+    })
   }
 }
 

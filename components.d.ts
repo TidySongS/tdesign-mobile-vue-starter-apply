@@ -19,6 +19,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     TagFilter: typeof import('./src/components/TagFilter.vue')['default']
     TAvatar: typeof import('tdesign-mobile-vue')['Avatar']
+    TAvatarGroup: typeof import('tdesign-mobile-vue')['AvatarGroup']
     TButton: typeof import('tdesign-mobile-vue')['Button']
     TCalendar: typeof import('tdesign-mobile-vue')['Calendar']
     TCell: typeof import('tdesign-mobile-vue')['Cell']
@@ -28,7 +29,6 @@ declare module 'vue' {
     TDateTimePicker: typeof import('tdesign-mobile-vue')['DateTimePicker']
     TDivider: typeof import('tdesign-mobile-vue')['Divider']
     TEmpty: typeof import('tdesign-mobile-vue')['Empty']
-    TFooter: typeof import('tdesign-mobile-vue')['Footer']
     TForm: typeof import('tdesign-mobile-vue')['Form']
     TFormItem: typeof import('tdesign-mobile-vue')['FormItem']
     TGrid: typeof import('tdesign-mobile-vue')['Grid']
@@ -43,7 +43,6 @@ declare module 'vue' {
     TNavbar: typeof import('tdesign-mobile-vue')['Navbar']
     TPicker: typeof import('tdesign-mobile-vue')['Picker']
     TPopup: typeof import('tdesign-mobile-vue')['Popup']
-    TPullDownRefresh: typeof import('tdesign-mobile-vue')['PullDownRefresh']
     TRadio: typeof import('tdesign-mobile-vue')['Radio']
     TRadioGroup: typeof import('tdesign-mobile-vue')['RadioGroup']
     TRate: typeof import('tdesign-mobile-vue')['Rate']
@@ -59,6 +58,5 @@ declare module 'vue' {
     TTabBarItem: typeof import('tdesign-mobile-vue')['TabBarItem']
     TTabPanel: typeof import('tdesign-mobile-vue')['TabPanel']
     TTabs: typeof import('tdesign-mobile-vue')['Tabs']
-    TTag: typeof import('tdesign-mobile-vue')['Tag']
   }
 }

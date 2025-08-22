@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Toast } from 'tdesign-mobile-vue'
-import cityList from '@/constant/cityList'
+import { getCityNameFromCoords } from '@/api/location'
+import { cityList, hotCityList } from '@/constant/cityList'
 import userInfo from '@/store/userInfo'
 
-const hotCityList = ['北京市', '上海市', '广州市', '深圳市', '成都市']
 const indexList = cityList.map(item => item.index)
 const router = useRouter()
 const locationStatus = ref(false)
@@ -86,35 +86,6 @@ function updateLocation() {
   else {
     locationStatus.value = false
     Toast('您的浏览器不支持地理位置服务')
-  }
-}
-
-async function getCityNameFromCoords(
-  latitude: number,
-  longitude: number,
-): Promise<string> {
-  const tencentApiKey = import.meta.env.VITE_TENCENT_MAP_API_KEY
-  if (!tencentApiKey) {
-    throw new Error(
-      '腾讯地图 API Key 缺失，请在 .env 文件中设置 VITE_TENCENT_MAP_API_KEY',
-    )
-  }
-  const url = `/api/tencent-map/ws/geocoder/v1/?location=${latitude},${longitude}&key=${tencentApiKey}`
-  try {
-    const response = await fetch(url, { signal: AbortSignal.timeout(5000) })
-    if (!response.ok) {
-      throw new Error('无法从腾讯地图获取城市名称')
-    }
-    const data = await response.json()
-    if (data.status !== 0) {
-      throw new Error(`腾讯地图 API 返回错误: ${data.message}`)
-    }
-    const city = data.result.address_component.city
-    return city || '未知城市'
-  }
-  catch (error) {
-    console.error('逆地理编码失败', error)
-    throw error
   }
 }
 </script>
