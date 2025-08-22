@@ -10,6 +10,11 @@ declare module 'vue' {
   export interface GlobalComponents {
     ActivityCardSkeleton: typeof import('./src/components/ActivityCardSkeleton.vue')['default']
     ActivityFilterPopup: typeof import('./src/components/ActivityFilterPopup.vue')['default']
+    CheckIcon: typeof import('tdesign-icons-vue-next')['CheckIcon']
+    ChevronLeftIcon: typeof import('tdesign-icons-vue-next')['ChevronLeftIcon']
+    CloseIcon: typeof import('tdesign-icons-vue-next')['CloseIcon']
+    FilterIcon: typeof import('tdesign-icons-vue-next')['FilterIcon']
+    LocationIcon: typeof import('tdesign-icons-vue-next')['LocationIcon']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TagFilter: typeof import('./src/components/TagFilter.vue')['default']

@@ -124,7 +124,7 @@ async function getCityNameFromCoords(
     <t-navbar title="选择城市" left-arrow :on-left-click="$router.back" />
     <div class="location-container p-16 flex-center">
       <div class="location flex-center">
-        <t-icon name="location" size="22" />
+        <LocationIcon size="22" />
         <t-loading
           v-if="locationStatus"
           theme="dots"
@@ -166,9 +166,8 @@ async function getCityNameFromCoords(
             >
               {{ formatCityName(item) }}
             </span>
-            <t-icon
+            <CheckIcon
               v-if="userInfo.locationName === item"
-              name="check"
               size="24"
               class="city-check--active"
             />
@@ -191,9 +190,8 @@ async function getCityNameFromCoords(
                   {{ formatCityName(val) }}
                 </span>
               </template>
-              <t-icon
+              <CheckIcon
                 v-if="userInfo.locationName === val"
-                name="check"
                 size="24"
                 class="city-check--active"
               />

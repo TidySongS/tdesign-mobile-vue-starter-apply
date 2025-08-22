@@ -104,7 +104,7 @@ function formatDateRange(dateRange: Date[]) {
         <div class="filter-popup flex-fill-col">
           <div class="filter-popup__header flex-center">
             <span> 全部筛选 </span>
-            <t-icon name="close" size="24" @click="closePopup" />
+            <CloseIcon size="24" @click="closePopup" />
           </div>
           <div class="filter-popup__content">
             <div class="checktag-group">
@@ -184,11 +184,11 @@ function formatDateRange(dateRange: Date[]) {
         >
           <template #title>
             <div class="calendar-title-container flex-center">
-              <t-icon name="chevron-left" size="24" @click="closeCalendar" />
+              <ChevronLeftIcon size="24" @click="closeCalendar" />
               <div class="calendar-title">
                 选择日期
               </div>
-              <t-icon name="close" size="24" @click="closeCalendar" />
+              <CloseIcon size="24" @click="closeCalendar" />
             </div>
           </template>
         </t-calendar>
