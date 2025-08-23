@@ -13,9 +13,13 @@ const route = useRoute()
 const router = useRouter()
 
 // 活动ID
-const activityId = computed(() => {
-  return route.query.eventId || null
-})
+// const activityId = computed(() => {
+//         return route.query.eventId || (history.state && history.state.orderInfo && history.state.orderInfo.activityId)
+//     })
+const activityId = computed(() => (route.params as {
+  id
+}).id)
+
 // 活动信息
 const eventTitle = ref('')
 const eventDate = ref('')
@@ -192,13 +196,16 @@ function handleConfirmPurchase() {
   console.log(activityId.value)
   setTimeout(() => 0, 2000)
   // 跳转到购买结果页面并传递订单信息
-  router.push({
-    path: '/buy-result',
-    query: {
-      eventId: activityId.value,
-      totalPrice: totalPrice.value.toString(),
-    },
-  })
+  router.push(
+    //   {
+    //     path: '/buy-result',
+    //     query: {
+    //         eventId: activityId.value,
+    //         totalPrice: totalPrice.value.toString(),
+    //     },
+    // }
+    `/buy-result/${activityId.value}`,
+  )
 }
 // 组件挂载时获取数据
 onMounted(() => {

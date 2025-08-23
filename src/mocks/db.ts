@@ -274,11 +274,11 @@ for (let i = 0; i < 20; i++) {
 }
 
 const appList = [
-  { id: '1', appname: 'Doc', icon: 'imgs/icon/icon-doc.png' },
-  { id: '2', appname: 'Map', icon: 'imgs/icon/icon-map.png' },
-  { id: '3', appname: 'QQ', icon: 'imgs/icon/icon-qq.png' },
-  { id: '4', appname: 'QQ music', icon: 'imgs/icon/icon-qqmusic.png' },
-  { id: '5', appname: 'WeChat', icon: 'imgs/icon/icon-wechat.png' },
+  { id: '1', appname: 'Doc', icon: '/imgs/icon/icon-doc.png' },
+  { id: '2', appname: 'Map', icon: '/imgs/icon/icon-map.png' },
+  { id: '3', appname: 'QQ', icon: '/imgs/icon/icon-qq.png' },
+  { id: '4', appname: 'QQ music', icon: '/imgs/icon/icon-qqmusic.png' },
+  { id: '5', appname: 'WeChat', icon: '/imgs/icon/icon-wechat.png' },
 ]
 
 appList.forEach((app) => {

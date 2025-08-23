@@ -7,7 +7,7 @@ const activityId = computed(() => (route.params as {
 
 // 处理购买按钮点击
 function handleBuyClick() {
-  router.push(`/buy-confirm?eventId=${activityId.value}`)
+  router.push(`/buy-confirm/${activityId.value}`)
 }
 </script>
 

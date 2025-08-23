@@ -25,7 +25,9 @@ function share() {
 const isSharePopupVisible = ref(false)
 
 // 活动ID
-const activityId = ref(null)
+const activityId = computed(() => (route.params as {
+  id
+}).id)
 // 活动信息
 const activity = ref({
   name: '',
@@ -47,16 +49,6 @@ const loading = ref(true)
 
 // 获取活动信息
 async function fetchActivityData() {
-  // 从路由参数或state中获取活动ID
-  const id = route.query.eventId || (history.state && history.state.orderInfo && history.state.orderInfo.activityId)
-  console.log(id)
-  if (!id) {
-    loading.value = false
-    return
-  }
-
-  activityId.value = id
-
   try {
     // 获取活动详情
     const data = await getActivityDetail(activityId.value)
@@ -93,6 +85,7 @@ async function fetchFrendandAppdata() {
     const apdata = await getAppList()
     appList.length = 0
     appList.push(...apdata)
+    console.log(appList)
     loading.value = false
   }
   catch (err) {
