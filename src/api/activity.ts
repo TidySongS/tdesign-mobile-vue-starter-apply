@@ -43,3 +43,32 @@ export function getPersonActivities(
 ) {
   return axios.get('/personActivities', { params })
 }
+
+// 活动详情内容
+
+/**
+ * 获取活动详情
+ * @param id 活动ID
+ * @returns 活动详情
+ */
+export function getActivityDetail(id: string) {
+  return axios.get(`/activities/${id}`)
+}
+
+/**
+ * 获取活动票类场次
+ * @param id 活动ID
+ * @returns 票类场次列表
+ */
+export function getActivityTickets(id: string) {
+  return axios.get(`/activities/${id}/tickets`)
+}
+
+/**
+ * 获取活动票档价格
+ * @param id 活动ID
+ * @returns 票档价格列表
+ */
+export function getActivityPrices(id: string) {
+  return axios.get(`/activities/${id}/prices`)
+}

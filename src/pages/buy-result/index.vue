@@ -3,6 +3,15 @@ import {
   ShareIcon,
 } from 'tdesign-icons-vue-next'
 
+import {
+  getActivityDetail,
+} from '@/api/activity'
+
+import {
+  getAppList,
+  getFriendList,
+} from '@/api/share'
+
 const route = useRoute()
 const router = useRouter()
 
@@ -50,16 +59,18 @@ async function fetchActivityData() {
 
   try {
     // 获取活动详情
-    const response = await fetch(`/api/activities/${id}`)
-    if (!response.ok) {
-      throw new Error('Failed to fetch activity')
-    }
-    const data = await response.json()
+    const data = await getActivityDetail(activityId.value)
+
+    // 处理日期
+    const date = new Date(data.date)
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
 
     // 设置活动信息
     activity.value = {
       name: data.title,
-      date: data.date,
+      date: `${year}年${month}月${day}日`,
       address: data.address,
       cover: data.swiper,
     }
@@ -71,22 +82,15 @@ async function fetchActivityData() {
     loading.value = false
   }
 }
+
 // 获取朋友\app信息
 async function fetchFrendandAppdata() {
   try {
-    const flresponse = await fetch('/api/share/friends')
-    if (!flresponse.ok)
-      throw new Error('Failed to fetch friemdList')
-
-    const fldata = await flresponse.json()
+    const flresponse = await getFriendList()
     frendList.length = 0
-    frendList.push(...fldata)
+    frendList.push(...flresponse)
 
-    const apresponse = await fetch('api/share/app')
-    if (!apresponse.ok)
-      throw new Error('Failed to fetch appList')
-
-    const apdata = await apresponse.json()
+    const apdata = await getAppList()
     appList.length = 0
     appList.push(...apdata)
     loading.value = false
@@ -401,19 +405,6 @@ onMounted(() => {
                     min-width: 70px;
                     flex-shrink: 0;
                 }
-                /* 调整社交媒体图标大小 */
-                /* &:nth-child(2) {
-                     :deep(.t-grid-item) {
-                        --td-grid-item-image-width: 50px;
-                        --td-grid-item-image-border-radius: 8px;
-                        .t-image {
-                            width: 50px !important;
-                            height: 50px !important;
-                            border-radius: 8px;
-                            object-fit: contain;
-                        }
-                    }
-                } */
             }
         }
         .share-cancel {

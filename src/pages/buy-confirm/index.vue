@@ -2,6 +2,11 @@
 import {
   Message,
 } from 'tdesign-mobile-vue'
+import {
+  getActivityDetail,
+  getActivityPrices,
+  getActivityTickets,
+} from '@/api/activity'
 import userInfo from '@/store/userInfo'
 
 const route = useRoute()
@@ -115,11 +120,7 @@ async function fetchActivityData() {
 
   try {
     // 获取活动详情
-    const activityResponse = await fetch(`/api/activities/${activityId.value}`)
-    if (!activityResponse.ok) {
-      throw new Error('Failed to fetch activity')
-    }
-    const activityData = await activityResponse.json()
+    const activityData = await getActivityDetail(activityId.value)
     console.log('qnfoqojvnq', activityData)
 
     // 设置活动信息console.log(activityData)
@@ -132,11 +133,7 @@ async function fetchActivityData() {
     eventLocation.value = activityData.address
 
     // 获取票类场次
-    const ticketsResponse = await fetch(`/api/activities/${activityId.value}/tickets`)
-    if (!ticketsResponse.ok) {
-      throw new Error('Failed to fetch tickets')
-    }
-    const ticketsData = await ticketsResponse.json()
+    const ticketsData = await getActivityTickets(activityId.value)
 
     // 更新票类场次数据
     tickets.length = 0
@@ -146,11 +143,7 @@ async function fetchActivityData() {
     }
 
     // 获取票档价格
-    const pricesResponse = await fetch(`/api/activities/${activityId.value}/prices`)
-    if (!pricesResponse.ok) {
-      throw new Error('Failed to fetch prices')
-    }
-    const pricesData = await pricesResponse.json()
+    const pricesData = await getActivityPrices(activityId.value)
 
     // 更新票档价格数据
     prices.length = 0
