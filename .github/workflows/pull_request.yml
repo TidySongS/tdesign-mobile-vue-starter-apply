@@ -1,4 +1,4 @@
-name: Lint
+name: MAIN_PULL_REQUEST
 
 on:
   pull_request:
@@ -6,19 +6,26 @@ on:
       - main
 
 jobs:
-  build:
-
+  build_and_check:
     runs-on: ubuntu-latest
-    environment: Build
     env:
       NODE_ENV: development
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
+          cache: npm
+
       - name: Install dependencies
         run: npm install
+
       - name: Run lint
         run: npm run lint
+
+      - name: Run type check
+        run: npm run type-check
