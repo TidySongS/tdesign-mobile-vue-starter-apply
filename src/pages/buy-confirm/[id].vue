@@ -383,7 +383,7 @@ onMounted(() => {
             align-items: center;
             span {
                 margin-left: 8px;
-                color: #666666;
+                color: #000000;
                 font-size: 14px;
                 font-weight: 400;
             }

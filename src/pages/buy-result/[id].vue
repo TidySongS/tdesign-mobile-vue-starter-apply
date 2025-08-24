@@ -387,9 +387,9 @@ onMounted(() => {
         .share-section {
             margin-bottom: 24px;
             .share-title {
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: 500;
-                color: #333;
+                color: var( --td-font-gray-3);
                 margin: 0 0 16px 0;
             }
             .grid-scroll {

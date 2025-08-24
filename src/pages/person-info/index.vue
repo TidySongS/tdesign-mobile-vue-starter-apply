@@ -167,7 +167,7 @@ function onReset() {
           </t-form-item>
 
           <!-- 生日 -->
-          <t-form-item label="生日" name="birthday" required arrow>
+          <t-form-item label="生日" name="birthday" required>
             <div class="input-with-icon">
               <t-input v-model="formData.birthday" placeholder="请选择生日" borderless align="left" readonly @click="showDatePicker = true" />
               <t-icon name="calendar" size="20" @click="showDatePicker = true" />
@@ -246,8 +246,6 @@ function onReset() {
         right: 0;
         background: white;
         padding: 20px;
-        border-top: 1px solid #e5e5e5;
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
         box-sizing: border-box;
     }
 
@@ -271,14 +269,14 @@ function onReset() {
             }
         }
         .t-form-item__label {
-            font-size: 14px;
+            font-size: 16px;
             color: #333;
             padding-right: 16px;
         }
         .t-input {
             text-align: left;
             .t-input__control {
-                font-size: 14px;
+                font-size: 16px;
                 color: #333;
                 text-align: left;
             }
