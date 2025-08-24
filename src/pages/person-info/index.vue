@@ -156,7 +156,7 @@ function onReset() {
     <div class="page-content">
       <!-- 表单内容 -->
       <div class="form-section">
-        <t-form ref="form" :data="formData" :rules="rules" label-align="left" show-error-message @reset="onReset" @submit="handleConfirm">
+        <t-form ref="form" :data="formData" :rules="rules" label-align="left" show-error-message label-width="97px" @reset="onReset" @submit="handleConfirm">
           <!-- 设为默认开关 -->
           <t-form-item label="设为默认" name="isDefault" content-align="right">
             <t-switch v-model="isDefault" />

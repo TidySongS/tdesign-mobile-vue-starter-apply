@@ -304,8 +304,8 @@ onMounted(() => {
                   borderless
                 />
                 <div class="price-amount">
-                  <span class="current-price">¥{{ price.price }}</span>
-                  <span v-if="price.originalPrice > price.price" class="original-price">¥{{ price.originalPrice }}</span>
+                  <span class="current-price">{{ price.price }}元</span>
+                  <span v-if="price.originalPrice > price.price" class="original-price">{{ price.originalPrice }}元</span>
                 </div>
               </div>
             </div>
@@ -503,7 +503,6 @@ onMounted(() => {
     .current-price {
         font-size: 16px;
         font-weight: 600;
-        color: #0052d9;
     }
 
     .original-price {
