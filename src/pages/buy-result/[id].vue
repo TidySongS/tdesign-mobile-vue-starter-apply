@@ -75,6 +75,8 @@ async function fetchActivityData() {
   catch (err) {
     console.error('Error fetching activity data:', err)
     loading.value = false
+    // 找不到活动信息时跳转到404页面
+    router.push('/not-found')
   }
 }
 
