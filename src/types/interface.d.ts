@@ -15,6 +15,7 @@ export interface Activity {
   date: Date
   domain: string[]
   type: string
+  formattedPrice?: string
 }
 
 export interface Person {

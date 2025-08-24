@@ -1,18 +1,12 @@
 <script setup lang="ts">
 import { Toast } from 'tdesign-mobile-vue'
 import { getCityNameFromCoords } from '@/api/location'
-import { cityList, hotCityList } from '@/constant/cityList'
+import { processedCityList as cityList, processedHotCityList as hotCityList } from '@/constant/cityList'
 import userInfo from '@/store/userInfo'
 
 const indexList = cityList.map(item => item.index)
 const router = useRouter()
 const locationStatus = ref(false)
-
-function formatCityName(name: string) {
-  if (name.endsWith('市'))
-    return name.slice(0, -1)
-  return name
-}
 
 function updateCity(cityName: string) {
   userInfo.locationName = cityName
@@ -128,17 +122,17 @@ function updateLocation() {
             v-for="(item, index) in hotCityList"
             :key="`hot-city-${index}`"
             class="hot-city__content flex-center"
-            @click="updateCity(item)"
+            @click="updateCity(item.name)"
           >
             <span
               :class="{
-                'city-title--active': userInfo.locationName === item,
+                'city-title--active': userInfo.locationName === item.name,
               }"
             >
-              {{ formatCityName(item) }}
+              {{ item.label }}
             </span>
             <CheckIcon
-              v-if="userInfo.locationName === item"
+              v-if="userInfo.locationName === item.name"
               size="24"
               class="city-check--active"
             />
@@ -150,19 +144,19 @@ function updateLocation() {
             <t-cell
               v-for="(val, i) in item.children"
               :key="`city-${i}`"
-              @click="updateCity(val)"
+              @click="updateCity(val.name)"
             >
               <template #title>
                 <span
                   :class="{
-                    'city-title--active': userInfo.locationName === val,
+                    'city-title--active': userInfo.locationName === val.name,
                   }"
                 >
-                  {{ formatCityName(val) }}
+                  {{ val.label }}
                 </span>
               </template>
               <CheckIcon
-                v-if="userInfo.locationName === val"
+                v-if="userInfo.locationName === val.name"
                 size="24"
                 class="city-check--active"
               />

@@ -2,6 +2,7 @@
 import type { Activity, Filters } from '@/types/interface'
 import { getActivities, getHomeSwiper } from '@/api/activity'
 import { useFilters } from '@/hooks/useFilters'
+import { formatPrice } from '@/utils/formatters'
 
 defineOptions({
   name: 'MainIndex',
@@ -44,14 +45,6 @@ const tabPanels = [
   },
 ]
 
-function formatPrice(minPrice: number, maxPrice: number): string {
-  if (minPrice === 0 && maxPrice === 0)
-    return '免费活动'
-  if (minPrice === maxPrice)
-    return `¥${minPrice.toFixed(2)}`
-  return `¥${minPrice.toFixed(2)}-¥${maxPrice.toFixed(2)}`
-}
-
 async function fetchActivityList(isRefreshMode = true) {
   if (isLoadAllActivities.value && !isRefreshMode) {
     return
@@ -70,11 +63,17 @@ async function fetchActivityList(isRefreshMode = true) {
       filters: JSON.stringify(filters),
     }
     const res = await getActivities(payload)
+    const paginatedData = res.data.paginatedData.map((item: Activity) => {
+      return {
+        ...item,
+        formattedPrice: formatPrice(item.minPrice, item.maxPrice),
+      }
+    })
     if (isRefresh.value) {
-      activityList.value = res.data.paginatedData
+      activityList.value = paginatedData
     }
     else {
-      activityList.value.push(...res.data.paginatedData)
+      activityList.value.push(...paginatedData)
     }
     currentPage++
     if (activityList.value.length >= res.data.total) {
@@ -306,7 +305,7 @@ onActivated(() => {
             <span>{{ item.score }}分</span>
           </div>
           <span class="price">{{
-            formatPrice(item.minPrice, item.maxPrice)
+            item.formattedPrice
           }}</span>
         </div>
       </router-link>

@@ -2,6 +2,7 @@
 import type { Filters } from '@/types/interface'
 import { defaultFilterOptions } from '@/constant/filters'
 import { copyFilters } from '@/hooks/useFilters'
+import { formatDateRange } from '@/utils/formatters'
 
 const props = defineProps({
   visible: {
@@ -74,22 +75,6 @@ function handleDateConfirm() {
 function applyFilters() {
   emit('update:filters', tmpFilters.value)
   emit('update:visible', false)
-}
-
-function formatDateRange(dateRange: Date[]) {
-  const formatDate = (date: Date) => {
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    return [year, month, day]
-  }
-  const [startYear, startMonth, startDay] = formatDate(dateRange[0])
-  if (dateRange.length === 1)
-    return `${startYear}年${startMonth}月${startDay}日`
-  const [endYear, endMonth, endDay] = formatDate(dateRange[1])
-  if (startYear === endYear)
-    return `${startYear}年${startMonth}月${startDay}日-${endMonth}月${endDay}日`
-  return `${startYear}年${startMonth}月${startDay}日-${endYear}年${endMonth}月${endDay}日`
 }
 </script>
 

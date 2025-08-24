@@ -1,6 +1,8 @@
-export const hotCityList = ['北京市', '上海市', '广州市', '深圳市', '成都市']
+import { formatCityName } from '@/utils/formatters'
 
-export const cityList = [
+const hotCityList = ['北京市', '上海市', '广州市', '深圳市', '成都市']
+
+const cityList = [
   {
     index: 'A',
     children: [
@@ -441,3 +443,16 @@ export const cityList = [
     ],
   },
 ]
+
+export const processedHotCityList = hotCityList.map(name => ({
+  name,
+  label: formatCityName(name),
+}))
+
+export const processedCityList = cityList.map(item => ({
+  ...item,
+  children: item.children.map(name => ({
+    name,
+    label: formatCityName(name),
+  })),
+}))
