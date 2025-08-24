@@ -1,38 +1,111 @@
 <script setup lang="ts">
+import type { UserProfile } from '@/api/info'
+import dayjs from 'dayjs'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 import { IconFont } from 'tdesign-icons-vue-next'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { getPersonActivities } from '@/api/activity'
+import { getUserProfile } from '@/api/info'
 
-function onEdit(): void {
-  console.log('Todo...')
+dayjs.extend(utc)
+dayjs.extend(timezone)
+dayjs.tz.setDefault('Asia/Shanghai')
+
+type TabValue = 'first' | 'second' | 'third'
+
+type ActivityStatus = '待参加' | '已完成'
+
+interface PersonActivity {
+  id: string
+  personId: string
+  title: string
+  status: ActivityStatus
+  date: string | number | Date
+  cover?: string
 }
-function onReview(_id: number): void {
-  console.log('Todo...')
+
+interface PersonActivitiesResponse {
+  data: PersonActivity[]
+  pagination: {
+    page: number
+    pageSize: number
+    total: number
+    totalPages: number
+  }
 }
 
 interface ActivityItem {
-  id: number
+  id: string
   cover: string
   title: string
   time: string
-  status: 'pendding' | 'done'
+  status: ActivityStatus
 }
 
-const activities = ref<ActivityItem[]>([
-  {
-    id: 1,
-    cover: '/imgs/activity/cover-2.png',
-    title: '2021 SICC服务设计创...',
-    time: '2021年3月16日',
-    status: 'pendding',
-  },
-  {
-    id: 2,
-    cover: '/imgs/activity/cover-3.png',
-    title: 'SICC 2019 创新论坛',
-    time: '2019年5月20日',
-    status: 'done',
-  },
-])
+const tabValue = ref<TabValue>('first')
+const activities = ref<ActivityItem[]>([])
+const isFetching = ref(false)
+const profile = ref<UserProfile | null>(null)
+const isProfileLoading = ref(false)
+
+function onEdit(): void {
+  // TODO: 跳转到个人信息编辑
+}
+function onReview(_id: string): void {
+  // TODO: 跳转到评价
+}
+
+function formatDate(input: string | number | Date): string {
+  return dayjs.tz(input, 'Asia/Shanghai').format('YYYY年M月D日')
+}
+function mapTabToStatus(tab: TabValue): ActivityStatus | undefined {
+  if (tab === 'first')
+    return '待参加'
+  if (tab === 'second')
+    return '已完成'
+  return undefined
+}
+
+async function fetchActivities() {
+  isFetching.value = true
+  try {
+    const status = mapTabToStatus(tabValue.value)
+    const res = await getPersonActivities({ page: 1, pageSize: 20, status }) as unknown as PersonActivitiesResponse
+    const pageData = Array.isArray(res.data) ? res.data : []
+    activities.value = pageData.map(it => ({
+      id: String(it.id),
+      cover: it.cover ?? '/imgs/activity/cover-1.png',
+      title: it.title,
+      time: formatDate(it.date),
+      status: it.status,
+    }))
+  }
+  finally {
+    isFetching.value = false
+  }
+}
+
+async function fetchProfile() {
+  isProfileLoading.value = true
+  try {
+    const res = await getUserProfile() as unknown as UserProfile
+    profile.value = res
+  }
+  finally {
+    isProfileLoading.value = false
+  }
+}
+
+function onTabChange(value: string | number, _label: string) {
+  tabValue.value = String(value) as TabValue
+  fetchActivities()
+}
+
+onMounted(() => {
+  fetchActivities()
+  fetchProfile()
+})
 </script>
 
 <template>
@@ -40,19 +113,26 @@ const activities = ref<ActivityItem[]>([
     <div class="user-card">
       <div class="user-card-info">
         <div class="user-card-avatar">
-          <t-avatar image="/imgs/avatar1.png" alt="用户头像" size="large" />
+          <t-skeleton :loading="isProfileLoading && !profile" animation="flashed" :row-col="[{ height: '64px', width: '64px', type: 'circle' }]" />
+          <t-avatar v-if="profile" :image="profile.avatar" alt="用户头像" size="large" />
         </div>
         <div class="user-card-meta">
           <div class="user-name">
-            蔡宣轩
+            <t-skeleton :loading="isProfileLoading && !profile" animation="flashed" :row-col="[{ height: '24px', width: '120px' }]" />
+            <template v-if="profile">
+              {{ profile.name }}
+            </template>
           </div>
           <div class="user-tag">
-            <t-tag variant="light">
-              29岁
-            </t-tag>
-            <t-tag variant="light">
-              设计/艺术从业者
-            </t-tag>
+            <t-skeleton :loading="isProfileLoading && !profile" animation="flashed" :row-col="[{ height: '20px', width: '60px' }, { height: '20px', width: '120px' }]" />
+            <template v-if="profile">
+              <t-tag variant="light">
+                {{ profile.age }}岁
+              </t-tag>
+              <t-tag variant="light">
+                {{ profile.occupation }}
+              </t-tag>
+            </template>
           </div>
         </div>
       </div>
@@ -67,7 +147,7 @@ const activities = ref<ActivityItem[]>([
     </div>
     <div class="activity-list">
       <div class="tab-wrapper">
-        <t-tabs default-value="first">
+        <t-tabs :value="tabValue" @change="onTabChange">
           <t-tab-panel
             value="first"
             :badge-props="{ dot: true, offset: [-4, 1] }"
@@ -78,6 +158,13 @@ const activities = ref<ActivityItem[]>([
         </t-tabs>
       </div>
       <div class="activity-content">
+        <t-skeleton
+          v-if="isFetching && activities.length === 0"
+          :loading="true"
+          animation="flashed"
+          :row-col="[{ size: '120px' }]"
+        />
+        <t-empty v-if="!isFetching && activities.length === 0" description="暂无活动" />
         <div v-for="item in activities" :key="item.id" class="activity-item">
           <div class="activity-item-img">
             <img :src="item.cover" :alt="item.title" loading="lazy">
@@ -93,10 +180,10 @@ const activities = ref<ActivityItem[]>([
             </div>
             <div class="activity-item-bottom">
               <div class="activity-item-status">
-                {{ item.status === "pendding" ? "待参加" : "已完成" }}
+                {{ item.status }}
               </div>
               <button
-                v-show="item.status === 'done'"
+                v-if="item.status === '已完成'"
                 class="activity-item-btn"
                 type="button"
                 aria-label="去评价"
