@@ -62,8 +62,16 @@ const priceText = computed<string>(() => {
 })
 
 async function fetchData() {
-  const d = await getActivityDetail(activityId.value)
-  detail.value = d
+  try {
+    const d = await getActivityDetail(activityId.value)
+    if (!d || !d.id || String(d.id) !== activityId.value) {
+      throw new Error('Invalid activity detail')
+    }
+    detail.value = d
+  }
+  catch {
+    router.push('/not-found')
+  }
 }
 
 onMounted(() => {

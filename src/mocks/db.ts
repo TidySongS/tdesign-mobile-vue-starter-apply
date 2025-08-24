@@ -230,6 +230,7 @@ export const db = factory({
     title: () => `${faker.company.name()}活动`, // 活动标题
     status: () => faker.helpers.arrayElement(['已完成', '待参加']),
     date: () => faker.date.between({ from: new Date(), to: twoYearsFromNow }), // 未来两年
+    cover: () => faker.helpers.arrayElement(covers),
   },
   // 职业
   occupation: {
@@ -260,6 +261,15 @@ export const db = factory({
     id: primaryKey(String),
     appname: String,
     icon: String,
+  },
+  // 用户档案
+  userProfile: {
+    id: primaryKey(String),
+    name: String,
+    age: Number,
+    occupation: String,
+    avatar: String,
+    city: String,
   },
 })
 
@@ -310,4 +320,14 @@ const appList = [
 
 appList.forEach((app) => {
   db.shareAppIconList.create(app)
+})
+
+// 预置一个用户档案
+db.userProfile.create({
+  id: 'current',
+  name: faker.person.fullName(),
+  age: faker.number.int({ min: 18, max: 60 }),
+  occupation: faker.person.jobTitle(),
+  avatar: faker.image.avatar(),
+  city: faker.location.city(),
 })
