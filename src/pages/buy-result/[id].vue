@@ -2,6 +2,9 @@
 import {
   ShareIcon,
 } from 'tdesign-icons-vue-next'
+import {
+  Message,
+} from 'tdesign-mobile-vue'
 
 import {
   getActivityDetail,
@@ -107,6 +110,14 @@ function closeSharePopup() {
   console.log('关闭分享弹窗')
 }
 
+// 分享至社媒
+function sharemsg() {
+  Message.error({
+    content: '分享功能待实现',
+    duration: 3000,
+  })
+}
+
 // 去查看
 function goToView() {
   router.push(`/activity-detail/${activityId.value}`)
@@ -159,7 +170,7 @@ onMounted(() => {
       </h3>
       <div class="person-info">
         <div class="person-avatar">
-          <img src="/imgs/head-bg.png" alt="头像">
+          <img src="/imgs/avatar1.png" alt="头像">
         </div>
         <div class="person-details">
           <div class="person-name">
@@ -210,7 +221,7 @@ onMounted(() => {
           分享给朋友
         </h3>
         <t-grid :column="0" class="grid-scroll">
-          <t-grid-item v-for="frend in frendList" :key="frend.id" :text="frend.name">
+          <t-grid-item v-for="frend in frendList" :key="frend.id" :text="frend.name" @click="sharemsg">
             <template #image>
               <t-avatar :image="frend.avatar" />
             </template>
@@ -223,7 +234,7 @@ onMounted(() => {
           分享到社媒
         </h3>
         <t-grid :column="0" class="grid-scroll">
-          <t-grid-item v-for="app in appList" :key="app.id" :text="app.appname" :image="app.icon" />
+          <t-grid-item v-for="app in appList" :key="app.id" :text="app.appname" :image="app.icon" @click="sharemsg" />
         </t-grid>
       </div>
       <div class="share-cancel">

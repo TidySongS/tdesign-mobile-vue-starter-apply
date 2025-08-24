@@ -38,6 +38,9 @@ const professionColumns = [
     label: '计算机从业者',
     value: '计算机从业者',
   }, {
+    label: '设计师/艺术从业者',
+    value: '设计师/艺术从业者',
+  }, {
     label: '医务人员',
     value: '医务人员',
   }, {

@@ -13,9 +13,6 @@ const route = useRoute()
 const router = useRouter()
 
 // 活动ID
-// const activityId = computed(() => {
-//         return route.query.eventId || (history.state && history.state.orderInfo && history.state.orderInfo.activityId)
-//     })
 const activityId = computed(() => (route.params as {
   id
 }).id)
@@ -192,18 +189,8 @@ function handleConfirmPurchase() {
     })
     return
   }
-
-  console.log(activityId.value)
-  setTimeout(() => 0, 2000)
   // 跳转到购买结果页面并传递订单信息
   router.push(
-    //   {
-    //     path: '/buy-result',
-    //     query: {
-    //         eventId: activityId.value,
-    //         totalPrice: totalPrice.value.toString(),
-    //     },
-    // }
     `/buy-result/${activityId.value}`,
   )
 }
