@@ -12,6 +12,14 @@ import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      less: {
+        additionalData: `@import "@/styles/utils.less";`,
+        javascriptEnabled: true,
+      },
+    },
+  },
   plugins: [
     VueRouter({ dts: './src/types/typed-router.d.ts' }),
     vue(),

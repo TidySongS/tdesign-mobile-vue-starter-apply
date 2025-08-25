@@ -87,8 +87,8 @@ function updateLocation() {
 <template>
   <header>
     <t-navbar title="选择城市" left-arrow :on-left-click="$router.back" />
-    <div class="location-container p-16 flex-center">
-      <div class="location flex-center">
+    <div class="location-container">
+      <div class="location">
         <LocationIcon size="22" />
         <t-loading
           v-if="locationStatus"
@@ -121,7 +121,7 @@ function updateLocation() {
           <div
             v-for="(item, index) in hotCityList"
             :key="`hot-city-${index}`"
-            class="hot-city__content flex-center"
+            class="hot-city__content"
             @click="updateCity(item.name)"
           >
             <span
@@ -169,8 +169,6 @@ function updateLocation() {
 </template>
 
 <style lang="less" scoped>
-@import "@/style/home.less";
-
 header {
   top: 0;
   z-index: 99;
@@ -180,6 +178,8 @@ header {
 }
 
 .location-container {
+  .p-16();
+  .flex-center();
   height: 56px;
   width: 100%;
   position: fixed;
@@ -189,6 +189,7 @@ header {
 }
 
 .location {
+  .flex-center();
   &__name {
     margin-left: 4px;
   }
@@ -212,6 +213,7 @@ header {
     background: var(--gray-color-1);
   }
   &__content {
+    .flex-center();
     .font(16px, 400);
     height: 56px;
     margin-left: 16px;

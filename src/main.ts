@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import 'tdesign-mobile-vue/es/style/index.css'
-import '@/style/main.less'
+import '@/styles/main.less'
 
 async function enableMocking() {
   if (import.meta.env.VITE_APP_ENABLE_MOCKS === 'true') {

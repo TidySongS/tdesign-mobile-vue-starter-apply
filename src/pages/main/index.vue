@@ -224,7 +224,7 @@ onActivated(() => {
         全部活动
       </h2>
       <t-sticky :offset-top="104" :z-index="99">
-        <div class="tab-container flex-center">
+        <div class="tab-container">
           <t-tabs
             v-model:value="currentTab"
             :split="false"
@@ -239,7 +239,7 @@ onActivated(() => {
             />
           </t-tabs>
           <div
-            class="filter-container flex-center"
+            class="filter-container"
             @click="filterPopupVisible = true"
           >
             <FilterIcon size="16" />
@@ -324,8 +324,6 @@ onActivated(() => {
 </template>
 
 <style scoped lang="less">
-@import "@/style/home.less";
-
 .page-container {
   touch-action: pan-y;
   overflow-x: hidden;
@@ -359,9 +357,9 @@ h2 {
 }
 
 .swiper-placeholder {
-  height: var(--swiper-height);
   .flex-center();
   flex-grow: 1;
+  height: var(--swiper-height);
   &__main {
     .flex-center();
     width: var(--swiper-width);
@@ -379,8 +377,7 @@ h2 {
 
 .swiper {
   overflow: visible;
-  margin: 0 calc((100vw - var(--swiper-width)) / 2 - 12px) 0
-    calc((100vw - var(--swiper-width)) / 2);
+  margin: 0 calc((100vw - var(--swiper-width)) / 2 - 12px) 0 calc((100vw - var(--swiper-width)) / 2);
   .t-image {
     width: var(--swiper-width);
     height: 100%;
@@ -389,6 +386,7 @@ h2 {
 }
 
 .tab-container {
+  .flex-center();
   height: 48px;
   background: var(--bg-color-page);
 
@@ -397,6 +395,7 @@ h2 {
   }
 
   .filter-container {
+    .flex-center();
     flex: 1;
     position: relative;
     display: flex;
@@ -404,7 +403,7 @@ h2 {
     justify-content: center;
     height: 48px;
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       top: 50%;
@@ -437,6 +436,12 @@ h2 {
 }
 
 .card {
+  margin: 16px;
+  display: flex;
+  height: var(--card-height);
+  border-radius: var(--td-radius-large);
+  box-shadow: var(--shadow);
+  overflow: hidden;
   &__cover {
     flex-shrink: 0;
     width: var(--card-height);
@@ -449,8 +454,12 @@ h2 {
   }
 
   &__content {
+    .p-16();
+    .flex-col();
     flex: 1;
+    width: 100%;
     min-width: 0;
+    padding-bottom: 12px;
     h3 {
       .font();
       white-space: nowrap;
@@ -458,6 +467,10 @@ h2 {
       text-overflow: ellipsis;
       margin-bottom: 8px;
     }
+  }
+  .price {
+    .font(14px, 600);
+    margin-top: auto;
   }
 }
 

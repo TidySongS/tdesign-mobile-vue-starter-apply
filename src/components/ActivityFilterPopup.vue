@@ -86,8 +86,8 @@ function applyFilters() {
       @update:visible="onPopupUpdate"
     >
       <div class="popup-container">
-        <div class="filter-popup flex-fill-col">
-          <div class="filter-popup__header flex-center">
+        <div class="filter-popup">
+          <div class="filter-popup__header">
             <span> 全部筛选 </span>
             <CloseIcon size="24" @click="closePopup" />
           </div>
@@ -106,7 +106,7 @@ function applyFilters() {
             </div>
             <div class="filter">
               <h4>活动日期</h4>
-              <div class="date-range-container flex-center">
+              <div class="date-range-container">
                 <span>{{ formatDateRange(tmpFilters.dateRange) }}</span>
                 <t-button
                   theme="default"
@@ -130,7 +130,7 @@ function applyFilters() {
               />
             </div>
           </div>
-          <div class="filter-popup__footer flex-center">
+          <div class="filter-popup__footer">
             <t-button
               theme="light"
               variant="base"
@@ -168,7 +168,7 @@ function applyFilters() {
           @select="handleDateSelect"
         >
           <template #title>
-            <div class="calendar-title-container flex-center">
+            <div class="calendar-title-container">
               <ChevronLeftIcon size="24" @click="closeCalendar" />
               <div class="calendar-title">
                 选择日期
@@ -177,7 +177,7 @@ function applyFilters() {
             </div>
           </template>
         </t-calendar>
-        <div class="confirm-date-btn flex-center">
+        <div class="confirm-date-btn">
           <t-button theme="primary" size="large" @click="handleDateConfirm">
             确定日期
           </t-button>
@@ -188,8 +188,6 @@ function applyFilters() {
 </template>
 
 <style scoped lang="less">
-@import "@/style/home.less";
-
 .popup-container {
   .flex-col();
   padding: 16px 0;
@@ -197,9 +195,12 @@ function applyFilters() {
 }
 
 .filter-popup {
+  .flex-col();
   padding: 0 16px;
   overflow: hidden;
+  flex-grow: 1;
   &__header {
+    .flex-center();
     .font(18px, 600);
     height: 26px;
     margin-bottom: 14px;
@@ -222,6 +223,7 @@ function applyFilters() {
   }
 
   &__footer {
+    .flex-center();
     gap: 8px;
     height: 48px;
     margin-top: 16px;
@@ -247,6 +249,7 @@ function applyFilters() {
 }
 
 .date-range-container {
+  .flex-center();
   .font(16px, 400);
   margin-top: 8px;
   justify-content: space-between;
@@ -263,7 +266,7 @@ function applyFilters() {
   :deep(.t-calendar__days) {
     .t-calendar__days-item {
       &::before {
-        content: "周";
+        content: '周';
       }
     }
   }
@@ -274,6 +277,7 @@ function applyFilters() {
 }
 
 .calendar-title-container {
+  .flex-center();
   width: 100%;
 
   .calendar-title {
@@ -282,6 +286,7 @@ function applyFilters() {
 }
 
 .confirm-date-btn {
+  .flex-center();
   bottom: 0;
   width: 100%;
   z-index: 9999;
