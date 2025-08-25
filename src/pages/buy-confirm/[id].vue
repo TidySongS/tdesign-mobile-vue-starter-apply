@@ -1,16 +1,23 @@
 <script setup lang="ts">
+import type { PriceItem, TicketItem } from '@/types/interface'
 import {
   Message,
 } from 'tdesign-mobile-vue'
+import {
+  getActivityDetail,
+  getActivityPrices,
+  getActivityTickets,
+} from '@/api/activity'
 import userInfo from '@/store/userInfo'
 
 const route = useRoute()
 const router = useRouter()
 
 // 活动ID
-const activityId = computed(() => {
-  return route.query.eventId || null
-})
+const activityId = computed(() => (route.params as {
+  id: string
+}).id)
+
 // 活动信息
 const eventTitle = ref('')
 const eventDate = ref('')
@@ -32,12 +39,12 @@ const selectedPersonIds = computed({
 })
 
 // 票类场次
-const tickets = reactive([])
+const tickets = reactive<TicketItem[]>([])
 // 选中的票类场次ID
 const selectedTicketId = ref('')
 
 // 票档价格
-const prices = reactive([])
+const prices = reactive<PriceItem[]>([])
 // 选中的票档价格ID
 const selectedPriceId = ref('')
 
@@ -115,12 +122,8 @@ async function fetchActivityData() {
 
   try {
     // 获取活动详情
-    const activityResponse = await fetch(`/api/activities/${activityId.value}`)
-    if (!activityResponse.ok) {
-      throw new Error('Failed to fetch activity')
-    }
-    const activityData = await activityResponse.json()
-    console.log('qnfoqojvnq', activityData)
+    const activityData = await getActivityDetail(activityId.value)
+    console.log('activityData', activityData)
 
     // 设置活动信息console.log(activityData)
     eventTitle.value = activityData.title
@@ -132,11 +135,7 @@ async function fetchActivityData() {
     eventLocation.value = activityData.address
 
     // 获取票类场次
-    const ticketsResponse = await fetch(`/api/activities/${activityId.value}/tickets`)
-    if (!ticketsResponse.ok) {
-      throw new Error('Failed to fetch tickets')
-    }
-    const ticketsData = await ticketsResponse.json()
+    const ticketsData = await getActivityTickets(activityId.value)
 
     // 更新票类场次数据
     tickets.length = 0
@@ -146,11 +145,7 @@ async function fetchActivityData() {
     }
 
     // 获取票档价格
-    const pricesResponse = await fetch(`/api/activities/${activityId.value}/prices`)
-    if (!pricesResponse.ok) {
-      throw new Error('Failed to fetch prices')
-    }
-    const pricesData = await pricesResponse.json()
+    const pricesData = await getActivityPrices(activityId.value)
 
     // 更新票档价格数据
     prices.length = 0
@@ -165,16 +160,18 @@ async function fetchActivityData() {
     console.error('Error fetching data:', err)
     error.value = true
     loading.value = false
+    // 找不到活动信息时跳转到404页面
+    router.push('/not-found')
   }
 }
 
 // 处理票类场次选择变化
-function handleTicketChange(value) {
+function handleTicketChange(value: any) {
   selectedTicketId.value = value
 }
 
 // 处理票档价格选择变化
-function handlePriceChange(value) {
+function handlePriceChange(value: any) {
   selectedPriceId.value = value
 }
 
@@ -195,17 +192,10 @@ function handleConfirmPurchase() {
     })
     return
   }
-
-  console.log(activityId.value)
-  setTimeout(() => 0, 2000)
   // 跳转到购买结果页面并传递订单信息
-  router.push({
-    path: '/buy-result',
-    query: {
-      eventId: activityId.value,
-      totalPrice: totalPrice.value.toString(),
-    },
-  })
+  router.push(
+    `/buy-result/${activityId.value}`,
+  )
 }
 // 组件挂载时获取数据
 onMounted(() => {
@@ -260,7 +250,7 @@ onMounted(() => {
                 class="card__icon"
                 :aria-hidden="true"
               />
-              <t-checkbox :value="person.id" :label="person.name" icon="none" />
+              <t-checkbox :value="person.id" :label="person.name" :icon="false" />
             </div>
           </t-checkbox-group>
         </div>
@@ -315,8 +305,8 @@ onMounted(() => {
                   borderless
                 />
                 <div class="price-amount">
-                  <span class="current-price">¥{{ price.price }}</span>
-                  <span v-if="price.originalPrice > price.price" class="original-price">¥{{ price.originalPrice }}</span>
+                  <span class="current-price">{{ price.price }}元</span>
+                  <span v-if="price.originalPrice > price.price" class="original-price">{{ price.originalPrice }}元</span>
                 </div>
               </div>
             </div>
@@ -394,7 +384,7 @@ onMounted(() => {
             align-items: center;
             span {
                 margin-left: 8px;
-                color: #666666;
+                color: #000000;
                 font-size: 14px;
                 font-weight: 400;
             }
@@ -514,7 +504,6 @@ onMounted(() => {
     .current-price {
         font-size: 16px;
         font-weight: 600;
-        color: #0052d9;
     }
 
     .original-price {

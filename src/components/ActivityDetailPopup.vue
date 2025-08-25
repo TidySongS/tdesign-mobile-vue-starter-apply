@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { ActivityDetail } from '@/api/activity'
+import dayjs from 'dayjs'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 import { IconFont } from 'tdesign-icons-vue-next'
 import { computed } from 'vue'
 
@@ -24,15 +27,14 @@ const dateText = computed<string>(() => {
   const d = props.detail?.date
   if (!d)
     return ''
-  const dateObj = typeof d === 'string' || typeof d === 'number' ? new Date(d) : d
-  return dateObj.toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+  return dayjs.tz(d as string | number | Date, 'Asia/Shanghai').format('YYYY年M月D日')
 })
 
 const star = computed(() => props.detail?.score ?? 0)
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
+dayjs.tz.setDefault('Asia/Shanghai')
 </script>
 
 <template>

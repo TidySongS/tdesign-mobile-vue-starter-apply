@@ -22,8 +22,8 @@ declare module 'vue-router/auto-routes' {
     '/[...all]': RouteRecordInfo<'/[...all]', '/:all(.*)', { all: ParamValue<true> }, { all: ParamValue<false> }>,
     '/activity-detail/': RouteRecordInfo<'/activity-detail/', '/activity-detail', Record<never, never>, Record<never, never>>,
     '/activity-detail/[id]': RouteRecordInfo<'/activity-detail/[id]', '/activity-detail/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/buy-confirm/': RouteRecordInfo<'/buy-confirm/', '/buy-confirm', Record<never, never>, Record<never, never>>,
-    '/buy-result/': RouteRecordInfo<'/buy-result/', '/buy-result', Record<never, never>, Record<never, never>>,
+    '/buy-confirm/[id]': RouteRecordInfo<'/buy-confirm/[id]', '/buy-confirm/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/buy-result/[id]': RouteRecordInfo<'/buy-result/[id]', '/buy-result/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/main': RouteRecordInfo<'/main', '/main', Record<never, never>, Record<never, never>, '/main/' | '/main/user'>,
     '/main/': RouteRecordInfo<'/main/', '/main', Record<never, never>, Record<never, never>>,
     '/main/user': RouteRecordInfo<'/main/user', '/main/user', Record<never, never>, Record<never, never>>,
@@ -58,12 +58,12 @@ declare module 'vue-router/auto-routes' {
       routes: '/activity-detail/[id]'
       views: never
     }
-    'src/pages/buy-confirm/index.vue': {
-      routes: '/buy-confirm/'
+    'src/pages/buy-confirm/[id].vue': {
+      routes: '/buy-confirm/[id]'
       views: never
     }
-    'src/pages/buy-result/index.vue': {
-      routes: '/buy-result/'
+    'src/pages/buy-result/[id].vue': {
+      routes: '/buy-result/[id]'
       views: never
     }
     'src/pages/main.vue': {

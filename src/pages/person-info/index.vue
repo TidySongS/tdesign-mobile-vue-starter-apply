@@ -38,6 +38,9 @@ const professionColumns = [
     label: '计算机从业者',
     value: '计算机从业者',
   }, {
+    label: '设计师/艺术从业者',
+    value: '设计师/艺术从业者',
+  }, {
     label: '医务人员',
     value: '医务人员',
   }, {
@@ -47,15 +50,15 @@ const professionColumns = [
 ]
 
 // 处理日期选择
-function onDateChange(value) {
+function onDateChange(value: any) {
   console.log('date change: ', value)
 }
 
-function onDatePick(value) {
+function onDatePick(value: any) {
   console.log('date pick: ', value)
 }
 
-function onDateConfirm(value) {
+function onDateConfirm(value: any) {
   console.log('date confirm: ', value)
   if (value) {
     const date = new Date(value)
@@ -73,7 +76,7 @@ function onDateCancel() {
 }
 
 // 处理职业选择
-function onProfessionConfirm(value) {
+function onProfessionConfirm(value: any) {
   if (value && value[0]) {
     formData.profession = value[0]
   }
@@ -85,45 +88,39 @@ const rules = {
   name: [{
     required: true,
     message: '请输入姓名',
-    type: 'error',
   }],
   birthday: [{
     required: true,
     message: '请选择生日',
-    type: 'error',
   }],
   phone: [{
     required: true,
     message: '请输入手机号',
-    type: 'error',
   }, {
     pattern: /^1[3-9]\d{9}$/,
     message: '请输入正确的电话号码',
-    type: 'error',
   }],
   idCard: [{
     required: true,
     message: '请输入身份证号码',
-    type: 'error',
   }, {
     pattern: /^[1-9]\d{5}(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dX]$/i,
     message: '请输入正确的身份证号码',
-    type: 'error',
   }],
   email: [{
     pattern: /^[a-z0-9][\w.-]*[a-z0-9]@[a-z0-9]+\.[a-z]+$/i,
     message: '请输入正确的邮箱',
-    type: 'error',
   }],
 }
 
 // 确认保存
-function handleConfirm() {
-  form.value.validate().then((result) => {
-    if (result === true) {
+async function handleConfirm() {
+  // @ts-expect-error 临时忽略类型不匹配
+  form.value.validate().then((result: boolean) => {
+    if (result) {
       console.log('保存个人信息:', formData)
 
-      // 添加到userInfo store
+      // 添加到userInfo store 由于mock数据会刷新重置 目前先保存在store里
       userInfo.addPerson({
         name: formData.name,
         birthday: formData.birthday,
@@ -153,7 +150,7 @@ function onReset() {
     <div class="page-content">
       <!-- 表单内容 -->
       <div class="form-section">
-        <t-form ref="form" :data="formData" :rules="rules" label-align="left" show-error-message @reset="onReset" @submit="handleConfirm">
+        <t-form ref="form" :data="formData" :rules="rules" label-align="left" show-error-message label-width="97px" @reset="onReset" @submit="handleConfirm">
           <!-- 设为默认开关 -->
           <t-form-item label="设为默认" name="isDefault" content-align="right">
             <t-switch v-model="isDefault" />
@@ -164,7 +161,7 @@ function onReset() {
           </t-form-item>
 
           <!-- 生日 -->
-          <t-form-item label="生日" name="birthday" required arrow>
+          <t-form-item label="生日" name="birthday" required>
             <div class="input-with-icon">
               <t-input v-model="formData.birthday" placeholder="请选择生日" borderless align="left" readonly @click="showDatePicker = true" />
               <t-icon name="calendar" size="20" @click="showDatePicker = true" />
@@ -243,8 +240,6 @@ function onReset() {
         right: 0;
         background: white;
         padding: 20px;
-        border-top: 1px solid #e5e5e5;
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
         box-sizing: border-box;
     }
 
@@ -267,15 +262,15 @@ function onReset() {
                 margin-bottom: 0;
             }
         }
-        .t-form-item__label {
-            font-size: 14px;
+        .t-form__label {
+            font-size: 16px;
             color: #333;
             padding-right: 16px;
         }
         .t-input {
             text-align: left;
             .t-input__control {
-                font-size: 14px;
+                font-size: 16px;
                 color: #333;
                 text-align: left;
             }
@@ -283,6 +278,18 @@ function onReset() {
                 color: #999;
                 text-align: left;
             }
+        }
+        .t-form__label--required label::before {
+          content: none;
+        }
+
+        /* 星号在后面 */
+        .t-form__label--required label::after {
+            display: inline-block;
+            margin-left: 2px;
+            color: var(--td-error-color-6, #d54941);
+            line-height: 20px;
+            content: "*";
         }
     }
 

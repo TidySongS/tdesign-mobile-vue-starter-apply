@@ -1,7 +1,20 @@
 <script setup lang="ts">
+import type { AppItem, Person } from '@/types/interface'
 import {
   ShareIcon,
 } from 'tdesign-icons-vue-next'
+
+import {
+  Message,
+} from 'tdesign-mobile-vue'
+
+import {
+  getActivityDetail,
+} from '@/api/activity'
+import {
+  getAppList,
+  getFriendList,
+} from '@/api/share'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,12 +29,14 @@ function share() {
 const isSharePopupVisible = ref(false)
 
 // 活动ID
-const activityId = ref(null)
+const activityId = computed(() => (route.params as {
+  id: string
+}).id)
 // 活动信息
 const activity = ref({
   name: '',
   date: '',
-  location: '',
+  address: '',
   cover: '',
 })
 // 选中的人员
@@ -31,37 +46,29 @@ const selectedPerson = ref({
   occupation: '设计师/艺术从业者',
 })
 
-const frendList = reactive([])
-const appList = reactive([])
+const frendList = reactive<Person[]>([])
+const appList = reactive<AppItem[]>([])
 // 加载状态
 const loading = ref(true)
 
 // 获取活动信息
 async function fetchActivityData() {
-  // 从路由参数或state中获取活动ID
-  const id = route.query.eventId || (history.state && history.state.orderInfo && history.state.orderInfo.activityId)
-  console.log(id)
-  if (!id) {
-    loading.value = false
-    return
-  }
-
-  activityId.value = id
-
   try {
     // 获取活动详情
-    const response = await fetch(`/api/activities/${id}`)
-    if (!response.ok) {
-      throw new Error('Failed to fetch activity')
-    }
-    const data = await response.json()
+    const data = await getActivityDetail(activityId.value)
+
+    // 处理日期
+    const date = new Date(data.date)
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
 
     // 设置活动信息
     activity.value = {
       name: data.title,
-      date: data.date,
+      date: `${year}年${month}月${day}日`,
       address: data.address,
-      cover: data.swiper,
+      cover: data.cover,
     }
 
     loading.value = false
@@ -69,26 +76,22 @@ async function fetchActivityData() {
   catch (err) {
     console.error('Error fetching activity data:', err)
     loading.value = false
+    // 找不到活动信息时跳转到404页面
+    router.push('/not-found')
   }
 }
+
 // 获取朋友\app信息
 async function fetchFrendandAppdata() {
   try {
-    const flresponse = await fetch('/api/share/friends')
-    if (!flresponse.ok)
-      throw new Error('Failed to fetch friemdList')
-
-    const fldata = await flresponse.json()
+    const flresponse = await getFriendList()
     frendList.length = 0
-    frendList.push(...fldata)
+    frendList.push(...flresponse)
 
-    const apresponse = await fetch('api/share/app')
-    if (!apresponse.ok)
-      throw new Error('Failed to fetch appList')
-
-    const apdata = await apresponse.json()
+    const apdata = await getAppList()
     appList.length = 0
     appList.push(...apdata)
+    console.log(appList)
     loading.value = false
   }
   catch (err) {
@@ -108,6 +111,14 @@ function shareWithFriends() {
 function closeSharePopup() {
   isSharePopupVisible.value = false
   console.log('关闭分享弹窗')
+}
+
+// 分享至社媒
+function sharemsg() {
+  Message.error({
+    content: '分享功能待实现',
+    duration: 3000,
+  })
 }
 
 // 去查看
@@ -162,7 +173,7 @@ onMounted(() => {
       </h3>
       <div class="person-info">
         <div class="person-avatar">
-          <img src="/imgs/head-bg.png" alt="头像">
+          <img src="/imgs/avatar1.png" alt="头像">
         </div>
         <div class="person-details">
           <div class="person-name">
@@ -213,7 +224,7 @@ onMounted(() => {
           分享给朋友
         </h3>
         <t-grid :column="0" class="grid-scroll">
-          <t-grid-item v-for="frend in frendList" :key="frend.id" :text="frend.name">
+          <t-grid-item v-for="frend in frendList" :key="frend.id" :text="frend.name" @click="sharemsg">
             <template #image>
               <t-avatar :image="frend.avatar" />
             </template>
@@ -226,7 +237,7 @@ onMounted(() => {
           分享到社媒
         </h3>
         <t-grid :column="0" class="grid-scroll">
-          <t-grid-item v-for="app in appList" :key="app.id" :text="app.appname" :image="app.icon" />
+          <t-grid-item v-for="app in appList" :key="app.id" :text="app.name" :image="app.icon" @click="sharemsg" />
         </t-grid>
       </div>
       <div class="share-cancel">
@@ -249,6 +260,9 @@ onMounted(() => {
         background-color: #F5F6F7;
         /* padding-top: 10px; */
         box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .page-content {
@@ -377,9 +391,9 @@ onMounted(() => {
         .share-section {
             margin-bottom: 24px;
             .share-title {
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: 500;
-                color: #333;
+                color: var( --td-font-gray-3);
                 margin: 0 0 16px 0;
             }
             .grid-scroll {
@@ -401,19 +415,6 @@ onMounted(() => {
                     min-width: 70px;
                     flex-shrink: 0;
                 }
-                /* 调整社交媒体图标大小 */
-                /* &:nth-child(2) {
-                     :deep(.t-grid-item) {
-                        --td-grid-item-image-width: 50px;
-                        --td-grid-item-image-border-radius: 8px;
-                        .t-image {
-                            width: 50px !important;
-                            height: 50px !important;
-                            border-radius: 8px;
-                            object-fit: contain;
-                        }
-                    }
-                } */
             }
         }
         .share-cancel {
