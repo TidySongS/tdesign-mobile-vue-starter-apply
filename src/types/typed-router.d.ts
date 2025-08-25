@@ -20,7 +20,6 @@ declare module 'vue-router/auto-routes' {
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/[...all]': RouteRecordInfo<'/[...all]', '/:all(.*)', { all: ParamValue<true> }, { all: ParamValue<false> }>,
-    '/activity-detail/': RouteRecordInfo<'/activity-detail/', '/activity-detail', Record<never, never>, Record<never, never>>,
     '/activity-detail/[id]': RouteRecordInfo<'/activity-detail/[id]', '/activity-detail/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/buy-confirm/[id]': RouteRecordInfo<'/buy-confirm/[id]', '/buy-confirm/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/buy-result/[id]': RouteRecordInfo<'/buy-result/[id]', '/buy-result/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
@@ -48,10 +47,6 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/[...all].vue': {
       routes: '/[...all]'
-      views: never
-    }
-    'src/pages/activity-detail/index.vue': {
-      routes: '/activity-detail/'
       views: never
     }
     'src/pages/activity-detail/[id].vue': {

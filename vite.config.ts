@@ -13,7 +13,7 @@ import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    VueRouter({}),
+    VueRouter({ dts: './src/types/typed-router.d.ts' }),
     vue(),
     AutoImport({
       resolvers: [
@@ -23,6 +23,7 @@ export default defineConfig({
         }),
       ],
       imports: [VueRouterAutoImports, 'vue'],
+      dts: './src/types/auto-imports.d.ts',
     }),
     Components({
       resolvers: [
@@ -31,6 +32,7 @@ export default defineConfig({
           resolveIcons: true,
         }),
       ],
+      dts: './src/types/components.d.ts',
     }),
   ],
   resolve: {
