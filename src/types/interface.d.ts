@@ -17,6 +17,21 @@ export interface Activity {
   type: string
 }
 
+export interface TicketItem {
+  id: string
+  activityId: string
+  date: string
+}
+
+export interface PriceItem {
+  id: string
+  activityId: string
+  description: string
+  price: number
+  originalPrice: number
+  person: number
+}
+
 export interface Person {
   id: string
   name: string

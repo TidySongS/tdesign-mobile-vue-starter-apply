@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { PriceItem, TicketItem } from '@/types/interface'
 import {
   Message,
 } from 'tdesign-mobile-vue'
@@ -14,7 +15,7 @@ const router = useRouter()
 
 // 活动ID
 const activityId = computed(() => (route.params as {
-  id
+  id: string
 }).id)
 
 // 活动信息
@@ -38,12 +39,12 @@ const selectedPersonIds = computed({
 })
 
 // 票类场次
-const tickets = reactive([])
+const tickets = reactive<TicketItem[]>([])
 // 选中的票类场次ID
 const selectedTicketId = ref('')
 
 // 票档价格
-const prices = reactive([])
+const prices = reactive<PriceItem[]>([])
 // 选中的票档价格ID
 const selectedPriceId = ref('')
 
@@ -122,7 +123,7 @@ async function fetchActivityData() {
   try {
     // 获取活动详情
     const activityData = await getActivityDetail(activityId.value)
-    console.log('qnfoqojvnq', activityData)
+    console.log('activityData', activityData)
 
     // 设置活动信息console.log(activityData)
     eventTitle.value = activityData.title
@@ -165,12 +166,12 @@ async function fetchActivityData() {
 }
 
 // 处理票类场次选择变化
-function handleTicketChange(value) {
+function handleTicketChange(value: any) {
   selectedTicketId.value = value
 }
 
 // 处理票档价格选择变化
-function handlePriceChange(value) {
+function handlePriceChange(value: any) {
   selectedPriceId.value = value
 }
 
@@ -249,7 +250,7 @@ onMounted(() => {
                 class="card__icon"
                 :aria-hidden="true"
               />
-              <t-checkbox :value="person.id" :label="person.name" icon="none" />
+              <t-checkbox :value="person.id" :label="person.name" :icon="false" />
             </div>
           </t-checkbox-group>
         </div>
