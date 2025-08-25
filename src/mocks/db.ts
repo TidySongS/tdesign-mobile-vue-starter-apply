@@ -183,10 +183,10 @@ export const db = factory({
     title: () => `${faker.company.name()}活动`,
     cover: () => faker.helpers.arrayElement(covers),
     // 详情：横幅图
-    banner: () => '/imgs/activity-banner.png',
+    banner: () => '/imgs/activity/sicc2021.png',
     // 详情：嘉宾与现场轮播图
-    guestImages: () => ['/imgs/guests1.png', '/imgs/guests2.png', '/imgs/guests3.png'],
-    sceneImages: () => ['/imgs/location1.png', '/imgs/location2.png'],
+    guestImages: () => ['/imgs/activity/guests1.png', '/imgs/activity/guests2.png'],
+    sceneImages: () => ['/imgs/activity/location1.png', '/imgs/activity/location2.png'],
     score: () => faker.number.float({ min: 0, max: 5, multipleOf: 0.5 }),
     minPrice: () =>
       faker.number.int({
@@ -311,11 +311,11 @@ for (let i = 0; i < 20; i++) {
 }
 
 const appList = [
-  { id: '1', name: 'Doc', icon: '/imgs/icon/icon-doc.png' },
-  { id: '2', name: 'Map', icon: '/imgs/icon/icon-map.png' },
-  { id: '3', name: 'QQ', icon: '/imgs/icon/icon-qq.png' },
-  { id: '4', name: 'QQ music', icon: '/imgs/icon/icon-qqmusic.png' },
-  { id: '5', name: 'WeChat', icon: '/imgs/icon/icon-wechat.png' },
+  { id: '1', name: 'Doc', icon: '/imgs/app-icon/doc.png' },
+  { id: '2', name: 'Map', icon: '/imgs/app-icon/map.png' },
+  { id: '3', name: 'QQ', icon: '/imgs/app-icon/qq.png' },
+  { id: '4', name: 'QQ music', icon: '/imgs/app-icon/qqmusic.png' },
+  { id: '5', name: 'WeChat', icon: '/imgs/app-icon/wechat.png' },
 ]
 
 appList.forEach((app) => {

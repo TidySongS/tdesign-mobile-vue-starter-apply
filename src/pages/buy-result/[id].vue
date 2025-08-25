@@ -151,7 +151,7 @@ onMounted(() => {
 
       <!-- 活动信息卡片 -->
       <div class="activity-card">
-        <img :src="activity.cover || '/imgs/activity/sicc-2021.png'" alt="活动封面" class="activity-cover">
+        <img :src="activity.cover || '/imgs/activity/sicc2021.png'" alt="活动封面" class="activity-cover">
         <h3 class="activity-name">
           {{ activity.name }}
         </h3>
@@ -173,7 +173,7 @@ onMounted(() => {
       </h3>
       <div class="person-info">
         <div class="person-avatar">
-          <img src="/imgs/avatar1.png" alt="头像">
+          <img src="https://tdesign.gtimg.com/mobile/demos/avatar1.png" alt="头像">
         </div>
         <div class="person-details">
           <div class="person-name">

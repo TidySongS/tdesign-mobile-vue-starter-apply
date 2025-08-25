@@ -75,7 +75,7 @@ async function fetchActivities() {
     const pageData = Array.isArray(res.data) ? res.data : []
     activities.value = pageData.map(it => ({
       id: String(it.id),
-      cover: it.cover ?? '/imgs/activity/cover-1.png',
+      cover: it.cover ?? '/imgs/activity/cover1.png',
       title: it.title,
       time: formatDate(it.date),
       status: it.status,

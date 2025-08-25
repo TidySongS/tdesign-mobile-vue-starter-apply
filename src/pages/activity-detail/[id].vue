@@ -45,7 +45,7 @@ watch(
 
 const bannerUrl = computed(
   () =>
-    detail.value?.banner || detail.value?.cover || '/imgs/activity-banner.png',
+    detail.value?.banner || detail.value?.cover || '/imgs/activity/sicc2021.png',
 )
 const guestImages = computed<string[]>(() => detail.value?.guestImages ?? [])
 const sceneImages = computed<string[]>(() => detail.value?.sceneImages ?? [])
@@ -204,6 +204,10 @@ function handleBuyClick() {
       .ad-slide {
         width: var(--swiper-width);
         height: 160px;
+      }
+      img {
+        height: var(--swiper-height);
+        width: var(--swiper-width);
       }
     }
   }
