@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { AppItem, Person } from '@/types/interface'
 import {
   ShareIcon,
 } from 'tdesign-icons-vue-next'
+
 import {
   Message,
 } from 'tdesign-mobile-vue'
@@ -9,7 +11,6 @@ import {
 import {
   getActivityDetail,
 } from '@/api/activity'
-
 import {
   getAppList,
   getFriendList,
@@ -29,13 +30,13 @@ const isSharePopupVisible = ref(false)
 
 // 活动ID
 const activityId = computed(() => (route.params as {
-  id
+  id: string
 }).id)
 // 活动信息
 const activity = ref({
   name: '',
   date: '',
-  location: '',
+  address: '',
   cover: '',
 })
 // 选中的人员
@@ -45,8 +46,8 @@ const selectedPerson = ref({
   occupation: '设计师/艺术从业者',
 })
 
-const frendList = reactive([])
-const appList = reactive([])
+const frendList = reactive<Person[]>([])
+const appList = reactive<AppItem[]>([])
 // 加载状态
 const loading = ref(true)
 
@@ -67,7 +68,7 @@ async function fetchActivityData() {
       name: data.title,
       date: `${year}年${month}月${day}日`,
       address: data.address,
-      cover: data.swiper,
+      cover: data.cover,
     }
 
     loading.value = false
@@ -236,7 +237,7 @@ onMounted(() => {
           分享到社媒
         </h3>
         <t-grid :column="0" class="grid-scroll">
-          <t-grid-item v-for="app in appList" :key="app.id" :text="app.appname" :image="app.icon" @click="sharemsg" />
+          <t-grid-item v-for="app in appList" :key="app.id" :text="app.name" :image="app.icon" @click="sharemsg" />
         </t-grid>
       </div>
       <div class="share-cancel">
@@ -259,6 +260,9 @@ onMounted(() => {
         background-color: #F5F6F7;
         /* padding-top: 10px; */
         box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .page-content {

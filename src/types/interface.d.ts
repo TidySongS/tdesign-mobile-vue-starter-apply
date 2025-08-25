@@ -35,12 +35,19 @@ export interface PriceItem {
 export interface Person {
   id: string
   name: string
+  avatar: string
   birthday?: string
   phone?: string
   idCard?: string
   email?: string
   profession?: string
   isDefault: boolean
+}
+
+export interface AppItem {
+  id: string
+  name: string
+  icon: string
 }
 
 export interface UserInfo {
