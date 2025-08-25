@@ -43,5 +43,3 @@ export function getPersonActivities(
 ) {
   return axios.get('/personActivities', { params })
 }
-
-// 活动详情内容
