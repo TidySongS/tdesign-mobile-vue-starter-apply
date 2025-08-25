@@ -91,7 +91,7 @@ src/
 
 1. 克隆项目
 ```bash
-git clone https://github.com/TidySongS/tdesign-mobile-vue-starter-apply
+git clone https://github.com/TDesignOteam/tdesign-mobile-vue-starter-apply
 cd tdesign-mobile-vue-starter-apply
 ```
 
