@@ -17,15 +17,37 @@ export interface Activity {
   type: string
 }
 
+export interface TicketItem {
+  id: string
+  activityId: string
+  date: string
+}
+
+export interface PriceItem {
+  id: string
+  activityId: string
+  description: string
+  price: number
+  originalPrice: number
+  person: number
+}
+
 export interface Person {
   id: string
   name: string
+  avatar?: string
   birthday?: string
   phone?: string
   idCard?: string
   email?: string
   profession?: string
   isDefault: boolean
+}
+
+export interface AppItem {
+  id: string
+  name: string
+  icon: string
 }
 
 export interface UserInfo {
