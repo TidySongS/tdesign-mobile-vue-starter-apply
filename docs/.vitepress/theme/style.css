@@ -1,49 +1,4 @@
-/**
- * Customize default theme styling by overriding CSS variables:
- * https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css
- */
-
-/**
- * Colors
- *
- * Each colors have exact same color scale system with 3 levels of solid
- * colors with different brightness, and 1 soft color.
- *
- * - `XXX-1`: The most solid color used mainly for colored text. It must
- *   satisfy the contrast ratio against when used on top of `XXX-soft`.
- *
- * - `XXX-2`: The color used mainly for hover state of the button.
- *
- * - `XXX-3`: The color for solid background, such as bg color of the button.
- *   It must satisfy the contrast ratio with pure white (#ffffff) text on
- *   top of it.
- *
- * - `XXX-soft`: The color used for subtle background such as custom container
- *   or badges. It must satisfy the contrast ratio when putting `XXX-1` colors
- *   on top of it.
- *
- *   The soft color must be semi transparent alpha channel. This is crucial
- *   because it allows adding multiple "soft" colors on top of each other
- *   to create an accent, such as when having inline code block inside
- *   custom containers.
- *
- * - `default`: The color used purely for subtle indication without any
- *   special meanings attached to it such as bg color for menu hover state.
- *
- * - `brand`: Used for primary brand colors, such as link text, button with
- *   brand theme, etc.
- *
- * - `tip`: Used to indicate useful information. The default theme uses the
- *   brand color for this by default.
- *
- * - `warning`: Used to indicate warning to the users. Used in custom
- *   container, badges, etc.
- *
- * - `danger`: Used to show error, or dangerous message to the users. Used
- *   in custom container, badges, etc.
- * -------------------------------------------------------------------------- */
-
- .home-page {
+.home-page {
   background-image: url('https://tdesign.gtimg.com/tdesign-pro/doc/homepage-banner-bg-light.png');
   background-repeat: no-repeat;
   background-size: cover;
@@ -54,15 +9,33 @@ html.dark .home-page {
   background-image: url('https://tdesign.gtimg.com/tdesign-pro/doc/homepage-banner-bg-dark.png');
 }
 
+/**
+ * Colors
+ * -------------------------------------------------------------------------- */
+
 :root {
+  --td-brand-color-4: #8eabff;
+  --td-brand-color-5: #618dff;
+  --td-brand-color-7: #0052d9;
+
+  --td-warning-color-3: #ffb98c;
+  --td-warning-color-5: #e37318;
+  --td-warning-color-7: #954500;
+
+  --td-error-color-5: #f6685d;
+  --td-error-color-6: #d54941;
+  --td-error-color-7: #ad352f;
+
+  --td-success-color-5: #2ba471;
+
   --vp-c-default-1: var(--vp-c-gray-1);
   --vp-c-default-2: var(--vp-c-gray-2);
   --vp-c-default-3: var(--vp-c-gray-3);
   --vp-c-default-soft: var(--vp-c-gray-soft);
 
-  --vp-c-brand-1: #8eabff;
-  --vp-c-brand-2: #618dff;
-  --vp-c-brand-3: #0052d9;
+  --vp-c-brand-1: var(--td-brand-color-7);
+  --vp-c-brand-2: var(--td-brand-color-5);
+  --vp-c-brand-3: var(--td-brand-color-4);
   --vp-c-brand-soft: #f2f3ff;
 
   --vp-c-tip-1: var(--vp-c-brand-1);
@@ -70,15 +43,24 @@ html.dark .home-page {
   --vp-c-tip-3: var(--vp-c-brand-3);
   --vp-c-tip-soft: var(--vp-c-brand-soft);
 
-  --vp-c-warning-1: #ffb98c;
-  --vp-c-warning-2: #e37318;
-  --vp-c-warning-3: #954500;
+  --vp-c-warning-1: var(--td-warning-color-7);
+  --vp-c-warning-2: var(--td-warning-color-5);
+  --vp-c-warning-3: var(--td-warning-color-3);
   --vp-c-warning-soft: #fff1e9;
 
-  --vp-c-danger-1: #f6685d;
-  --vp-c-danger-2: #d54941;
-  --vp-c-danger-3:#ad352f;
+  --vp-c-danger-1: var(--td-error-color-7);
+  --vp-c-danger-2: var(--td-error-color-6);
+  --vp-c-danger-3: var(--td-error-color-5);
   --vp-c-danger-soft: #fff0ed;
+}
+
+html.dark {
+  --vp-c-brand-1: var(--td-brand-color-4);
+  --vp-c-brand-3: var(--td-brand-color-7);
+  --vp-c-warning-1: var(--td-warning-color-3);
+  --vp-c-warning-3: var(--td-warning-color-7);
+  --vp-c-danger-1: var(--td-error-color-5);
+  --vp-c-danger-3: var(--td-error-color-7);
 }
 
 /**
@@ -103,7 +85,12 @@ html.dark .home-page {
 
 :root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #2ba471 30%, #618dff 70%, #0052d9);
+  --vp-home-hero-name-background: -webkit-linear-gradient(
+    120deg,
+    var(--td-success-color-5) 30%,
+    var(--td-brand-color-5) 70%,
+    var(--td-brand-color-7)
+  );
 }
 
 @media (min-width: 640px) {
