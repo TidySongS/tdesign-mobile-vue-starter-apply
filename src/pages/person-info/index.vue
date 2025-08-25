@@ -126,7 +126,7 @@ function handleConfirm() {
     if (result === true) {
       console.log('保存个人信息:', formData)
 
-      // 添加到userInfo store
+      // 添加到userInfo store 由于mock数据会刷新重置 目前先保存在store里
       userInfo.addPerson({
         name: formData.name,
         birthday: formData.birthday,
