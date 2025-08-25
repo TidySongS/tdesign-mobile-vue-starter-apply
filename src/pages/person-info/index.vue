@@ -50,15 +50,15 @@ const professionColumns = [
 ]
 
 // 处理日期选择
-function onDateChange(value) {
+function onDateChange(value: any) {
   console.log('date change: ', value)
 }
 
-function onDatePick(value) {
+function onDatePick(value: any) {
   console.log('date pick: ', value)
 }
 
-function onDateConfirm(value) {
+function onDateConfirm(value: any) {
   console.log('date confirm: ', value)
   if (value) {
     const date = new Date(value)
@@ -76,7 +76,7 @@ function onDateCancel() {
 }
 
 // 处理职业选择
-function onProfessionConfirm(value) {
+function onProfessionConfirm(value: any) {
   if (value && value[0]) {
     formData.profession = value[0]
   }
@@ -88,42 +88,36 @@ const rules = {
   name: [{
     required: true,
     message: '请输入姓名',
-    type: 'error',
   }],
   birthday: [{
     required: true,
     message: '请选择生日',
-    type: 'error',
   }],
   phone: [{
     required: true,
     message: '请输入手机号',
-    type: 'error',
   }, {
     pattern: /^1[3-9]\d{9}$/,
     message: '请输入正确的电话号码',
-    type: 'error',
   }],
   idCard: [{
     required: true,
     message: '请输入身份证号码',
-    type: 'error',
   }, {
     pattern: /^[1-9]\d{5}(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dX]$/i,
     message: '请输入正确的身份证号码',
-    type: 'error',
   }],
   email: [{
     pattern: /^[a-z0-9][\w.-]*[a-z0-9]@[a-z0-9]+\.[a-z]+$/i,
     message: '请输入正确的邮箱',
-    type: 'error',
   }],
 }
 
 // 确认保存
-function handleConfirm() {
-  form.value.validate().then((result) => {
-    if (result === true) {
+async function handleConfirm() {
+  // @ts-expect-error 临时忽略类型不匹配
+  form.value.validate().then((result: boolean) => {
+    if (result) {
       console.log('保存个人信息:', formData)
 
       // 添加到userInfo store 由于mock数据会刷新重置 目前先保存在store里
@@ -268,7 +262,7 @@ function onReset() {
                 margin-bottom: 0;
             }
         }
-        .t-form-item__label {
+        .t-form__label {
             font-size: 16px;
             color: #333;
             padding-right: 16px;
@@ -284,6 +278,18 @@ function onReset() {
                 color: #999;
                 text-align: left;
             }
+        }
+        .t-form__label--required label::before {
+          content: none;
+        }
+
+        /* 星号在后面 */
+        .t-form__label--required label::after {
+            display: inline-block;
+            margin-left: 2px;
+            color: var(--td-error-color-6, #d54941);
+            line-height: 20px;
+            content: "*";
         }
     }
 

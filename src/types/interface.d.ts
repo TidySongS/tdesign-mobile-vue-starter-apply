@@ -35,7 +35,7 @@ export interface PriceItem {
 export interface Person {
   id: string
   name: string
-  avatar: string
+  avatar?: string
   birthday?: string
   phone?: string
   idCard?: string
