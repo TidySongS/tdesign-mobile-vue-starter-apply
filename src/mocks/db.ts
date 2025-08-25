@@ -6,6 +6,24 @@ import { covers } from './activityMocks'
 
 const twoYearsFromNow = dayjs().add(2, 'year').toDate()
 
+// 中文介绍文案池
+const cnIntroducePool = [
+  '在数字化时代背景下，如何抓住机遇，构建“数字+文化”更高效、宽领域、深覆盖的文化创新之路，让优秀传统文化得以延续与新生，是我们持续探索的方向。',
+  '活动将围绕文化保育与文化创新，邀请来自文物、建筑、服饰、工艺等不同艺术领域的专家，分享最新趋势与实践经验。',
+  '通过跨界交流与案例解析，帮助来宾在传统文化与数字科技的碰撞中获得启发，探索服务设计的新命题。',
+  '现场还将设置多种互动环节与展陈内容，呈现真实的服务设计实践，助力参与者获得系统的认知与方法论。',
+]
+
+// 中文评论文案池
+const cnCommentPool = [
+  '活动组织得很专业，内容充实有干货，期待下次再参加。',
+  '嘉宾分享观点独到，案例贴近实际，受益匪浅。',
+  '现场互动环节很有趣，整体节奏把控得很好。',
+  '信息量大且结构清晰，对我的工作有很大启发。',
+  '场地与服务体验不错，细节考虑得很周到。',
+  '主题设置紧贴行业趋势，收获了许多新思路。',
+]
+
 function generatePrice() {
   const priceType = faker.helpers.arrayElement(['free', 'single', 'range'])
 
@@ -164,6 +182,11 @@ export const db = factory({
     id: primaryKey(faker.string.uuid), // 主键 ID
     title: () => `${faker.company.name()}活动`,
     cover: () => faker.helpers.arrayElement(covers),
+    // 详情：横幅图
+    banner: () => '/imgs/activity-banner.png',
+    // 详情：嘉宾与现场轮播图
+    guestImages: () => ['/imgs/guests1.png', '/imgs/guests2.png', '/imgs/guests3.png'],
+    sceneImages: () => ['/imgs/location1.png', '/imgs/location2.png'],
     score: () => faker.number.float({ min: 0, max: 5, multipleOf: 0.5 }),
     minPrice: () =>
       faker.number.int({
@@ -179,16 +202,20 @@ export const db = factory({
     type: () => faker.helpers.arrayElement(defaultFilterOptions.type),
     date: () => faker.date.between({ from: new Date(), to: twoYearsFromNow }), // 未来两年
     address: () => faker.location.streetAddress(),
-    introduce: () => faker.lorem.paragraphs(1),
+    introduce: () => faker.helpers.arrayElement(cnIntroducePool),
+    // 详情：感兴趣人数（用于头像组右侧的人数展示）
+    interestedCount: () => faker.number.int({ min: 50, max: 5000 }),
     comments: manyOf('comment'), // 嵌套评论
     interestedPeople: manyOf('interestedPerson'), // 嵌套感兴趣的人
+
   },
   // 独立的评论模型
   comment: {
     id: primaryKey(faker.string.uuid),
     user: () => faker.person.fullName(),
+    avatar: () => faker.image.avatar(),
     rating: () => faker.number.int({ min: 1, max: 5 }),
-    content: () => faker.lorem.sentence(),
+    content: () => faker.helpers.arrayElement(cnCommentPool),
   },
 
   // 独立的感兴趣的人模型
@@ -203,6 +230,7 @@ export const db = factory({
     title: () => `${faker.company.name()}活动`, // 活动标题
     status: () => faker.helpers.arrayElement(['已完成', '待参加']),
     date: () => faker.date.between({ from: new Date(), to: twoYearsFromNow }), // 未来两年
+    cover: () => faker.helpers.arrayElement(covers),
   },
   // 职业
   occupation: {
@@ -233,6 +261,15 @@ export const db = factory({
     id: primaryKey(String),
     appname: String,
     icon: String,
+  },
+  // 用户档案
+  userProfile: {
+    id: primaryKey(String),
+    name: String,
+    age: Number,
+    occupation: String,
+    avatar: String,
+    city: String,
   },
 })
 
@@ -283,4 +320,14 @@ const appList = [
 
 appList.forEach((app) => {
   db.shareAppIconList.create(app)
+})
+
+// 预置一个用户档案
+db.userProfile.create({
+  id: 'current',
+  name: faker.person.fullName(),
+  age: faker.number.int({ min: 18, max: 60 }),
+  occupation: faker.person.jobTitle(),
+  avatar: faker.image.avatar(),
+  city: faker.location.city(),
 })

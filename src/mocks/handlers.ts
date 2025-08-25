@@ -186,6 +186,13 @@ export const handlers = [
     return HttpResponse.json(appList)
   }),
 
+  // 用户信息
+  http.get('/api/user/profile', () => {
+    const profile = db.userProfile.findFirst({
+      where: { id: { equals: 'current' } },
+    })
+    return HttpResponse.json(profile)
+  }),
   // 处理Vue开发服务器的样式请求
   http.get(/\.vue\?vue&type=style/, () => {
     return new HttpResponse(null, { status: 200 })
