@@ -334,211 +334,211 @@ onMounted(() => {
 
 <style lang="less" scoped>
     header {
-        top: 0;
-        z-index: 99;
-        height: 120px;
-        position: sticky;
-        background: white;
-        .event-container {
-            margin-top: 10px;
-            padding: 16px;
-            flex-direction: column;
-            top: 48px;
-            position: fixed;
-            background: white;
-            width: 100%;
-            box-sizing: border-box;
-            align-items: flex-start;
-        }
-    }
+  top: 0;
+  z-index: 99;
+  height: 120px;
+  position: sticky;
+  background: white;
+  .event-container {
+    margin-top: 10px;
+    padding: 16px;
+    flex-direction: column;
+    top: 48px;
+    position: fixed;
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: flex-start;
+  }
+}
 
-    .buy-confirm-page {
-        margin-top: 0;
-        min-height: calc(100dvh - 120px);
-        /* 减去header高度 */
-        background-color: #fff;
-        padding-bottom: 73px;
-        box-sizing: border-box;
-    }
+.buy-confirm-page {
+  margin-top: 0;
+  min-height: calc(100dvh - 120px);
+  /* 减去header高度 */
+  background-color: #fff;
+  padding-bottom: 73px;
+  box-sizing: border-box;
+}
 
-    .flex-center {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        margin-bottom: 12px;
-        span {
-            font-size: 20px;
-            font-weight: 600;
-            color: #000000;
-            line-height: 32px;
-        }
-    }
+.flex-center {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  span {
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000;
+    line-height: 32px;
+  }
+}
 
-    .event-details {
-        display: flex;
-        flex-direction: row;
-        gap: 16px;
-        margin-bottom: 12px;
-        .detail-item {
-            display: flex;
-            align-items: center;
-            span {
-                margin-left: 8px;
-                color: #000000;
-                font-size: 14px;
-                font-weight: 400;
-            }
-            .t-icon {
-                color: #0052D9;
-            }
-        }
+.event-details {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin-bottom: 12px;
+  .detail-item {
+    display: flex;
+    align-items: center;
+    span {
+      margin-left: 8px;
+      color: #000000;
+      font-size: 14px;
+      font-weight: 400;
     }
+    .t-icon {
+      color: #0052d9;
+    }
+  }
+}
 
-    .page-content {
-        padding: 16px 0 0 0;
-        margin-top: 30px;
-        box-sizing: border-box;
-    }
+.page-content {
+  padding: 16px 0 0 0;
+  margin-top: 30px;
+  box-sizing: border-box;
+}
 
-    .section {
-        background: white;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        padding: 15px 16px 0 16px;
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin: 0;
-        }
-    }
-    /* 人员信息网格布局 */
+.section {
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  padding: 15px 16px 0 16px;
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+}
+/* 人员信息网格布局 */
 
-    .person-grid {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-    }
+.person-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
 
-    .person-grid .card {
-        margin: 0;
-    }
+.person-grid .card {
+  margin: 0;
+}
 
-    .person-grid .card::after {
-        border-width: 12px;
-    }
+.person-grid .card::after {
+  border-width: 12px;
+}
 
-    .person-grid .card__icon {
-        font-size: 12px;
-    }
-    /* 卡片样式 */
+.person-grid .card__icon {
+  font-size: 12px;
+}
+/* 卡片样式 */
 
-    .card {
-        position: relative;
-        margin: 16px 0;
-        border-radius: 6px;
-        overflow: hidden;
-        box-sizing: border-box;
-        border: 1.5px solid #DCDCDC;
-        padding-left: 8px;
-    }
+.card {
+  position: relative;
+  margin: 16px 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1.5px solid #dcdcdc;
+  padding-left: 8px;
+}
 
-    .card--active {
-        border-color: #0052d9;
-    }
+.card--active {
+  border-color: #0052d9;
+}
 
-    .card--active::after {
-        content: '';
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 0;
-        border: 14px solid #0052d9;
-        border-bottom-color: transparent;
-        border-right-color: transparent;
-    }
+.card--active::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  border: 14px solid #0052d9;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+}
 
-     :deep(.t-radio) {
-        padding-left: 0;
-    }
+:deep(.t-radio) {
+  padding-left: 0;
+}
 
-     :deep(.t-checkbox) {
-        padding-left: 8px;
-    }
+:deep(.t-checkbox) {
+  padding-left: 8px;
+}
 
-    .card__icon {
-        color: #fff;
-        position: absolute;
-        left: 1.5px;
-        top: 1.5px;
-        z-index: 1;
-        font-size: 14px;
-    }
-    /* 价格卡片内容布局 */
+.card__icon {
+  color: #fff;
+  position: absolute;
+  left: 1.5px;
+  top: 1.5px;
+  z-index: 1;
+  font-size: 14px;
+}
+/* 价格卡片内容布局 */
 
-    .price-card-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-    }
-    /* 价格样式 */
+.price-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+/* 价格样式 */
 
-    .price-amount {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        text-align: right;
-        padding-right: 12px;
-        /* 增加右侧内边距，使价格离边线远一点 */
-    }
+.price-amount {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: right;
+  padding-right: 12px;
+  /* 增加右侧内边距，使价格离边线远一点 */
+}
 
-    .current-price {
-        font-size: 16px;
-        font-weight: 600;
-    }
+.current-price {
+  font-size: 16px;
+  font-weight: 600;
+}
 
-    .original-price {
-        font-size: 16px;
-        color: #999;
-        text-decoration: line-through;
-    }
+.original-price {
+  font-size: 16px;
+  color: #999;
+  text-decoration: line-through;
+}
 
-    .bottom-action-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: white;
-        padding: 12px 16px;
-        border-top: 1px solid #e5e5e5;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-        box-sizing: border-box;
-        .price-info {
-            .price-label {
-                font-size: 14px;
-                color: #666;
-            }
-            .price-value {
-                font-size: 20px;
-                font-weight: 600;
-                color: #0052d9;
-                margin-left: 4px;
-            }
-        }
-         :deep(.t-button) {
-            min-width: 120px;
-        }
+.bottom-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 12px 16px;
+  border-top: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  .price-info {
+    .price-label {
+      font-size: 14px;
+      color: #666;
     }
+    .price-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: #0052d9;
+      margin-left: 4px;
+    }
+  }
+  :deep(.t-button) {
+    min-width: 120px;
+  }
+}
 </style>

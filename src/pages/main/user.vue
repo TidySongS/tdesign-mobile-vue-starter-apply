@@ -283,8 +283,7 @@ onMounted(() => {
           }
         }
         .activity-item-info {
-          padding: var(--td-spacer-2) var(--td-spacer-2) var(--td-spacer-1)
-            var(--td-spacer-2);
+          padding: var(--td-spacer-2) var(--td-spacer-2) var(--td-spacer-1) var(--td-spacer-2);
           display: flex;
           flex-direction: column;
           justify-content: space-between;

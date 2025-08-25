@@ -212,99 +212,99 @@ function onReset() {
 
 <style lang="less" scoped>
     header {
-        position: fixed;
-        z-index: 999;
-    }
+  position: fixed;
+  z-index: 999;
+}
 
-    .person-info-page {
-        min-height: calc(100dvh - 48px);
-        background-color: #fff;
-        padding-bottom: 80px;
-        box-sizing: border-box;
-    }
+.person-info-page {
+  min-height: calc(100dvh - 48px);
+  background-color: #fff;
+  padding-bottom: 80px;
+  box-sizing: border-box;
+}
 
-    .page-content {
-        padding-top: 48px;
-        box-sizing: border-box;
-    }
+.page-content {
+  padding-top: 48px;
+  box-sizing: border-box;
+}
 
-    .form-section {
-        background: white;
-        padding: 3px;
-    }
+.form-section {
+  background: white;
+  padding: 3px;
+}
 
-    .bottom-action {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: white;
-        padding: 20px;
-        box-sizing: border-box;
-    }
+.bottom-action {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-     :deep(.t-cell) {
-        padding: 16px;
-        height: 56px;
-        display: flex;
-        align-items: center;
-    }
+:deep(.t-cell) {
+  padding: 16px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+}
 
-     :deep(.t-form) {
-        --td-form-label-width: 80px;
-        .t-form-item {
-            padding: 16px;
-            margin-bottom: 16px;
-            /* 增加表单项之间的间距 */
-            border-bottom: 1px solid #f0f0f0;
-            &:last-child {
-                border-bottom: none;
-                margin-bottom: 0;
-            }
-        }
-        .t-form__label {
-            font-size: 16px;
-            color: #333;
-            padding-right: 16px;
-        }
-        .t-input {
-            text-align: left;
-            .t-input__control {
-                font-size: 16px;
-                color: #333;
-                text-align: left;
-            }
-            .t-input__placeholder {
-                color: #999;
-                text-align: left;
-            }
-        }
-        .t-form__label--required label::before {
-          content: none;
-        }
-
-        /* 星号在后面 */
-        .t-form__label--required label::after {
-            display: inline-block;
-            margin-left: 2px;
-            color: var(--td-error-color-6, #d54941);
-            line-height: 20px;
-            content: "*";
-        }
+:deep(.t-form) {
+  --td-form-label-width: 80px;
+  .t-form-item {
+    padding: 16px;
+    margin-bottom: 16px;
+    /* 增加表单项之间的间距 */
+    border-bottom: 1px solid #f0f0f0;
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
     }
-
-     :deep(.t-switch) {
-        --td-switch-checked-color: #0052d9;
+  }
+  .t-form__label {
+    font-size: 16px;
+    color: #333;
+    padding-right: 16px;
+  }
+  .t-input {
+    text-align: left;
+    .t-input__control {
+      font-size: 16px;
+      color: #333;
+      text-align: left;
     }
-
-    .input-with-icon {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        .t-icon {
-            color: #999;
-            margin-right: 8px;
-        }
+    .t-input__placeholder {
+      color: #999;
+      text-align: left;
     }
+  }
+  .t-form__label--required label::before {
+    content: none;
+  }
+
+  /* 星号在后面 */
+  .t-form__label--required label::after {
+    display: inline-block;
+    margin-left: 2px;
+    color: var(--td-error-color-6, #d54941);
+    line-height: 20px;
+    content: '*';
+  }
+}
+
+:deep(.t-switch) {
+  --td-switch-checked-color: #0052d9;
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  .t-icon {
+    color: #999;
+    margin-right: 8px;
+  }
+}
 </style>

@@ -251,181 +251,181 @@ onMounted(() => {
 
 <style lang="less" scoped>
     .tnavbar {
-        --td-navbar-bg-color: #f5f6f7;
-    }
+  --td-navbar-bg-color: #f5f6f7;
+}
 
-    .buy-result-page {
-        min-height: calc(100vh);
-        /* 减去navbar高度 */
-        background-color: #F5F6F7;
-        /* padding-top: 10px; */
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
+.buy-result-page {
+  min-height: calc(100vh);
+  /* 减去navbar高度 */
+  background-color: #f5f6f7;
+  /* padding-top: 10px; */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-    .page-content {
-        padding: 16px 16px 16px;
-        box-sizing: border-box;
-    }
+.page-content {
+  padding: 16px 16px 16px;
+  box-sizing: border-box;
+}
 
-    .result-status {
-        text-align: center;
-        margin-top: 40px;
-        margin-bottom: 24px;
-        .status-icon {
-            margin-bottom: 16px;
-        }
-        .status-title {
-            opacity: 1;
-            color: #000000e6;
-            font-size: 20px;
-            font-weight: 600;
-            text-align: center;
-            line-height: 28px;
-            margin: 0;
-        }
-    }
+.result-status {
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 24px;
+  .status-icon {
+    margin-bottom: 16px;
+  }
+  .status-title {
+    opacity: 1;
+    color: #000000e6;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 28px;
+    margin: 0;
+  }
+}
 
-    .activity-card {
-        background: white;
-        border-radius: 12px;
-        padding: 16px;
-        margin-bottom: 16px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        .activity-cover {
-            width: 100%;
-            height: auto;
-            max-height: 200px;
-            object-fit: cover;
-            display: block;
-            border-radius: 9.06px;
-        }
-        .activity-name {
-            height: 26px;
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin: 16px 0px 8px;
-        }
-        .activity-details {
-            /* padding: 0 16px 16px; */
-            display: flex;
-            flex-direction: row;
-            .detail-item {
-                display: flex;
-                align-items: center;
-                margin-right: 16px;
-                margin-bottom: 10px;
-                .t-icon {
-                    color: #0052D9;
-                    margin-right: 5px;
-                }
-                span {
-                    font-size: 14px;
-                    color: #666;
-                }
-            }
-        }
+.activity-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  .activity-cover {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: cover;
+    display: block;
+    border-radius: 9.06px;
+  }
+  .activity-name {
+    height: 26px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 16px 0px 8px;
+  }
+  .activity-details {
+    /* padding: 0 16px 16px; */
+    display: flex;
+    flex-direction: row;
+    .detail-item {
+      display: flex;
+      align-items: center;
+      margin-right: 16px;
+      margin-bottom: 10px;
+      .t-icon {
+        color: #0052d9;
+        margin-right: 5px;
+      }
+      span {
+        font-size: 14px;
+        color: #666;
+      }
     }
+  }
+}
 
-    .section-title {
-        font-size: 16px;
-        font-weight: 600;
-        color: #000;
-        margin: 24px 0 16px 0;
-    }
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin: 24px 0 16px 0;
+}
 
-    .person-info {
-        background: white;
-        border-radius: 8px;
-        margin-bottom: 24px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        display: flex;
-        align-items: center;
-        border: 0 solid #e7e7e7;
-        padding: 12px;
-        .person-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            overflow: hidden;
-            padding: 0;
-            margin-right: 12px;
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-        }
-        .person-details {
-            flex: 1;
-            .person-name {
-                font-size: 16px;
-                font-weight: 500;
-                color: #333;
-                margin-bottom: 4px;
-            }
-            .person-desc {
-                font-size: 12px;
-                color: #999;
-            }
-        }
+.person-info {
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  border: 0 solid #e7e7e7;
+  padding: 12px;
+  .person-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    padding: 0;
+    margin-right: 12px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
+  }
+  .person-details {
+    flex: 1;
+    .person-name {
+      font-size: 16px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    .person-desc {
+      font-size: 12px;
+      color: #999;
+    }
+  }
+}
 
-    .action-buttons {
-        display: flex;
-        flex-direction: row;
-        gap: 12px;
-        margin-top: 24px;
-        margin-bottom: 24px;
-    }
-    /* 分享弹窗样式 */
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+/* 分享弹窗样式 */
 
-    .share-popup {
-        background-color: white;
-        border-top-left-radius: 16px;
-        border-top-right-radius: 16px;
-        padding: 16px 16px;
-        .share-section {
-            margin-bottom: 24px;
-            .share-title {
-                font-size: 14px;
-                font-weight: 500;
-                color: var( --td-font-gray-3);
-                margin: 0 0 16px 0;
-            }
-            .grid-scroll {
-                overflow-x: auto;
-                white-space: nowrap;
-                scrollbar-width: none;
-                /* Firefox */
-                -ms-overflow-style: none;
-                /* IE and Edge */
-                &::-webkit-scrollbar {
-                    display: none;
-                    /* Chrome, Safari, Opera */
-                }
-                 :deep(.t-grid__content) {
-                    flex-wrap: nowrap;
-                    padding: 4px 0;
-                }
-                 :deep(.t-grid-item) {
-                    min-width: 70px;
-                    flex-shrink: 0;
-                }
-            }
-        }
-        .share-cancel {
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid #f5f5f5;
-             :deep(.t-button) {
-                font-size: 16px;
-                color: #333;
-                --td-button-large-height: 10px;
-            }
-        }
+.share-popup {
+  background-color: white;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 16px 16px;
+  .share-section {
+    margin-bottom: 24px;
+    .share-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--td-font-gray-3);
+      margin: 0 0 16px 0;
     }
+    .grid-scroll {
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      &::-webkit-scrollbar {
+        display: none;
+        /* Chrome, Safari, Opera */
+      }
+      :deep(.t-grid__content) {
+        flex-wrap: nowrap;
+        padding: 4px 0;
+      }
+      :deep(.t-grid-item) {
+        min-width: 70px;
+        flex-shrink: 0;
+      }
+    }
+  }
+  .share-cancel {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #f5f5f5;
+    :deep(.t-button) {
+      font-size: 16px;
+      color: #333;
+      --td-button-large-height: 10px;
+    }
+  }
+}
 </style>

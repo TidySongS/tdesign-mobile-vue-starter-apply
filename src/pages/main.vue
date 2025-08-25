@@ -129,7 +129,7 @@ function handleTabbarChange(name: string | number) {
 .header-navbar {
   z-index: 99;
   .t-navbar__content {
-    background-image: url("/imgs/head-bg.png");
+    background-image: url('/imgs/head-bg.png');
     background-position: left var(--status-bar-height);
     background-repeat: no-repeat;
     background-size: cover;
