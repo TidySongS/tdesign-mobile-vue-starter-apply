@@ -4,7 +4,6 @@ import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import { IconFont } from 'tdesign-icons-vue-next'
-import { computed } from 'vue'
 
 const props = defineProps<{
   detail: ActivityDetail | null
@@ -194,51 +193,7 @@ dayjs.tz.setDefault('Asia/Shanghai')
       transform: rotate(180deg);
     }
   }
-  .ad-summary {
-    padding-bottom: 16px;
-    border-bottom: 0.5px solid var(--td-gray-color-3);
-    .ad-title {
-      .font(20px, 600);
-      color: #040000;
-    }
-    .ad-avatars {
-      margin-top: 12px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      --td-avatar-group-margin-left-medium: -12px;
-      .ad-interest {
-        font-size: 12px;
-        line-height: 20px;
-        color: var(--td-font-gray-2);
-      }
-      .t-avatar__wrapper:nth-child(1) {
-        margin-left: 0;
-      }
-    }
-  }
-  .ad-meta {
-    .flex-col();
-    .font();
-    padding-bottom: 16px;
-    border-bottom: 0.5px solid var(--td-gray-color-3);
-    gap: 8px;
-    .ad-meta-text {
-      margin-left: 4px;
-      color: #040000;
-    }
-    .ad-time,
-    .ad-location {
-      .flex-center(space-between);
-      .ad-meta-item {
-        .flex-center();
-        .ad-meta-icon-time,
-        .ad-meta-icon-location {
-          color: var(--td-brand-color-7);
-        }
-      }
-    }
-  }
+
   .ad-reviews {
     padding-bottom: 16px;
     border-bottom: 0.5px solid var(--td-gray-color-3);
@@ -256,41 +211,6 @@ dayjs.tz.setDefault('Asia/Shanghai')
         --td-rate-text-font-size: 14px;
       }
     }
-    .ad-reviews-list {
-      --td-cell-bg-color: var(--td-gray-color-1);
-      --td-cell-vertical-padding: 12px;
-      margin-top: 12px;
-      --ad-swiper-width: 343px;
-      .ad-reviews-swiper {
-        overflow: visible;
-        margin: 0 calc((100vw - var(--ad-swiper-width)) - 48px) 0 0;
-        .ad-reviews-swiper-item {
-          width: var(--ad-swiper-width);
-          height: 90px;
-        }
-      }
-      .ad-review-item {
-        :deep(.t-cell__left) {
-          .flex-center();
-        }
-        border-radius: 9px;
-        height: 90px;
-        :deep(.t-cell__title-text) {
-          font-size: 14px;
-        }
-        .ad-review-item-content {
-          .font(12px, 400);
-          color: #00000099;
-          text-align: left;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          line-clamp: 2;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
-    }
   }
   .ad-intro {
     .ad-intro-title {
@@ -305,6 +225,89 @@ dayjs.tz.setDefault('Asia/Shanghai')
   .ad-popup-actions {
     display: flex;
     gap: 12px;
+  }
+}
+
+.ad-summary {
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid var(--td-gray-color-3);
+  .ad-title {
+    .font(20px, 600);
+    color: #040000;
+  }
+  .ad-avatars {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    --td-avatar-group-margin-left-medium: -12px;
+    .ad-interest {
+      font-size: 12px;
+      line-height: 20px;
+      color: var(--td-font-gray-2);
+    }
+    .t-avatar__wrapper:nth-child(1) {
+      margin-left: 0;
+    }
+  }
+}
+
+.ad-meta {
+  .flex-col();
+  .font();
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid var(--td-gray-color-3);
+  gap: 8px;
+  .ad-meta-text {
+    margin-left: 4px;
+    color: #040000;
+  }
+  .ad-time,
+  .ad-location {
+    .flex-center(space-between);
+    .ad-meta-item {
+      .flex-center();
+      .ad-meta-icon-time,
+      .ad-meta-icon-location {
+        color: var(--td-brand-color-7);
+      }
+    }
+  }
+}
+
+.ad-reviews-list {
+  --td-cell-bg-color: var(--td-gray-color-1);
+  --td-cell-vertical-padding: 12px;
+  margin-top: 12px;
+  --ad-swiper-width: 343px;
+  .ad-reviews-swiper {
+    overflow: visible;
+    margin: 0 calc((100vw - var(--ad-swiper-width)) - 48px) 0 0;
+    .ad-reviews-swiper-item {
+      width: var(--ad-swiper-width);
+      height: 90px;
+    }
+  }
+  .ad-review-item {
+    :deep(.t-cell__left) {
+      .flex-center();
+    }
+    border-radius: 9px;
+    height: 90px;
+    :deep(.t-cell__title-text) {
+      font-size: 14px;
+    }
+    .ad-review-item-content {
+      .font(12px, 400);
+      color: #00000099;
+      text-align: left;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 </style>
