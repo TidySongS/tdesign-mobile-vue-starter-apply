@@ -24,6 +24,8 @@ const error = ref(false)
 // 人员信息 - 从store中获取
 const persons = computed(() => userInfo.persons)
 
+const plusIcon = () => h(PlusIcon, { size: '18px' })
+
 // 选中的人员ID数组 - 从store中获取
 const selectedPersonIds = computed({
   get: () => userInfo.selectedPersonIds,
@@ -198,218 +200,189 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="buy-confirm-page">
-    <!-- <t-loading :loading="loading" theme="dots" size="large" class="loading-container" /> -->
-
-    <template v-if="!loading && !error">
-      <header>
-        <t-navbar title="购买确认" left-arrow :on-left-click="$router.back" />
-        <div class="event-container">
-          <div class="flex-center">
-            <span>{{ eventTitle }}</span>
-          </div>
-          <div class="event-details">
-            <div class="detail-item">
-              <t-icon name="time" size="16" />
-              <span>{{ eventDate }}</span>
-            </div>
-            <div class="detail-item">
-              <t-icon name="location" size="16" />
-              <span>{{ eventLocation }}</span>
-            </div>
-          </div>
-          <t-divider />
+  <header>
+    <t-navbar title="购买确认" left-arrow :on-left-click="$router.back" />
+  </header>
+  <main class="buy-confirm-page">
+    <t-sticky :offset-top="48">
+      <div class="event-container">
+        <div class="event-title">
+          <span>{{ eventTitle }}</span>
         </div>
-      </header>
-      <div class="page-content">
-        <!-- 人员信息 -->
-        <div class="section">
-          <div class="section-header">
-            <h3 class="section-title">
-              人员信息
-            </h3>
-            <t-button size="small" shape="round" @click="addPerson">
-              + 增加人员
-            </t-button>
+        <div class="event-details">
+          <div class="detail-item">
+            <TimeIcon size="16px" />
+            <span>{{ eventDate }}</span>
           </div>
-          <t-checkbox-group v-model="selectedPersonIds" class="person-grid" borderless>
-            <div
-              v-for="person in persons"
-              :key="person.id"
-              :class="`card ${selectedPersonIds.includes(person.id) ? 'card--active' : ''}`"
-            >
-              <TIcon
-                v-if="selectedPersonIds.includes(person.id)"
-                name="check"
-                class="card__icon"
-                :aria-hidden="true"
-              />
-              <t-checkbox :value="person.id" :label="person.name" :icon="false" />
-            </div>
-          </t-checkbox-group>
+          <div class="detail-item">
+            <LocationIcon size="16px" />
+            <span>{{ eventLocation }}</span>
+          </div>
         </div>
-
-        <!-- 票类场次 -->
-        <div class="section">
+      </div>
+    </t-sticky>
+    <div class="page-content">
+      <!-- 人员信息 -->
+      <div class="section">
+        <div class="section-header">
           <h3 class="section-title">
-            票类场次
+            人员信息
           </h3>
-          <t-radio-group v-model="selectedTicketId" @change="handleTicketChange">
-            <div
-              v-for="ticket in tickets"
-              :key="ticket.id"
-              :class="`card ${selectedTicketId === ticket.id ? 'card--active' : ''}`"
-            >
-              <TIcon
-                v-if="selectedTicketId === ticket.id"
-                name="check"
-                class="card__icon"
-              />
-              <t-radio
-                :value="ticket.id"
-                :label="ticket.date"
-                icon="none"
-                borderless
-              />
-            </div>
-          </t-radio-group>
+          <t-button size="extra-small" shape="round" :icon="plusIcon" @click="addPerson">
+            增加人员
+          </t-button>
         </div>
+        <t-checkbox-group v-model="selectedPersonIds" class="person-grid" borderless>
+          <div
+            v-for="person in persons"
+            :key="person.id"
+            :class="`card ${selectedPersonIds.includes(person.id) ? 'card--active' : ''}`"
+          >
+            <CheckIcon v-if="selectedPersonIds.includes(person.id)" class="card__icon" />
+            <t-checkbox :value="person.id" :label="person.name" :icon="false" />
+          </div>
+        </t-checkbox-group>
+      </div>
 
-        <!-- 票档价格 -->
-        <div class="section">
-          <h3 class="section-title">
-            票档价格
-          </h3>
-          <t-radio-group v-model="selectedPriceId" @change="handlePriceChange">
-            <div
-              v-for="price in prices"
-              :key="price.id"
-              :class="`card ${selectedPriceId === price.id ? 'card--active' : ''}`"
+      <!-- 票类场次 -->
+      <div class="section">
+        <h3 class="section-title">
+          票类场次
+        </h3>
+        <t-radio-group v-model="selectedTicketId" @change="handleTicketChange">
+          <div
+            v-for="ticket in tickets"
+            :key="ticket.id"
+            :class="`card ${selectedTicketId === ticket.id ? 'card--active' : ''}`"
+          >
+            <CheckIcon v-if="selectedTicketId === ticket.id" class="card__icon" />
+            <t-radio
+              :value="ticket.id"
+              :label="ticket.date"
+              icon="none"
+              borderless
+            />
+          </div>
+        </t-radio-group>
+      </div>
+
+      <!-- 票档价格 -->
+      <div class="section">
+        <h3 class="section-title">
+          票档价格
+        </h3>
+        <t-radio-group v-model="selectedPriceId" @change="handlePriceChange">
+          <div
+            v-for="price in prices"
+            :key="price.id"
+            :class="`card ${selectedPriceId === price.id ? 'card--active' : ''}`"
+          >
+            <CheckIcon v-if="selectedPriceId === price.id" class="card__icon" />
+            <t-radio
+              :value="price.id"
+              icon="none"
+              borderless
             >
-              <TIcon
-                v-if="selectedPriceId === price.id"
-                name="check"
-                class="card__icon"
-              />
-              <div class="price-card-content">
-                <t-radio
-                  :value="price.id"
-                  :label="price.description"
-                  icon="none"
-                  borderless
-                />
-                <div class="price-amount">
-                  <span class="current-price">{{ price.price }}元</span>
-                  <span v-if="price.originalPrice > price.price" class="original-price">{{ price.originalPrice }}元</span>
+              <template #label>
+                <div class="price-container">
+                  <span>{{ price.description }}</span>
+                  <div class="price-amount">
+                    <span class="current-price">{{ price.price }}元</span>
+                    <span v-if="price.originalPrice > price.price" class="original-price">{{ price.originalPrice }}元</span>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </t-radio-group>
-        </div>
+              </template>
+            </t-radio>
+          </div>
+        </t-radio-group>
       </div>
+    </div>
 
-      <!-- 底部操作栏 -->
-      <div class="bottom-action-bar">
-        <div class="price-info">
-          <span class="price-label">待支付:</span>
-          <span class="price-value">¥{{ totalPrice }}</span>
-        </div>
-        <t-button theme="primary" size="large" :disabled="!canPurchase" @click="handleConfirmPurchase">
-          确认购买
-        </t-button>
+    <!-- 底部操作栏 -->
+    <div class="bottom-action-bar">
+      <div class="price-info">
+        <span>待支付:</span>
+        <span class="price-value">¥{{ totalPrice }}</span>
       </div>
-    </template>
-
-    <t-empty v-if="!loading && error" description="加载失败，请重试">
-      {{ error }}
-    </t-empty>
-  </div>
+      <t-button theme="primary" size="large" :disabled="!canPurchase" @click="handleConfirmPurchase">
+        确认购买
+      </t-button>
+    </div>
+  </main>
 </template>
 
 <style lang="less" scoped>
 header {
-  top: 0;
   z-index: 99;
-  height: 120px;
-  position: sticky;
-  background: white;
-  .event-container {
-    margin-top: 10px;
-    padding: 16px;
-    flex-direction: column;
-    top: 48px;
-    position: fixed;
-    background: white;
-    width: 100%;
-    box-sizing: border-box;
-    align-items: flex-start;
+  height: var(--navbar-height);
+  background: var(--bg-color-page);
+}
+
+.event-container {
+  .p-16();
+  .flex-col();
+  min-height: 90px;
+  top: var(--navbar-height);
+  background: var(--bg-color-page);
+  &::after {
+    content: '';
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 0;
+    height: 0.5px;
+    background-color: var(--td-gray-color-3);
+  }
+  .event-title {
+    .font(20px, 600);
+    margin-bottom: 8px;
+  }
+  .event-details {
+    .font();
+    gap: 16px;
+    height: 22px;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  .detail-item {
+    .flex-center();
+    min-width: 0;
+    &::last-child {
+      flex-grow: 1;
+    }
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .t-icon {
+      color: var(--td-brand-color-7);
+      margin-right: 4px;
+    }
   }
 }
 
 .buy-confirm-page {
-  margin-top: 0;
-  min-height: calc(100dvh - 120px);
-  /* 减去header高度 */
+  min-height: calc(100vh - var(--navbar-height));
   background-color: #fff;
-  padding-bottom: 73px;
-  box-sizing: border-box;
-}
-
-.flex-center {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 12px;
-  span {
-    font-size: 20px;
-    font-weight: 600;
-    color: #000000;
-    line-height: 32px;
-  }
-}
-
-.event-details {
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  margin-bottom: 12px;
-  .detail-item {
-    display: flex;
-    align-items: center;
-    span {
-      margin-left: 8px;
-      color: #000000;
-      font-size: 14px;
-      font-weight: 400;
-    }
-    .t-icon {
-      color: #0052d9;
-    }
-  }
+  padding-bottom: 80px;
 }
 
 .page-content {
-  padding: 16px 0 0 0;
-  margin-top: 30px;
-  box-sizing: border-box;
+  .p-16();
 }
 
 .section {
-  background: white;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  padding: 15px 16px 0 16px;
+  margin-bottom: 24px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+    .flex-center(space-between);
+    margin-bottom: 14px;
   }
   .section-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
+    .font(16px, 600);
   }
 }
 /* 人员信息网格布局 */
@@ -425,27 +398,24 @@ header {
   margin: 0;
 }
 
-.person-grid .card::after {
-  border-width: 12px;
-}
-
-.person-grid .card__icon {
-  font-size: 12px;
-}
 /* 卡片样式 */
 
 .card {
   position: relative;
-  margin: 16px 0;
+  margin: 12px 0;
   border-radius: 6px;
   overflow: hidden;
   box-sizing: border-box;
-  border: 1.5px solid #dcdcdc;
-  padding-left: 8px;
+  border: 1px solid var(--td-gray-color-4);
+  padding: 0.5px 0.5px 0.5px 8.5px;
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .card--active {
-  border-color: #0052d9;
+  padding: 0 0 0 8px;
+  border: 1.5px solid var(--td-brand-color-7);
 }
 
 .card--active::after {
@@ -455,12 +425,13 @@ header {
   left: 0;
   top: 0;
   width: 0;
-  border: 14px solid #0052d9;
+  border: 14px solid var(--td-brand-color-7);
   border-bottom-color: transparent;
   border-right-color: transparent;
 }
 
 :deep(.t-radio) {
+  width: 100%;
   padding-left: 0;
 }
 
@@ -476,63 +447,53 @@ header {
   z-index: 1;
   font-size: 14px;
 }
+
 /* 价格卡片内容布局 */
 
-.price-card-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.price-container {
   width: 100%;
+  .flex-center(space-between);
 }
+
 /* 价格样式 */
 
 .price-amount {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  text-align: right;
-  padding-right: 12px;
-  /* 增加右侧内边距，使价格离边线远一点 */
+  align-items: baseline;
+  gap: 4px;
 }
 
 .current-price {
-  font-size: 16px;
-  font-weight: 600;
+  .font(16px, 600);
 }
 
 .original-price {
-  font-size: 16px;
-  color: #999;
+  .font(16px, 400);
+  color: var(--td-font-gray-2);
   text-decoration: line-through;
 }
 
 .bottom-action-bar {
+  .flex-center(space-between);
+  height: 80px;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: white;
+  background: #ffffff;
   padding: 12px 16px;
-  border-top: 1px solid #e5e5e5;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
+  border-top: 0.5px solid var(--td-gray-color-3);
   .price-info {
-    .price-label {
-      font-size: 14px;
-      color: #666;
-    }
+    .flex-center();
+    margin-right: 40px;
     .price-value {
-      font-size: 20px;
-      font-weight: 600;
-      color: #0052d9;
-      margin-left: 4px;
+      .font(20px, 600);
+      color: var(--td-brand-color-7);
+      margin-left: 8px;
     }
   }
-  :deep(.t-button) {
-    min-width: 120px;
+  .t-button {
+    flex: 1;
   }
 }
 </style>

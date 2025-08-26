@@ -113,7 +113,7 @@ const swiperStyle = computed(() => {
   .swiper-img {
     height: 100%;
     border-radius: var(--td-radius-large);
-    background-color: var(--gray-color-1);
+    background-color: var(--td-gray-color-1);
   }
   &__side {
     flex-grow: 1;
@@ -125,7 +125,7 @@ const swiperStyle = computed(() => {
   .t-image {
     width: var(--swiper-width);
     height: 100%;
-    box-shadow: var(--shadow);
+    box-shadow: var(--td-shadow-3);
   }
 }
 </style>

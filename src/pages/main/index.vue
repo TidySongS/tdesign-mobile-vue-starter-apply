@@ -345,7 +345,7 @@ h2 {
 .rate-container {
   .font(12px, 600);
   display: flex;
-  color: var(--star-color);
+  color: var(--td-warning-color-5);
 
   span {
     margin-left: 8px;
@@ -353,7 +353,7 @@ h2 {
 
   :deep(.t-rate__icon--selected),
   :deep(.t-rate__icon-left--selected) {
-    color: var(--star-color);
+    color: var(--td-warning-color-5);
   }
 }
 

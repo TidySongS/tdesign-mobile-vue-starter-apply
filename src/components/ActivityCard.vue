@@ -34,7 +34,7 @@ const props = defineProps({
   margin: var(--td-spacer-2);
   height: var(--card-height);
   border-radius: var(--td-radius-large);
-  box-shadow: var(--shadow);
+  box-shadow: var(--td-shadow-3);
   overflow: hidden;
   &__cover {
     flex-shrink: 0;

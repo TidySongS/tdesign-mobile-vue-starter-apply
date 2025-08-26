@@ -275,6 +275,9 @@ onMounted(() => {
   .activity-details {
     display: flex;
     .detail-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
       &:first-child {
         margin-right: 16px;
       }
@@ -282,11 +285,8 @@ onMounted(() => {
         flex-grow: 1;
         min-width: 0;
       }
-      display: flex;
-      align-items: center;
-      margin-bottom: 4px;
       .t-icon {
-        color: var(--brand-main);
+        color: var(--td-brand-color-7);
         margin-right: 4px;
         flex-shrink: 0;
       }
@@ -351,7 +351,7 @@ onMounted(() => {
     height: 48px;
     padding: 12px 16px;
     padding-bottom: calc(16px + env(safe-area-inset-bottom));
-    border-top: 0.5px solid var(--gray-color-3);
+    border-top: 0.5px solid var(--td-gray-color-3);
     :deep(.t-button__content) {
       .font(16px, 400);
     }

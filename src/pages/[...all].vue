@@ -53,7 +53,7 @@ function goBack() {
 .status-404__text {
   font-size: 80px;
   font-weight: 700;
-  color: var(--brand-main);
+  color: var(--td-brand-color-7);
   line-height: 1;
   margin-bottom: 16px;
 }

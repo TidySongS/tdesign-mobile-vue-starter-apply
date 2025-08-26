@@ -237,7 +237,7 @@ function applyFilters() {
 .filter {
   padding: 24px 0;
   height: auto;
-  border-top: 0.5px solid var(--gray-color-3);
+  border-top: 0.5px solid var(--td-gray-color-3);
 }
 
 .t-slider {

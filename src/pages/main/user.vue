@@ -275,7 +275,7 @@ onMounted(() => {
     display: flex;
   }
   .activity-item-btn {
-    color: var(--brand-main);
+    color: var(--td-brand-color-7);
     background: none;
     border: 0;
     padding: 0;

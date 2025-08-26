@@ -198,7 +198,7 @@ header {
   margin-top: 4px;
   .city-check--active {
     margin-right: 24px;
-    color: var(--brand-main);
+    color: var(--td-brand-color-7);
   }
   .city-title--active {
     font-weight: 600;
@@ -209,7 +209,7 @@ header {
   &__header {
     height: 30px;
     padding: 4px 16px;
-    background: var(--gray-color-1);
+    background: var(--td-gray-color-1);
   }
   &__content {
     .font(16px, 400);
@@ -217,7 +217,7 @@ header {
     height: 56px;
     margin-left: 16px;
     padding: 16px 16px 16px 0;
-    border-bottom: 1px solid var(--gray-color-1);
+    border-bottom: 1px solid var(--td-gray-color-1);
   }
 }
 </style>

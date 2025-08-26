@@ -42,7 +42,7 @@ defineProps({
   display: flex;
   height: var(--card-height);
   border-radius: var(--td-radius-large);
-  box-shadow: var(--shadow);
+  box-shadow: var(--td-shadow-3);
   overflow: hidden;
   &__content {
     .p-16();
