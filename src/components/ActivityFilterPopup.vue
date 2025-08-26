@@ -249,10 +249,9 @@ function applyFilters() {
 }
 
 .date-range-container {
-  .flex-center();
+  .flex-center(space-between);
   .font(16px, 400);
   margin-top: 8px;
-  justify-content: space-between;
 }
 
 .calendar-container {

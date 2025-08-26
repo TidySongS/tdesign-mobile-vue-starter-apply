@@ -8,12 +8,14 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ActivityCard: typeof import('./../components/ActivityCard.vue')['default']
     ActivityCardSkeleton: typeof import('./../components/ActivityCardSkeleton.vue')['default']
     ActivityDetailPopup: typeof import('./../components/ActivityDetailPopup.vue')['default']
     ActivityFilterPopup: typeof import('./../components/ActivityFilterPopup.vue')['default']
     CheckIcon: typeof import('tdesign-icons-vue-next')['CheckIcon']
     ChevronLeftIcon: typeof import('tdesign-icons-vue-next')['ChevronLeftIcon']
     CloseIcon: typeof import('tdesign-icons-vue-next')['CloseIcon']
+    EditIcon: typeof import('tdesign-icons-vue-next')['EditIcon']
     FilterIcon: typeof import('tdesign-icons-vue-next')['FilterIcon']
     LocationIcon: typeof import('tdesign-icons-vue-next')['LocationIcon']
     RouterLink: typeof import('vue-router')['RouterLink']

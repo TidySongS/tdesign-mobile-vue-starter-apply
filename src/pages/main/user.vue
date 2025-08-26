@@ -3,8 +3,6 @@ import type { UserProfile } from '@/api/info'
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
-import { IconFont } from 'tdesign-icons-vue-next'
-import { onMounted, ref } from 'vue'
 import { getPersonActivities } from '@/api/activity'
 import { getUserProfile } from '@/api/info'
 
@@ -142,7 +140,7 @@ onMounted(() => {
         aria-label="编辑个人信息"
         @click="onEdit"
       >
-        <IconFont name="edit" size="20px" aria-hidden="true" />
+        <EditIcon size="20px" />
       </button>
     </div>
     <div class="activity-list">
@@ -166,33 +164,32 @@ onMounted(() => {
         />
         <t-empty v-if="!isFetching && activities.length === 0" description="暂无活动" />
         <div v-for="item in activities" :key="item.id" class="activity-item">
-          <div class="activity-item-img">
-            <img :src="item.cover" :alt="item.title" loading="lazy">
-          </div>
-          <div class="activity-item-info">
-            <div class="activity-item-top">
-              <div class="activity-item-title">
-                {{ item.title }}
-              </div>
+          <ActivityCard :cover="item.cover" :title="item.title">
+            <template #content>
               <div class="activity-item-time">
                 {{ item.time }}
               </div>
-            </div>
-            <div class="activity-item-bottom">
-              <div class="activity-item-status">
-                {{ item.status }}
+            </template>
+            <template #footer>
+              <div class="activity-item-bottom">
+                <div
+                  class="activity-item-status"
+                  :style="{ color: item.status === '已完成' ? 'var(--td-font-gray-3)' : 'var(--td-success-color-5)' }"
+                >
+                  {{ item.status }}
+                </div>
+                <button
+                  v-if="item.status === '已完成'"
+                  class="activity-item-btn"
+                  type="button"
+                  aria-label="去评价"
+                  @click="onReview(item.id)"
+                >
+                  去评价
+                </button>
               </div>
-              <button
-                v-if="item.status === '已完成'"
-                class="activity-item-btn"
-                type="button"
-                aria-label="去评价"
-                @click="onReview(item.id)"
-              >
-                去评价
-              </button>
-            </div>
-          </div>
+            </template>
+          </ActivityCard>
         </div>
       </div>
     </div>
@@ -201,126 +198,88 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .user-page {
-  background-color: var(--bg-color-secondarypage);
+  .flex-col();
+  background: var(--bg-color-secondarypage);
   height: calc(100vh - var(--navbar-height) - var(--tabbar-height));
   padding: 0 var(--td-spacer-2);
-  display: flex;
-  flex-direction: column;
   .user-card {
-    padding: var(--td-spacer-2);
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    .p-16();
+    .flex-center(space-between);
+    background: var(--bg-color-page);
     border-radius: var(--td-radius-extraLarge);
-    .user-card-info {
-      display: flex;
-      align-items: center;
-      gap: var(--td-spacer-2);
-      .user-card-avatar {
-        width: 64px;
-      }
-      .user-card-meta {
-        display: flex;
-        flex-direction: column;
-        height: 54px;
-        justify-content: space-between;
-        .user-name {
-          height: 24px;
-          color: var(--td-font-gray-1);
-          font-size: var(--td-font-size-body-large);
-          font-weight: 600;
-          line-height: 24px;
-        }
-        .user-tag {
-          display: flex;
-          gap: var(--td-spacer);
-        }
-      }
-    }
     .user-card-edit {
+      .flex-center();
       background: none;
       border: 0;
       padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       cursor: pointer;
     }
   }
-  .activity-list {
-    margin-top: var(--td-spacer-2);
-    background: white;
-    border-top-left-radius: var(--td-radius-extraLarge);
-    border-top-right-radius: var(--td-radius-extraLarge);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    .activity-content {
-      padding: var(--td-spacer-2);
-      display: flex;
-      flex-direction: column;
-      gap: var(--td-spacer-2);
-      flex: 1;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: contain;
-      .activity-item {
-        flex-shrink: 0;
-        height: 120px;
-        min-height: 120px;
-        border-radius: var(--td-radius-large);
-        display: flex;
-        overflow: hidden;
-        box-shadow: var(--td-shadow-3);
-        .activity-item-img {
-          height: 100%;
-          img {
-            height: 100%;
-            aspect-ratio: 1/1;
-          }
-        }
-        .activity-item-info {
-          padding: var(--td-spacer-2) var(--td-spacer-2) var(--td-spacer-1) var(--td-spacer-2);
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          flex: 1;
-          .activity-item-top {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            .activity-item-title {
-              color: var(--td-font-gray-1);
-            }
-            .activity-item-time {
-              color: var(--td-font-gray-2);
-              font-size: var(--td-font-size-body-small);
-              line-height: 20px;
-            }
-          }
-          .activity-item-bottom {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            .activity-item-status {
-              display: flex;
-              color: var(--td-success-color-5);
-              font-weight: 600;
-            }
-            .activity-item-btn {
-              color: var(--td-brand-color-7);
-              background: none;
-              border: 0;
-              padding: 0;
-              cursor: pointer;
-            }
-          }
-        }
-      }
+}
+
+.user-card-info {
+  .flex-center();
+  gap: var(--td-spacer-2);
+  .user-card-avatar {
+    width: 64px;
+  }
+  .user-card-meta {
+    .flex-col();
+    height: 54px;
+    max-width: calc(100vw - 180px);
+    justify-content: space-between;
+    .user-name {
+      .font(16px, 600);
+      height: 24px;
+      color: var(--td-font-gray-1);
     }
+    .user-tag {
+      min-width: 0;
+      display: flex;
+      gap: var(--td-spacer);
+    }
+    .user-tag .t-tag:nth-child(2) {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.activity-list {
+  .flex-col();
+  margin-top: var(--td-spacer-2);
+  background: var(--bg-color-page);
+  border-top-left-radius: var(--td-radius-extraLarge);
+  border-top-right-radius: var(--td-radius-extraLarge);
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+  .activity-content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
+
+.activity-item {
+  .activity-item-time {
+    .font(12px, 400);
+    color: var(--td-font-gray-2);
+  }
+}
+.activity-item-bottom {
+  .flex-center(space-between);
+  .activity-item-status {
+    display: flex;
+  }
+  .activity-item-btn {
+    color: var(--brand-main);
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
   }
 }
 </style>

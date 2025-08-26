@@ -179,13 +179,12 @@ header {
 
 .location-container {
   .p-16();
-  .flex-center();
+  .flex-center(space-between);
   height: 56px;
   width: 100%;
   position: fixed;
   top: var(--navbar-height);
   background: var(--bg-color-page);
-  justify-content: space-between;
 }
 
 .location {
@@ -213,12 +212,11 @@ header {
     background: var(--gray-color-1);
   }
   &__content {
-    .flex-center();
     .font(16px, 400);
+    .flex-center(space-between);
     height: 56px;
     margin-left: 16px;
     padding: 16px 16px 16px 0;
-    justify-content: space-between;
     border-bottom: 1px solid var(--gray-color-1);
   }
 }

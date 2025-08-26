@@ -286,28 +286,27 @@ onActivated(() => {
       <router-link
         v-for="item in activityList"
         :key="item.id"
-        class="card"
         :to="`/activity-detail/${item.id}`"
       >
-        <div class="card__cover">
-          <t-image :src="item.cover" :alt="item.title" fit="cover" />
-        </div>
-        <div class="card__content">
-          <h3>{{ item.title }}</h3>
-          <div class="rate-container">
-            <t-rate
-              v-model="item.score"
-              size="16"
-              variant="filled"
-              allow-half
-              disabled
-            />
-            <span>{{ item.score }}分</span>
-          </div>
-          <span class="price">{{
-            item.formattedPrice
-          }}</span>
-        </div>
+        <ActivityCard :cover="item.cover" :title="item.title">
+          <template #content>
+            <div class="rate-container">
+              <t-rate
+                v-model="item.score"
+                size="16"
+                variant="filled"
+                allow-half
+                disabled
+              />
+              <span>{{ item.score }}分</span>
+            </div>
+          </template>
+          <template #footer>
+            <span class="price">{{
+              item.formattedPrice
+            }}</span>
+          </template>
+        </ActivityCard>
       </router-link>
       <div v-if="!isRefresh && isFetchActivityList" key="skeleton-more">
         <ActivityCardSkeleton :count="1" />
@@ -433,45 +432,6 @@ h2 {
 
 .slide-in-animation {
   animation: slide-in 0.5s ease-in-out forwards;
-}
-
-.card {
-  margin: 16px;
-  display: flex;
-  height: var(--card-height);
-  border-radius: var(--td-radius-large);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  &__cover {
-    flex-shrink: 0;
-    width: var(--card-height);
-    height: 100%;
-
-    .t-image {
-      height: var(--card-height);
-      width: 100%;
-    }
-  }
-
-  &__content {
-    .p-16();
-    .flex-col();
-    flex: 1;
-    width: 100%;
-    min-width: 0;
-    padding-bottom: 12px;
-    h3 {
-      .font();
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 8px;
-    }
-  }
-  .price {
-    .font(14px, 600);
-    margin-top: auto;
-  }
 }
 
 .rate-container {
