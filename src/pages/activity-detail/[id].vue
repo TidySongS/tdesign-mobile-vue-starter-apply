@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import type { ActivityDetail } from '@/api/activity'
-import { IconFont } from 'tdesign-icons-vue-next'
-import { computed, onMounted, ref, watch } from 'vue'
 import {
   getActivityDetail,
 } from '@/api/activity'
-import ActivityDetailPopup from '@/components/ActivityDetailPopup.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -94,7 +91,10 @@ function handleBuyClick() {
   </header>
   <main class="ad-main">
     <div class="ad-banner">
-      <img :src="bannerUrl" alt="活动横幅" loading="lazy">
+      <t-image
+        :src="bannerUrl" alt="活动横幅" loading="lazy" fit="cover"
+        :style="{ width: '100%', height: '160px' }"
+      />
     </div>
     <div v-if="guestImages.length" class="ad-section-guests">
       <div class="ad-section-title">
@@ -104,7 +104,6 @@ function handleBuyClick() {
         <t-swiper
           :autoplay="false"
           :navigation="{ type: 'dots', placement: 'outside' }"
-          :next-margin="20"
           class="ad-swiper-scene"
         >
           <t-swiper-item
@@ -125,7 +124,6 @@ function handleBuyClick() {
         <t-swiper
           :autoplay="false"
           :navigation="{ type: 'dots', placement: 'outside' }"
-          :next-margin="20"
           class="ad-swiper-scene"
         >
           <t-swiper-item
@@ -142,13 +140,13 @@ function handleBuyClick() {
   <footer>
     <div class="ad-footer-actions">
       <div class="ad-footer-action">
-        <IconFont name="heart" size="16px" aria-hidden="true" />
+        <HeartIcon size="20px" />
         <div class="ad-footer-action-text">
           收藏
         </div>
       </div>
       <div class="ad-footer-action">
-        <IconFont name="share" size="16px" aria-hidden="true" />
+        <ShareIcon size="20px" />
         <div class="ad-footer-action-text">
           分享
         </div>
@@ -180,79 +178,78 @@ function handleBuyClick() {
   padding-bottom: calc(80px + env(safe-area-inset-bottom));
 }
 .ad-banner {
-  img {
-    width: 100%;
-  }
+  width: 100%;
+  height: 160px;
+  // img {
+  //   width: 100%;
+  //   height: 100%;
+  // }
 }
 .ad-section-guests,
 .ad-section-scene {
   color: var(--td-font-white-1);
   font-size: var(--td-font-size-mark-large);
-  padding-left: 16px;
-  --swiper-width: 283px;
+  margin-left: 16px;
   .ad-section-title {
-    font-size: 16px;
-    font-weight: 600;
+    .font(16px, 600);
     text-align: left;
-    line-height: 24px;
   }
-  .ad-swiper {
-    margin-top: 12px;
-    .ad-swiper-scene {
-      overflow: visible;
-      margin: 0 calc((100vw - var(--swiper-width)) - 32px) 0 0;
-      .ad-slide {
-        width: var(--swiper-width);
-        height: 160px;
-      }
-      img {
-        height: var(--swiper-height);
-        width: var(--swiper-width);
-      }
+}
+
+.ad-swiper {
+  overflow: hidden;
+  margin-top: 12px;
+  .ad-swiper-scene {
+    overflow: visible;
+    margin: 0 calc((100vw - var(--swiper-width)) - 28px) 0 0;
+    .ad-slide {
+      width: var(--swiper-width);
+      height: 160px;
+    }
+    img {
+      height: var(--swiper-height);
+      width: var(--swiper-width);
     }
   }
 }
+
 .ad-section-guests {
   margin-top: 21px;
 }
+
 .ad-section-scene {
   margin-top: 24px;
 }
+
 footer {
+  .p-16();
   z-index: 12000;
   height: 80px;
-  background-color: var(--td-font-white-1);
+  background: var(--bg-color-page);
   position: fixed;
   bottom: 0px;
   width: 100%;
-  padding: 16px;
   display: flex;
-  box-sizing: border-box;
   gap: 16px;
   padding-bottom: calc(16px + env(safe-area-inset-bottom));
-  .ad-footer-actions {
-    display: flex;
-    align-items: center;
-
-    .ad-footer-action {
-      width: 50px;
-      height: 48px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      .ad-footer-action-text {
-        height: 20px;
-        color: #040000;
-        font-size: 12px;
-        font-weight: 400;
-        text-align: center;
-        line-height: 20px;
-      }
-    }
-  }
   .ad-footer-cta {
     flex: 1;
+  }
+}
+
+.ad-footer-actions {
+  .flex-center();
+  .ad-footer-action {
+    .flex-center();
+    width: 50px;
+    height: 48px;
+    flex-direction: column;
+    .ad-footer-action-text {
+      .font(12px, 400);
+      margin-top: 4px;
+      height: 20px;
+      color: #040000;
+    }
   }
 }
 </style>

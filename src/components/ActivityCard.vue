@@ -28,7 +28,7 @@ const props = defineProps({
   </div>
 </template>
 
-<style lang="less">
+<style scoped lang="less">
 .card {
   display: flex;
   margin: var(--td-spacer-2);

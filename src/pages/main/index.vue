@@ -8,12 +8,6 @@ defineOptions({
   name: 'MainIndex',
 })
 
-interface SwiperItem {
-  id: string
-  name: string
-  url: string
-}
-
 const searchValue = ref('')
 const currentTab = ref('latest')
 const isRefresh = ref(true)
@@ -30,8 +24,7 @@ let currentPage = 1
 
 const { filters, resetFilters } = useFilters()
 
-const swiperList = ref<SwiperItem[]>([])
-
+const swiperList = ref([])
 const activityList = ref<Activity[]>([])
 
 const tabPanels = [
@@ -127,6 +120,7 @@ function onScroll(scrollBottom: number, scrollTop: number) {
 }
 
 onMounted(() => {
+  fetchSwiperList()
   fetchActivityList()
 })
 
@@ -136,9 +130,6 @@ onDeactivated(() => {
 })
 
 onActivated(() => {
-  if (swiperList.value.length === 0) {
-    fetchSwiperList()
-  }
   nextTick(() => {
     swiperReady.value = true
     if (scrollPosition.value > 0) {
@@ -170,53 +161,12 @@ onActivated(() => {
 
     <div>
       <h2>热门推荐</h2>
-      <!-- <Transition name="swiper-fade" mode="out-in"> -->
-      <div class="swiper-container">
-        <div v-if="isFetchSwiperList" key="swiper-placeholder" class="flex-col">
-          <div class="swiper-placeholder">
-            <div
-              class="swiper-placeholder__side swiper-img"
-              style="border-radius: 0 9px 9px 0"
-            />
-            <div class="swiper-placeholder__main swiper-img" />
-            <div
-              class="swiper-placeholder__side swiper-img"
-              style="border-radius: 9px 0 0 9px"
-            />
-          </div>
-          <div class="dots-placeholder">
-            <t-loading
-              :pause="swiperReady"
-              theme="dots"
-              :duration="5000"
-              size="30px"
-            />
-          </div>
-        </div>
-        <div
-          v-else-if="swiperList.length === 0"
-          key="empty-swiper-placeholder"
-          class="swiper-placeholder"
-        >
-          <div class="swiper-placeholder__main swiper-img">
-            <span>暂无轮播图数据</span>
-          </div>
-        </div>
-
-        <t-swiper
-          v-else-if="swiperReady"
-          key="swiper"
-          :height="159.2"
-          :autoplay="true"
-          :navigation="{ type: 'dots', placement: 'outside' }"
-          class="swiper"
-        >
-          <t-swiper-item v-for="item in swiperList" :key="item.id">
-            <t-image :src="item.url" :alt="item.name" fit="cover" />
-          </t-swiper-item>
-        </t-swiper>
-      </div>
-      <!-- </Transition> -->
+      <ActivitySwiper
+        :is-fetch-swiper-list
+        :swiper-ready
+        :slide-margin="12"
+        :swiper-list="swiperList"
+      />
     </div>
 
     <div>
@@ -279,7 +229,7 @@ onActivated(() => {
 
     <t-list v-else @scroll="onScroll">
       <template #footer>
-        <div v-if="isLoadAllActivities" class="flex-center">
+        <div v-if="isLoadAllActivities" class="no-more-activity">
           没有更多活动了哦～
         </div>
       </template>
@@ -340,48 +290,6 @@ onActivated(() => {
 h2 {
   .p-16();
   .font(20px, 600);
-}
-
-.swiper-container {
-  height: calc(var(--swiper-height) + 18px);
-}
-
-.dots-placeholder {
-  display: flex;
-  height: 18px;
-  .t-loading {
-    bottom: 0;
-    margin: auto;
-  }
-}
-
-.swiper-placeholder {
-  .flex-center();
-  flex-grow: 1;
-  height: var(--swiper-height);
-  &__main {
-    .flex-center();
-    width: var(--swiper-width);
-    margin: 0 12px;
-  }
-  .swiper-img {
-    height: 100%;
-    border-radius: var(--td-radius-large);
-    background-color: var(--gray-color-1);
-  }
-  &__side {
-    width: calc((100vw - var(--swiper-width)) / 2 - 12px);
-  }
-}
-
-.swiper {
-  overflow: visible;
-  margin: 0 calc((100vw - var(--swiper-width)) / 2 - 12px) 0 calc((100vw - var(--swiper-width)) / 2);
-  .t-image {
-    width: var(--swiper-width);
-    height: 100%;
-    box-shadow: var(--shadow);
-  }
 }
 
 .tab-container {
@@ -447,5 +355,9 @@ h2 {
   :deep(.t-rate__icon-left--selected) {
     color: var(--star-color);
   }
+}
+
+.no-more-activity {
+  .flex-center();
 }
 </style>

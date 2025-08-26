@@ -111,8 +111,7 @@ function handleTabbarChange(name: string | number) {
 
 <style lang="less" scoped>
 .location {
-  display: flex;
-  align-items: center;
+  .flex-center();
   &__text {
     line-height: 22px;
     padding-left: 4px;
