@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import type { PriceItem, TicketItem } from '@/types/interface'
-import {
-  Message,
-} from 'tdesign-mobile-vue'
-import {
-  getActivityDetail,
-  getActivityPrices,
-  getActivityTickets,
-} from '@/api/activity'
+import { Message } from 'tdesign-mobile-vue'
+import { getActivityDetail, getActivityPrices, getActivityTickets } from '@/api/activity'
 import userInfo from '@/store/userInfo'
 
 const route = useRoute()
@@ -333,7 +327,7 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
-    header {
+header {
   top: 0;
   z-index: 99;
   height: 120px;

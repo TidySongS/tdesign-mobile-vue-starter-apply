@@ -149,7 +149,7 @@ function onReset() {
   <div class="person-info-page">
     <div class="page-content">
       <!-- 表单内容 -->
-      <div class="form-section">
+      <div>
         <t-form ref="form" :data="formData" :rules="rules" label-align="left" show-error-message label-width="97px" @reset="onReset" @submit="handleConfirm">
           <!-- 设为默认开关 -->
           <t-form-item label="设为默认" name="isDefault" content-align="right">
@@ -164,7 +164,7 @@ function onReset() {
           <t-form-item label="生日" name="birthday" required>
             <div class="input-with-icon">
               <t-input v-model="formData.birthday" placeholder="请选择生日" borderless align="left" readonly @click="showDatePicker = true" />
-              <t-icon name="calendar" size="20" @click="showDatePicker = true" />
+              <CalendarIcon size="20px" @click="showDatePicker = true" />
             </div>
           </t-form-item>
 
@@ -211,100 +211,55 @@ function onReset() {
 </template>
 
 <style lang="less" scoped>
-    header {
+header {
   position: fixed;
   z-index: 999;
 }
 
 .person-info-page {
-  min-height: calc(100dvh - 48px);
-  background-color: #fff;
+  min-height: 100vh;
+  background-color: var(--bg-color-page);
   padding-bottom: 80px;
-  box-sizing: border-box;
 }
 
 .page-content {
   padding-top: 48px;
-  box-sizing: border-box;
-}
-
-.form-section {
-  background: white;
-  padding: 3px;
 }
 
 .bottom-action {
+  .p-16();
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: white;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-:deep(.t-cell) {
-  padding: 16px;
-  height: 56px;
-  display: flex;
-  align-items: center;
 }
 
 :deep(.t-form) {
-  --td-form-label-width: 80px;
-  .t-form-item {
-    padding: 16px;
-    margin-bottom: 16px;
-    /* 增加表单项之间的间距 */
-    border-bottom: 1px solid #f0f0f0;
-    &:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-    }
-  }
+  .font(16px, 400);
   .t-form__label {
-    font-size: 16px;
-    color: #333;
     padding-right: 16px;
   }
-  .t-input {
-    text-align: left;
-    .t-input__control {
-      font-size: 16px;
-      color: #333;
-      text-align: left;
-    }
-    .t-input__placeholder {
-      color: #999;
-      text-align: left;
-    }
+  .t-input__control::placeholder {
+    color: var(--td-font-gray-3);
   }
   .t-form__label--required label::before {
     content: none;
   }
 
-  /* 星号在后面 */
   .t-form__label--required label::after {
     display: inline-block;
-    margin-left: 2px;
-    color: var(--td-error-color-6, #d54941);
+    margin-left: 4px;
+    color: var(--td-error-color-6);
     line-height: 20px;
     content: '*';
   }
 }
 
-:deep(.t-switch) {
-  --td-switch-checked-color: #0052d9;
-}
-
 .input-with-icon {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  .flex-center(space-between);
   width: 100%;
   .t-icon {
-    color: #999;
-    margin-right: 8px;
+    color: var(--td-font-gray-3);
   }
 }
 </style>

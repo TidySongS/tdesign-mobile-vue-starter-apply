@@ -13,6 +13,7 @@ declare module 'vue' {
     ActivityDetailPopup: typeof import('./../components/ActivityDetailPopup.vue')['default']
     ActivityFilterPopup: typeof import('./../components/ActivityFilterPopup.vue')['default']
     ActivitySwiper: typeof import('./../components/ActivitySwiper.vue')['default']
+    CalendarIcon: typeof import('tdesign-icons-vue-next')['CalendarIcon']
     CheckIcon: typeof import('tdesign-icons-vue-next')['CheckIcon']
     ChevronLeftIcon: typeof import('tdesign-icons-vue-next')['ChevronLeftIcon']
     ChevronUpIcon: typeof import('tdesign-icons-vue-next')['ChevronUpIcon']
