@@ -16,5 +16,6 @@ export default antfu({
   },
   ignores: [
     'public/mockServiceWorker.js',
+    '.vscode/*',
   ],
 })

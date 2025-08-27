@@ -46,6 +46,5 @@
     "scss",
     "pcss",
     "postcss"
-  ],
-  "editor.guides.bracketPairs": "active"
+  ]
 }
