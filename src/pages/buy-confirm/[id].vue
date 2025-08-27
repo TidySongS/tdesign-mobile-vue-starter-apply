@@ -497,7 +497,6 @@ header {
   border-top: 0.5px solid var(--td-gray-color-3);
   .price-info {
     .flex-center();
-    margin-right: 40px;
     .price-value {
       .font(20px, 600);
       color: var(--td-brand-color-7);
@@ -505,7 +504,7 @@ header {
     }
   }
   .t-button {
-    flex: 1;
+    width: 201px;
   }
 }
 </style>
