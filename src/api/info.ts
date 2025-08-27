@@ -13,6 +13,6 @@ export interface UserProfile {
   city: string
 }
 
-export function getUserProfile() {
-  return axios.get<UserProfile>('/user/profile')
+export function getUserProfile(): Promise<UserProfile> {
+  return axios.get<UserProfile, UserProfile>('/user/profile')
 }
