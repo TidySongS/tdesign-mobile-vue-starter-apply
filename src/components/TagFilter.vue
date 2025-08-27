@@ -67,13 +67,13 @@ h4 {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: var(--gray-color-1);
+    background: var(--td-gray-color-1);
   }
 
   .tag--active {
-    color: var(--brand-main);
-    border: 1px solid var(--brand-main);
-    background: var(--brand-main-light);
+    color: var(--td-brand-color-7);
+    border: 1px solid var(--td-brand-color-7);
+    background: var(--td-brand-color-1);
   }
 }
 </style>

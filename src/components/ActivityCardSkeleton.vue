@@ -30,12 +30,25 @@ defineProps({
         animation="flashed"
         :loading="true"
         :row-col="[{ height: '22px', width: '60%' }]"
-        class="price"
+        style="margin-top: auto;"
       />
     </div>
   </div>
 </template>
 
 <style scoped lang="less">
-@import "@/style/home.less";
+.card {
+  margin: 16px;
+  display: flex;
+  height: var(--card-height);
+  border-radius: var(--td-radius-large);
+  box-shadow: var(--td-shadow-3);
+  overflow: hidden;
+  &__content {
+    .p-16();
+    .flex-col();
+    width: 100%;
+    padding-bottom: 12px;
+  }
+}
 </style>

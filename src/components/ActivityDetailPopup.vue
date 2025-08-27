@@ -4,7 +4,6 @@ import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import { IconFont } from 'tdesign-icons-vue-next'
-import { computed } from 'vue'
 
 const props = defineProps<{
   detail: ActivityDetail | null
@@ -48,7 +47,7 @@ dayjs.tz.setDefault('Asia/Shanghai')
     <div class="ad-popup">
       <div v-show="!showBottomPopup" class="ad-popup-handle" @click="onToggle" />
       <div class="ad-popup-toggle" :class="{ 'ad-popup-toggle-active': showBottomPopup }" @click="onToggle">
-        <IconFont name="chevron-up" size="18px" aria-hidden="true" />
+        <ChevronUpIcon size="20px" />
       </div>
       <div v-show="showBottomPopup" class="ad-popup-content">
         <template v-if="detail">
@@ -102,7 +101,7 @@ dayjs.tz.setDefault('Asia/Shanghai')
               </div>
             </div>
             <div class="ad-reviews-list">
-              <t-swiper :autoplay="false" :next-margin="20" class="ad-reviews-swiper">
+              <t-swiper :autoplay="false" class="ad-reviews-swiper">
                 <t-swiper-item v-for="c in (detail?.comments ?? [])" :key="c.id" class="ad-reviews-swiper-item">
                   <t-cell :title="c.user" class="ad-review-item">
                     <template #leftIcon>
@@ -147,17 +146,15 @@ dayjs.tz.setDefault('Asia/Shanghai')
 
 <style lang="less" scoped>
 .ad-popup {
+  .flex-col();
   border-radius: 12px;
   background-color: #fff;
   position: relative;
   height: 100%;
-  display: flex;
-  flex-direction: column;
   .ad-popup-content {
+    .flex-col();
     padding: 24px 16px;
     padding-bottom: 80px;
-    display: flex;
-    flex-direction: column;
     gap: 16px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -172,94 +169,42 @@ dayjs.tz.setDefault('Asia/Shanghai')
     width: 76px;
     height: 11px;
     top: -10px;
-    background: url('/public/imgs/half-circle.png') no-repeat center center;
+    background: url('/imgs/half-circle.png') no-repeat center center;
     background-size: 100% 100%;
   }
   .ad-popup-toggle {
-    width: 16px;
-    height: 16px;
+    .flex-center();
+    height: 11px;
+    width: 100%;
     position: absolute;
-    left: 50%;
+    z-index: 99;
     top: 0;
-    transform: translateX(-50%);
-
-    i {
-      position: absolute;
+    .t-icon {
+      color: var(--td-font-gray-2);
     }
   }
   .ad-popup-toggle-active {
-    top: -24px;
-    box-shadow: var(--td-shadow-2);
-
-    i {
+    height: 44px;
+    top: -32px;
+    z-index: -1;
+    background: url('/imgs/mask.png');
+    padding-bottom: 12px;
+    .t-icon {
       color: var(--td-font-white-1);
       transform: rotate(180deg);
     }
   }
-  .ad-summary {
-    padding-bottom: 16px;
-    border-bottom: 0.5px solid var(--td-gray-color-3);
-    .ad-title {
-      font-size: 20px;
-      line-height: 28px;
-      font-weight: 600;
-      color: #040000;
-    }
-    .ad-avatars {
-      margin-top: 12px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      --td-avatar-group-margin-left-medium: -12px;
-      .ad-interest {
-        font-size: 12px;
-        line-height: 20px;
-        color: var(--td-font-gray-2);
-      }
-      .t-avatar__wrapper:nth-child(1) {
-        margin-left: 0;
-      }
-    }
-  }
-  .ad-meta {
-    font-size: 14px;
-    padding-bottom: 16px;
-    border-bottom: 0.5px solid var(--td-gray-color-3);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    .ad-meta-text {
-      margin-left: 4px;
-      line-height: 22px;
-      color: #040000;
-    }
-    .ad-time,
-    .ad-location {
-      display: flex;
-      justify-content: space-between;
-      .ad-meta-item {
-        display: flex;
-        align-items: center;
-        .ad-meta-icon-time,
-        .ad-meta-icon-location {
-          color: var(--td-brand-color-7);
-        }
-      }
-    }
-  }
+
   .ad-reviews {
     padding-bottom: 16px;
     border-bottom: 0.5px solid var(--td-gray-color-3);
     .ad-reviews-header {
-      display: flex;
-      justify-content: space-between;
+      .flex-center(space-between);
       .ad-reviews-title {
+        .font(16px, 600);
         height: 24px;
         color: #040000;
-        font-size: 16px;
-        font-weight: 600;
         text-align: left;
-        line-height: 24px;
       }
       .ad-reviews-rate {
         --td-rate-text-active-color: var(--td-warning-color-5);
@@ -267,45 +212,12 @@ dayjs.tz.setDefault('Asia/Shanghai')
         --td-rate-text-font-size: 14px;
       }
     }
-    .ad-reviews-list {
-      --td-cell-bg-color: var(--td-gray-color-1);
-      --td-cell-vertical-padding: 12px;
-      margin-top: 12px;
-      --swiper-width: 343px;
-      .ad-reviews-swiper {
-        overflow: visible;
-        margin: 0 calc((100vw - var(--swiper-width)) - 48px) 0 0;
-        .ad-reviews-swiper-item {
-          width: var(--swiper-width);
-          height: 100px;
-        }
-      }
-      .ad-review-item {
-        border-radius: 9px;
-        height: 92px;
-        .ad-review-item-content {
-          color: #00000099;
-          font-size: 12px;
-          font-weight: 400;
-          text-align: left;
-          line-height: 20px;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          line-clamp: 2;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
-    }
   }
   .ad-intro {
     .ad-intro-title {
+      .font(16px, 600);
       color: #040000;
-      font-size: 16px;
-      font-weight: 600;
       text-align: left;
-      line-height: 24px;
     }
     .ad-intro-content {
       margin-top: 12px;
@@ -314,6 +226,89 @@ dayjs.tz.setDefault('Asia/Shanghai')
   .ad-popup-actions {
     display: flex;
     gap: 12px;
+  }
+}
+
+.ad-summary {
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid var(--td-gray-color-3);
+  .ad-title {
+    .font(20px, 600);
+    color: #040000;
+  }
+  .ad-avatars {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    --td-avatar-group-margin-left-medium: -12px;
+    .ad-interest {
+      font-size: 12px;
+      line-height: 20px;
+      color: var(--td-font-gray-2);
+    }
+    .t-avatar__wrapper:nth-child(1) {
+      margin-left: 0;
+    }
+  }
+}
+
+.ad-meta {
+  .flex-col();
+  .font();
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid var(--td-gray-color-3);
+  gap: 8px;
+  .ad-meta-text {
+    margin-left: 4px;
+    color: #040000;
+  }
+  .ad-time,
+  .ad-location {
+    .flex-center(space-between);
+    .ad-meta-item {
+      .flex-center();
+      .ad-meta-icon-time,
+      .ad-meta-icon-location {
+        color: var(--td-brand-color-7);
+      }
+    }
+  }
+}
+
+.ad-reviews-list {
+  --td-cell-bg-color: var(--td-gray-color-1);
+  --td-cell-vertical-padding: 12px;
+  margin-top: 12px;
+  --ad-swiper-width: 343px;
+  .ad-reviews-swiper {
+    overflow: visible;
+    margin: 0 calc((100vw - var(--ad-swiper-width)) - 48px) 0 0;
+    .ad-reviews-swiper-item {
+      width: var(--ad-swiper-width);
+      height: 90px;
+    }
+  }
+  .ad-review-item {
+    height: 90px;
+    border-radius: 9px;
+    :deep(.t-cell__left) {
+      .flex-center();
+    }
+    :deep(.t-cell__title-text) {
+      font-size: 14px;
+    }
+    .ad-review-item-content {
+      .font(12px, 400);
+      color: var(--td-font-gray-2);
+      text-align: left;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 </style>

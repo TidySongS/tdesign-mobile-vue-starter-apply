@@ -1,27 +1,16 @@
 <script setup lang="ts">
 import type { AppItem, Person } from '@/types/interface'
-import {
-  ShareIcon,
-} from 'tdesign-icons-vue-next'
+import { Message } from 'tdesign-mobile-vue'
 
-import {
-  Message,
-} from 'tdesign-mobile-vue'
-
-import {
-  getActivityDetail,
-} from '@/api/activity'
-import {
-  getAppList,
-  getFriendList,
-} from '@/api/share'
+import { getActivityDetail } from '@/api/activity'
+import { getAppList, getFriendList } from '@/api/share'
 
 const route = useRoute()
 const router = useRouter()
 
 function share() {
   return h(ShareIcon, {
-    size: '24px',
+    size: '22px',
   })
 }
 
@@ -96,7 +85,6 @@ async function fetchFrendandAppdata() {
   }
   catch (err) {
     console.error('Error fetching data:', err)
-    // error.value = true
     loading.value = false
   }
 }
@@ -138,76 +126,68 @@ onMounted(() => {
     <t-navbar title="购买结果" left-arrow :on-left-click="$router.back" class="tnavbar" />
   </header>
   <div class="buy-result-page">
-    <div class="page-content">
-      <!-- 成功状态 -->
-      <div class="result-status">
-        <div class="status-icon">
-          <t-icon name="check-circle" size="80px" color="#2BA471" />
-        </div>
-        <h2 class="status-title">
-          购买成功
-        </h2>
-      </div>
+    <!-- 成功状态 -->
+    <t-result class="result-status" theme="success" title="购买成功" description="" />
 
-      <!-- 活动信息卡片 -->
-      <div class="activity-card">
-        <img :src="activity.cover || '/imgs/activity/sicc-2021.png'" alt="活动封面" class="activity-cover">
-        <h3 class="activity-name">
-          {{ activity.name }}
-        </h3>
-        <div class="activity-details">
-          <div class="detail-item">
-            <t-icon name="time" size="16" />
-            <span>{{ activity.date }}</span>
-          </div>
-          <div class="detail-item">
-            <t-icon name="location" size="16" />
-            <span>{{ activity.address }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 报名人员 -->
-      <h3 class="section-title">
-        报名人员
+    <!-- 活动信息卡片 -->
+    <div class="activity-card">
+      <t-image :src="activity.cover" alt="活动封面" fit="cover" class="activity-cover" />
+      <h3 class="activity-name">
+        {{ activity.name }}
       </h3>
-      <div class="person-info">
-        <div class="person-avatar">
-          <img src="/imgs/avatar1.png" alt="头像">
+      <div class="activity-details">
+        <div class="detail-item">
+          <TimeIcon size="16px" />
+          <span>{{ activity.date }}</span>
         </div>
-        <div class="person-details">
-          <div class="person-name">
-            {{ selectedPerson.name }}
-          </div>
-          <div class="person-desc">
-            {{ selectedPerson.age }} {{ selectedPerson.occupation }}
-          </div>
+        <div class="detail-item">
+          <LocationIcon size="16px" />
+          <span>{{ activity.address }}</span>
         </div>
       </div>
+    </div>
 
-      <!-- 操作按钮 -->
-      <div class="action-buttons">
-        <t-button
-          theme="light"
-          variant="outline"
-          block
-          size="large"
-          :icon="share"
-          borderless
-          @click="shareWithFriends"
-        >
-          分享给朋友
-        </t-button>
-        <t-button
-          theme="primary"
-          block
-          size="large"
-          borderless
-          @click="goToView"
-        >
-          去查看
-        </t-button>
+    <!-- 报名人员 -->
+    <h3 class="section-title">
+      报名人员
+    </h3>
+    <div class="person-info">
+      <t-avatar
+        class="person-avatar"
+        image="https://tdesign.gtimg.com/mobile/demos/avatar1.png"
+      />
+      <div class="person-details">
+        <div class="person-name">
+          {{ selectedPerson.name }}
+        </div>
+        <div class="person-desc">
+          {{ selectedPerson.age }} {{ selectedPerson.occupation }}
+        </div>
       </div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="action-buttons">
+      <t-button
+        theme="light"
+        variant="outline"
+        block
+        size="large"
+        :icon="share"
+        borderless
+        @click="shareWithFriends"
+      >
+        分享给朋友
+      </t-button>
+      <t-button
+        theme="primary"
+        block
+        size="large"
+        borderless
+        @click="goToView"
+      >
+        去查看
+      </t-button>
     </div>
   </div>
 
@@ -226,7 +206,7 @@ onMounted(() => {
         <t-grid :column="0" class="grid-scroll">
           <t-grid-item v-for="frend in frendList" :key="frend.id" :text="frend.name" @click="sharemsg">
             <template #image>
-              <t-avatar :image="frend.avatar" />
+              <t-avatar :image="frend.avatar" size="40px" />
             </template>
           </t-grid-item>
         </t-grid>
@@ -237,195 +217,174 @@ onMounted(() => {
           分享到社媒
         </h3>
         <t-grid :column="0" class="grid-scroll">
-          <t-grid-item v-for="app in appList" :key="app.id" :text="app.name" :image="app.icon" @click="sharemsg" />
+          <t-grid-item v-for="app in appList" :key="app.id" :text="app.name" @click="sharemsg">
+            <template #image>
+              <t-image :src="app.icon" :style="{ width: '40px', height: '40px' }" />
+            </template>
+          </t-grid-item>
         </t-grid>
       </div>
-      <div class="share-cancel">
-        <t-button block size="large" variant="text" @click="closeSharePopup">
-          取消
-        </t-button>
-      </div>
+      <t-button class="share-cancel" block variant="text" @click="closeSharePopup">
+        取消
+      </t-button>
     </div>
   </t-popup>
 </template>
 
 <style lang="less" scoped>
-    .tnavbar {
-        --td-navbar-bg-color: #f5f6f7;
-    }
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-    .buy-result-page {
-        min-height: calc(100vh);
-        /* 减去navbar高度 */
-        background-color: #F5F6F7;
-        /* padding-top: 10px; */
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
+.tnavbar {
+  --td-navbar-bg-color: var(--bg-color-secondarypage);
+}
 
-    .page-content {
-        padding: 16px 16px 16px;
-        box-sizing: border-box;
-    }
+.buy-result-page {
+  .flex-col();
+  padding: 0 16px;
+  min-height: 100vh;
+  justify-content: center;
+  padding-top: var(--navbar-height);
+  background-color: var(--bg-color-secondarypage);
+}
 
-    .result-status {
-        text-align: center;
-        margin-top: 40px;
-        margin-bottom: 24px;
-        .status-icon {
-            margin-bottom: 16px;
-        }
-        .status-title {
-            opacity: 1;
-            color: #000000e6;
-            font-size: 20px;
-            font-weight: 600;
-            text-align: center;
-            line-height: 28px;
-            margin: 0;
-        }
-    }
+.result-status {
+  margin-bottom: 24px;
+}
 
-    .activity-card {
-        background: white;
-        border-radius: 12px;
-        padding: 16px;
-        margin-bottom: 16px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        .activity-cover {
-            width: 100%;
-            height: auto;
-            max-height: 200px;
-            object-fit: cover;
-            display: block;
-            border-radius: 9.06px;
-        }
-        .activity-name {
-            height: 26px;
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin: 16px 0px 8px;
-        }
-        .activity-details {
-            /* padding: 0 16px 16px; */
-            display: flex;
-            flex-direction: row;
-            .detail-item {
-                display: flex;
-                align-items: center;
-                margin-right: 16px;
-                margin-bottom: 10px;
-                .t-icon {
-                    color: #0052D9;
-                    margin-right: 5px;
-                }
-                span {
-                    font-size: 14px;
-                    color: #666;
-                }
-            }
-        }
+.activity-card {
+  .p-16();
+  height: 281px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--td-shadow-3);
+  .activity-cover {
+    width: 100%;
+    height: 175px;
+    border-radius: 9.06px;
+  }
+  .activity-name {
+    .font(18px, 600);
+    .text-ellipsis();
+    height: 26px;
+    margin: 16px 0px 8px;
+  }
+  .activity-details {
+    display: flex;
+    .detail-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+      &:first-child {
+        margin-right: 16px;
+      }
+      &:last-child {
+        flex-grow: 1;
+        min-width: 0;
+      }
+      .t-icon {
+        color: var(--td-brand-color-7);
+        margin-right: 4px;
+        flex-shrink: 0;
+      }
+      span {
+        .font(12px, 400);
+        .text-ellipsis();
+      }
     }
+  }
+}
 
-    .section-title {
-        font-size: 16px;
-        font-weight: 600;
-        color: #000;
-        margin: 24px 0 16px 0;
-    }
+.section-title {
+  .font(16px, 600);
+  margin: 24px 0 12px 0;
+}
 
-    .person-info {
-        background: white;
-        border-radius: 8px;
-        margin-bottom: 24px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        display: flex;
-        align-items: center;
-        border: 0 solid #e7e7e7;
-        padding: 12px;
-        .person-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            overflow: hidden;
-            padding: 0;
-            margin-right: 12px;
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-        }
-        .person-details {
-            flex: 1;
-            .person-name {
-                font-size: 16px;
-                font-weight: 500;
-                color: #333;
-                margin-bottom: 4px;
-            }
-            .person-desc {
-                font-size: 12px;
-                color: #999;
-            }
-        }
+.person-info {
+  .flex-center();
+  height: 82px;
+  background: white;
+  border-radius: 9px;
+  margin-bottom: 22px;
+  padding: 17px 16px;
+  .person-avatar {
+    margin-right: 12px;
+  }
+  .person-details {
+    flex: 1;
+    min-width: 0;
+    .person-name {
+      .font(16px, 400);
+      margin-bottom: 4px;
     }
+    .person-desc {
+      .font();
+      .text-ellipsis();
+      color: var(--td-font-gray-2);
+    }
+  }
+}
 
-    .action-buttons {
-        display: flex;
-        flex-direction: row;
-        gap: 12px;
-        margin-top: 24px;
-        margin-bottom: 24px;
-    }
-    /* 分享弹窗样式 */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  padding: 16px 0;
+}
 
-    .share-popup {
-        background-color: white;
-        border-top-left-radius: 16px;
-        border-top-right-radius: 16px;
-        padding: 16px 16px;
-        .share-section {
-            margin-bottom: 24px;
-            .share-title {
-                font-size: 14px;
-                font-weight: 500;
-                color: var( --td-font-gray-3);
-                margin: 0 0 16px 0;
-            }
-            .grid-scroll {
-                overflow-x: auto;
-                white-space: nowrap;
-                scrollbar-width: none;
-                /* Firefox */
-                -ms-overflow-style: none;
-                /* IE and Edge */
-                &::-webkit-scrollbar {
-                    display: none;
-                    /* Chrome, Safari, Opera */
-                }
-                 :deep(.t-grid__content) {
-                    flex-wrap: nowrap;
-                    padding: 4px 0;
-                }
-                 :deep(.t-grid-item) {
-                    min-width: 70px;
-                    flex-shrink: 0;
-                }
-            }
-        }
-        .share-cancel {
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid #f5f5f5;
-             :deep(.t-button) {
-                font-size: 16px;
-                color: #333;
-                --td-button-large-height: 10px;
-            }
-        }
+/* 分享弹窗样式 */
+
+.share-popup {
+  background-color: white;
+  border-radius: 12px;
+  .share-section {
+    .share-title {
+      .font(14px, 400);
+      padding: 16px 0 0 16px;
+      color: var(--td-font-gray-3);
     }
+  }
+  .share-cancel {
+    .flex-center();
+    height: 48px;
+    padding: 12px 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    border-top: 0.5px solid var(--td-gray-color-3);
+    :deep(.t-button__content) {
+      .font(16px, 400);
+    }
+  }
+}
+
+.grid-scroll {
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  &::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+  }
+  :deep(.t-grid-item) {
+    max-width: 80px;
+    flex-basis: 80px;
+    padding: 16px 20px;
+  }
+  :deep(.t-grid-item__image) {
+    .flex-center();
+
+    width: 40px;
+    background: transparent;
+  }
+  :deep(.t-grid-item__title) {
+    .font(12px, 400);
+    .text-ellipsis();
+    max-width: 72px;
+    padding-top: 4px;
+  }
+}
 </style>

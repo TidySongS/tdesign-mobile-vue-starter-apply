@@ -111,8 +111,7 @@ function handleTabbarChange(name: string | number) {
 
 <style lang="less" scoped>
 .location {
-  display: flex;
-  align-items: center;
+  .flex-center();
   &__text {
     line-height: 22px;
     padding-left: 4px;
@@ -129,7 +128,7 @@ function handleTabbarChange(name: string | number) {
 .header-navbar {
   z-index: 99;
   .t-navbar__content {
-    background-image: url("/imgs/head-bg.png");
+    background-image: url('/imgs/head-bg.png');
     background-position: left var(--status-bar-height);
     background-repeat: no-repeat;
     background-size: cover;

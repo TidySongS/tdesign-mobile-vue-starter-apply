@@ -1,8 +1,8 @@
 export const covers = [
-  '/imgs/activity/cover-1.png',
-  '/imgs/activity/cover-2.png',
-  '/imgs/activity/cover-3.png',
-  '/imgs/activity/cover-4.png',
+  '/imgs/activity/cover1.png',
+  '/imgs/activity/cover2.png',
+  '/imgs/activity/cover3.png',
+  '/imgs/activity/cover4.png',
   'https://tdesign.gtimg.com/mobile/demos/swiper1.png',
   'https://tdesign.gtimg.com/mobile/demos/swiper2.png',
   'https://tdesign.gtimg.com/mobile/demos/example1.png',
@@ -14,32 +14,32 @@ export const swiperList = [
   {
     id: '1',
     name: '2019 SICC服务设计创新大会',
-    url: '/imgs/activity/sicc-2019.png',
+    url: '/imgs/activity/sicc2019.png',
   },
   {
     id: '2',
     name: '2021 SICC服务设计创新大会',
-    url: '/imgs/activity/sicc-2021.png',
+    url: '/imgs/activity/sicc2021.png',
   },
   {
     id: '3',
     name: '第一届SICC服务创新大会',
-    url: '/imgs/activity/sicc-2019.png',
+    url: '/imgs/activity/sicc2019.png',
   },
   {
     id: '4',
     name: '第三届SICC服务创新大会',
-    url: '/imgs/activity/sicc-2021.png',
+    url: '/imgs/activity/sicc2021.png',
   },
   {
     id: '5',
     name: '2019年SICC服务设计创新大会',
-    url: '/imgs/activity/sicc-2019.png',
+    url: '/imgs/activity/sicc2019.png',
   },
   {
     id: '6',
     name: '2021年SICC服务设计创新大会',
-    url: '/imgs/activity/sicc-2021.png',
+    url: '/imgs/activity/sicc2021.png',
   },
 ]
 
@@ -119,7 +119,7 @@ export const activityList = [
   {
     id: 1,
     title: '2019 SICC服务设计创新大会',
-    cover: '/imgs/activity/cover-1.png',
+    cover: '/imgs/activity/cover1.png',
     score: 5,
     minPrice: 0,
     maxPrice: 0,
@@ -130,7 +130,7 @@ export const activityList = [
   {
     id: 2,
     title: '2021 SICC服务设计创新大会',
-    cover: '/imgs/activity/cover-2.png',
+    cover: '/imgs/activity/cover2.png',
     score: 4.5,
     minPrice: 88,
     maxPrice: 228,
@@ -142,7 +142,7 @@ export const activityList = [
   {
     id: 3,
     title: '少年与星空 插画巡展',
-    cover: '/imgs/activity/cover-3.png',
+    cover: '/imgs/activity/cover3.png',
     score: 4.5,
     minPrice: 98,
     maxPrice: 118,
@@ -153,7 +153,7 @@ export const activityList = [
   {
     id: 4,
     title: 'Universe AI艺术展',
-    cover: '/imgs/activity/cover-4.png',
+    cover: '/imgs/activity/cover4.png',
     score: 3.5,
     minPrice: 128,
     maxPrice: 228,
@@ -164,7 +164,7 @@ export const activityList = [
   {
     id: 5,
     title: '第一届SICC服务创新大会',
-    cover: '/imgs/activity/sicc-2019.png',
+    cover: '/imgs/activity/sicc2019.png',
     score: 3.5,
     minPrice: 98,
     maxPrice: 118,
@@ -175,7 +175,7 @@ export const activityList = [
   {
     id: 6,
     title: '星空与少年 插画巡展',
-    cover: '/imgs/activity/cover-3.png',
+    cover: '/imgs/activity/cover3.png',
     score: 3.5,
     minPrice: 0,
     maxPrice: 0,
@@ -186,7 +186,7 @@ export const activityList = [
   {
     id: 7,
     title: '第三届SICC服务创新大会',
-    cover: '/imgs/activity/sicc-2021.png',
+    cover: '/imgs/activity/sicc2021.png',
     score: 3.5,
     minPrice: 88,
     maxPrice: 228,

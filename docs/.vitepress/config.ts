@@ -1,0 +1,60 @@
+import { defineConfig } from 'vitepress'
+
+// https://vitepress.dev/reference/site-config
+export default defineConfig({
+  title: 'TDesign Starter - Apply',
+  description: 'a front-end page template for event registration',
+  themeConfig: {
+    // https://vitepress.dev/reference/default-theme-config
+    logo: 'https://tdesign.gtimg.com/mobile/demos/logo2.png',
+    nav: [
+      { text: '指南', link: '/guide/introduction' },
+      { text: '文档', link: '/docs/get-started' },
+    ],
+
+    sidebar: {
+      '/guide/': [
+        {
+          text: '简介',
+          items: [
+            { text: '项目介绍', link: '/guide/introduction' },
+          ],
+        },
+      ],
+      '/docs/': [
+        {
+          text: '上手',
+          items: [
+            { text: '快速开始', link: '/docs/get-started' },
+          ],
+        },
+        {
+          text: '开发',
+          items: [
+            { text: '进入开发', link: '/docs/develop' },
+            { text: '开发规范', link: '/docs/develop-rules' },
+            { text: '路由配置', link: '/docs/router' },
+            { text: '请求与数据', link: '/docs/request-data' },
+            { text: '个性化配置', link: '/docs/custom-config' },
+          ],
+        },
+        {
+          text: '构建',
+          items: [
+            { text: '项目构建', link: '/docs/build' },
+          ],
+        },
+        {
+          text: '部署',
+          items: [
+            { text: '项目部署', link: '/docs/deploy' },
+          ],
+        },
+      ],
+    },
+
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/TDesignOteam/tdesign-mobile-vue-starter-apply' },
+    ],
+  },
+})

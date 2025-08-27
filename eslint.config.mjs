@@ -6,6 +6,11 @@ export default antfu({
     quotes: 'single',
     semi: false,
   },
+  formatters: {
+    css: true,
+    html: true,
+    markdown: 'prettier',
+  },
   rules: {
     'no-console': 'off',
   },

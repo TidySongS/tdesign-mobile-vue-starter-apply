@@ -1,18 +1,12 @@
 <script setup lang="ts">
 import { Toast } from 'tdesign-mobile-vue'
 import { getCityNameFromCoords } from '@/api/location'
-import { cityList, hotCityList } from '@/constant/cityList'
+import { processedCityList as cityList, processedHotCityList as hotCityList } from '@/constant/cityList'
 import userInfo from '@/store/userInfo'
 
 const indexList = cityList.map(item => item.index)
 const router = useRouter()
 const locationStatus = ref(false)
-
-function formatCityName(name: string) {
-  if (name.endsWith('市'))
-    return name.slice(0, -1)
-  return name
-}
 
 function updateCity(cityName: string) {
   userInfo.locationName = cityName
@@ -93,8 +87,8 @@ function updateLocation() {
 <template>
   <header>
     <t-navbar title="选择城市" left-arrow :on-left-click="$router.back" />
-    <div class="location-container p-16 flex-center">
-      <div class="location flex-center">
+    <div class="location-container">
+      <div class="location">
         <LocationIcon size="22" />
         <t-loading
           v-if="locationStatus"
@@ -127,18 +121,18 @@ function updateLocation() {
           <div
             v-for="(item, index) in hotCityList"
             :key="`hot-city-${index}`"
-            class="hot-city__content flex-center"
-            @click="updateCity(item)"
+            class="hot-city__content"
+            @click="updateCity(item.name)"
           >
             <span
               :class="{
-                'city-title--active': userInfo.locationName === item,
+                'city-title--active': userInfo.locationName === item.name,
               }"
             >
-              {{ formatCityName(item) }}
+              {{ item.label }}
             </span>
             <CheckIcon
-              v-if="userInfo.locationName === item"
+              v-if="userInfo.locationName === item.name"
               size="24"
               class="city-check--active"
             />
@@ -150,19 +144,19 @@ function updateLocation() {
             <t-cell
               v-for="(val, i) in item.children"
               :key="`city-${i}`"
-              @click="updateCity(val)"
+              @click="updateCity(val.name)"
             >
               <template #title>
                 <span
                   :class="{
-                    'city-title--active': userInfo.locationName === val,
+                    'city-title--active': userInfo.locationName === val.name,
                   }"
                 >
-                  {{ formatCityName(val) }}
+                  {{ val.label }}
                 </span>
               </template>
               <CheckIcon
-                v-if="userInfo.locationName === val"
+                v-if="userInfo.locationName === val.name"
                 size="24"
                 class="city-check--active"
               />
@@ -175,8 +169,6 @@ function updateLocation() {
 </template>
 
 <style lang="less" scoped>
-@import "@/style/home.less";
-
 header {
   top: 0;
   z-index: 99;
@@ -186,15 +178,17 @@ header {
 }
 
 .location-container {
+  .p-16();
+  .flex-center(space-between);
   height: 56px;
   width: 100%;
   position: fixed;
   top: var(--navbar-height);
   background: var(--bg-color-page);
-  justify-content: space-between;
 }
 
 .location {
+  .flex-center();
   &__name {
     margin-left: 4px;
   }
@@ -204,7 +198,7 @@ header {
   margin-top: 4px;
   .city-check--active {
     margin-right: 24px;
-    color: var(--brand-main);
+    color: var(--td-brand-color-7);
   }
   .city-title--active {
     font-weight: 600;
@@ -215,15 +209,15 @@ header {
   &__header {
     height: 30px;
     padding: 4px 16px;
-    background: var(--gray-color-1);
+    background: var(--td-gray-color-1);
   }
   &__content {
     .font(16px, 400);
+    .flex-center(space-between);
     height: 56px;
     margin-left: 16px;
     padding: 16px 16px 16px 0;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--gray-color-1);
+    border-bottom: 1px solid var(--td-gray-color-1);
   }
 }
 </style>

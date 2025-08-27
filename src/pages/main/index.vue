@@ -2,16 +2,11 @@
 import type { Activity, Filters } from '@/types/interface'
 import { getActivities, getHomeSwiper } from '@/api/activity'
 import { useFilters } from '@/hooks/useFilters'
+import { formatPrice } from '@/utils/formatters'
 
 defineOptions({
   name: 'MainIndex',
 })
-
-interface SwiperItem {
-  id: string
-  name: string
-  url: string
-}
 
 const searchValue = ref('')
 const currentTab = ref('latest')
@@ -29,8 +24,7 @@ let currentPage = 1
 
 const { filters, resetFilters } = useFilters()
 
-const swiperList = ref<SwiperItem[]>([])
-
+const swiperList = ref([])
 const activityList = ref<Activity[]>([])
 
 const tabPanels = [
@@ -43,14 +37,6 @@ const tabPanels = [
     label: '高分活动',
   },
 ]
-
-function formatPrice(minPrice: number, maxPrice: number): string {
-  if (minPrice === 0 && maxPrice === 0)
-    return '免费活动'
-  if (minPrice === maxPrice)
-    return `¥${minPrice.toFixed(2)}`
-  return `¥${minPrice.toFixed(2)}-¥${maxPrice.toFixed(2)}`
-}
 
 async function fetchActivityList(isRefreshMode = true) {
   if (isLoadAllActivities.value && !isRefreshMode) {
@@ -70,11 +56,17 @@ async function fetchActivityList(isRefreshMode = true) {
       filters: JSON.stringify(filters),
     }
     const res = await getActivities(payload)
+    const paginatedData = res.data.paginatedData.map((item: Activity) => {
+      return {
+        ...item,
+        formattedPrice: formatPrice(item.minPrice, item.maxPrice),
+      }
+    })
     if (isRefresh.value) {
-      activityList.value = res.data.paginatedData
+      activityList.value = paginatedData
     }
     else {
-      activityList.value.push(...res.data.paginatedData)
+      activityList.value.push(...paginatedData)
     }
     currentPage++
     if (activityList.value.length >= res.data.total) {
@@ -128,6 +120,7 @@ function onScroll(scrollBottom: number, scrollTop: number) {
 }
 
 onMounted(() => {
+  fetchSwiperList()
   fetchActivityList()
 })
 
@@ -137,9 +130,6 @@ onDeactivated(() => {
 })
 
 onActivated(() => {
-  if (swiperList.value.length === 0) {
-    fetchSwiperList()
-  }
   nextTick(() => {
     swiperReady.value = true
     if (scrollPosition.value > 0) {
@@ -171,53 +161,11 @@ onActivated(() => {
 
     <div>
       <h2>热门推荐</h2>
-      <!-- <Transition name="swiper-fade" mode="out-in"> -->
-      <div class="swiper-container">
-        <div v-if="isFetchSwiperList" key="swiper-placeholder" class="flex-col">
-          <div class="swiper-placeholder">
-            <div
-              class="swiper-placeholder__side swiper-img"
-              style="border-radius: 0 9px 9px 0"
-            />
-            <div class="swiper-placeholder__main swiper-img" />
-            <div
-              class="swiper-placeholder__side swiper-img"
-              style="border-radius: 9px 0 0 9px"
-            />
-          </div>
-          <div class="dots-placeholder">
-            <t-loading
-              :pause="swiperReady"
-              theme="dots"
-              :duration="5000"
-              size="30px"
-            />
-          </div>
-        </div>
-        <div
-          v-else-if="swiperList.length === 0"
-          key="empty-swiper-placeholder"
-          class="swiper-placeholder"
-        >
-          <div class="swiper-placeholder__main swiper-img">
-            <span>暂无轮播图数据</span>
-          </div>
-        </div>
-
-        <t-swiper
-          v-else-if="swiperReady"
-          key="swiper"
-          :height="159.2"
-          :autoplay="true"
-          :navigation="{ type: 'dots', placement: 'outside' }"
-          class="swiper"
-        >
-          <t-swiper-item v-for="item in swiperList" :key="item.id">
-            <t-image :src="item.url" :alt="item.name" fit="cover" />
-          </t-swiper-item>
-        </t-swiper>
-      </div>
-      <!-- </Transition> -->
+      <ActivitySwiper
+        :is-fetch-swiper-list
+        :swiper-ready
+        :swiper-list="swiperList"
+      />
     </div>
 
     <div>
@@ -225,7 +173,7 @@ onActivated(() => {
         全部活动
       </h2>
       <t-sticky :offset-top="104" :z-index="99">
-        <div class="tab-container flex-center">
+        <div class="tab-container">
           <t-tabs
             v-model:value="currentTab"
             :split="false"
@@ -240,7 +188,7 @@ onActivated(() => {
             />
           </t-tabs>
           <div
-            class="filter-container flex-center"
+            class="filter-container"
             @click="filterPopupVisible = true"
           >
             <FilterIcon size="16" />
@@ -280,35 +228,34 @@ onActivated(() => {
 
     <t-list v-else @scroll="onScroll">
       <template #footer>
-        <div v-if="isLoadAllActivities" class="flex-center">
+        <div v-if="isLoadAllActivities" class="no-more-activity">
           没有更多活动了哦～
         </div>
       </template>
       <router-link
         v-for="item in activityList"
         :key="item.id"
-        class="card"
         :to="`/activity-detail/${item.id}`"
       >
-        <div class="card__cover">
-          <t-image :src="item.cover" :alt="item.title" fit="cover" />
-        </div>
-        <div class="card__content">
-          <h3>{{ item.title }}</h3>
-          <div class="rate-container">
-            <t-rate
-              v-model="item.score"
-              size="16"
-              variant="filled"
-              allow-half
-              disabled
-            />
-            <span>{{ item.score }}分</span>
-          </div>
-          <span class="price">{{
-            formatPrice(item.minPrice, item.maxPrice)
-          }}</span>
-        </div>
+        <ActivityCard :cover="item.cover" :title="item.title">
+          <template #content>
+            <div class="rate-container">
+              <t-rate
+                v-model="item.score"
+                size="16"
+                variant="filled"
+                allow-half
+                disabled
+              />
+              <span>{{ item.score }}分</span>
+            </div>
+          </template>
+          <template #footer>
+            <span class="price">{{
+              item.formattedPrice
+            }}</span>
+          </template>
+        </ActivityCard>
       </router-link>
       <div v-if="!isRefresh && isFetchActivityList" key="skeleton-more">
         <ActivityCardSkeleton :count="1" />
@@ -325,8 +272,6 @@ onActivated(() => {
 </template>
 
 <style scoped lang="less">
-@import "@/style/home.less";
-
 .page-container {
   touch-action: pan-y;
   overflow-x: hidden;
@@ -346,50 +291,8 @@ h2 {
   .font(20px, 600);
 }
 
-.swiper-container {
-  height: calc(var(--swiper-height) + 18px);
-}
-
-.dots-placeholder {
-  display: flex;
-  height: 18px;
-  .t-loading {
-    bottom: 0;
-    margin: auto;
-  }
-}
-
-.swiper-placeholder {
-  height: var(--swiper-height);
-  .flex-center();
-  flex-grow: 1;
-  &__main {
-    .flex-center();
-    width: var(--swiper-width);
-    margin: 0 12px;
-  }
-  .swiper-img {
-    height: 100%;
-    border-radius: var(--td-radius-large);
-    background-color: var(--gray-color-1);
-  }
-  &__side {
-    width: calc((100vw - var(--swiper-width)) / 2 - 12px);
-  }
-}
-
-.swiper {
-  overflow: visible;
-  margin: 0 calc((100vw - var(--swiper-width)) / 2 - 12px) 0
-    calc((100vw - var(--swiper-width)) / 2);
-  .t-image {
-    width: var(--swiper-width);
-    height: 100%;
-    box-shadow: var(--shadow);
-  }
-}
-
 .tab-container {
+  .flex-center();
   height: 48px;
   background: var(--bg-color-page);
 
@@ -398,6 +301,7 @@ h2 {
   }
 
   .filter-container {
+    .flex-center();
     flex: 1;
     position: relative;
     display: flex;
@@ -405,7 +309,7 @@ h2 {
     justify-content: center;
     height: 48px;
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       top: 50%;
@@ -437,35 +341,10 @@ h2 {
   animation: slide-in 0.5s ease-in-out forwards;
 }
 
-.card {
-  &__cover {
-    flex-shrink: 0;
-    width: var(--card-height);
-    height: 100%;
-
-    .t-image {
-      height: var(--card-height);
-      width: 100%;
-    }
-  }
-
-  &__content {
-    flex: 1;
-    min-width: 0;
-    h3 {
-      .font();
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 8px;
-    }
-  }
-}
-
 .rate-container {
   .font(12px, 600);
   display: flex;
-  color: var(--star-color);
+  color: var(--td-warning-color-5);
 
   span {
     margin-left: 8px;
@@ -473,7 +352,11 @@ h2 {
 
   :deep(.t-rate__icon--selected),
   :deep(.t-rate__icon-left--selected) {
-    color: var(--star-color);
+    color: var(--td-warning-color-5);
   }
+}
+
+.no-more-activity {
+  .flex-center();
 }
 </style>
