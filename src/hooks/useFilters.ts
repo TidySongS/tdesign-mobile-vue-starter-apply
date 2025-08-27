@@ -1,5 +1,11 @@
-import type { Filters } from '@/types/interface'
 import { defaultFilterOptions } from '@/constant/filters'
+
+export interface Filters {
+  domain: string[]
+  type: string[]
+  priceRange: number[]
+  dateRange: Date[]
+}
 
 function createInitialFilters(options: Filters): Filters {
   return {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AppItem, Person } from '@/types/interface'
+import type { AppItem, Person } from '@/api/share'
 import { Message } from 'tdesign-mobile-vue'
 
 import { getActivityDetail } from '@/api/activity'

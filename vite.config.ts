@@ -22,7 +22,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    VueRouter({}),
+    VueRouter({ dts: './types/typed-router.d.ts' }),
     vue(),
     AutoImport({
       resolvers: [
@@ -32,6 +32,7 @@ export default defineConfig({
         }),
       ],
       imports: [VueRouterAutoImports, 'vue'],
+      dts: './types/auto-imports.d.ts',
     }),
     {
       name: 'remove-mockServiceWorker.js',
@@ -46,6 +47,7 @@ export default defineConfig({
           resolveIcons: true,
         }),
       ],
+      dts: './types/components.d.ts',
     }),
   ],
   resolve: {

@@ -1,4 +1,12 @@
-import type { Person, UserInfo } from '@/types/interface'
+import type { Person } from '@/api/share'
+
+interface UserInfo {
+  locationName: string
+  persons: Person[]
+  selectedPersonIds: string[]
+  addPerson: (person: Omit<Person, 'id'>) => void
+  getDefaultPerson: () => Person | undefined
+}
 
 // 初始化人员数据
 function initPersons(): Person[] {
