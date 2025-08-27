@@ -14,25 +14,6 @@ type TabValue = 'first' | 'second' | 'third'
 
 type ActivityStatus = '待参加' | '已完成'
 
-interface PersonActivity {
-  id: string
-  personId: string
-  title: string
-  status: ActivityStatus
-  date: string | number | Date
-  cover?: string
-}
-
-interface PersonActivitiesResponse {
-  data: PersonActivity[]
-  pagination: {
-    page: number
-    pageSize: number
-    total: number
-    totalPages: number
-  }
-}
-
 interface ActivityItem {
   id: string
   cover: string
@@ -69,7 +50,7 @@ async function fetchActivities() {
   isFetching.value = true
   try {
     const status = mapTabToStatus(tabValue.value)
-    const res = await getPersonActivities({ page: 1, pageSize: 20, status }) as unknown as PersonActivitiesResponse
+    const res = await getPersonActivities({ page: 1, pageSize: 20, status })
     const pageData = Array.isArray(res.data) ? res.data : []
     activities.value = pageData.map(it => ({
       id: String(it.id),
@@ -87,7 +68,7 @@ async function fetchActivities() {
 async function fetchProfile() {
   isProfileLoading.value = true
   try {
-    const res = await getUserProfile() as unknown as UserProfile
+    const res = await getUserProfile()
     profile.value = res
   }
   finally {
