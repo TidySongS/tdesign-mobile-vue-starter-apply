@@ -266,6 +266,7 @@ onMounted(() => {
 .activity-item {
   .activity-item-time {
     .font(12px, 400);
+    margin-top: 4px;
     color: var(--td-font-gray-2);
   }
 }
@@ -275,6 +276,7 @@ onMounted(() => {
     display: flex;
   }
   .activity-item-btn {
+    .font(14px, 400);
     color: var(--td-brand-color-7);
     background: none;
     border: 0;

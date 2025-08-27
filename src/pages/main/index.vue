@@ -356,6 +356,7 @@ h2 {
 
 .rate-container {
   .font(12px, 600);
+  margin-top: 8px;
   display: flex;
   color: var(--td-warning-color-5);
 
