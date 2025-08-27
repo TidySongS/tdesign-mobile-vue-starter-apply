@@ -172,9 +172,10 @@ function handleBuyClick() {
   --td-navbar-color: var(--td-font-white-1);
 }
 .ad-main {
+  overflow-y: auto;
   padding-top: 48px;
   background-color: #040000;
-  // height: calc(100vh - v-bind(popupHeight)); // 不注释收起时不会显示圆角
+  height: calc(100vh - 48px);
   padding-bottom: calc(80px + env(safe-area-inset-bottom));
 }
 .ad-banner {

@@ -328,7 +328,7 @@ onMounted(() => {
 <style lang="less" scoped>
 header {
   z-index: 99;
-  height: var(--navbar-height);
+  position: fixed;
   background: var(--bg-color-page);
 }
 
@@ -381,6 +381,7 @@ header {
 
 .page-content {
   .p-16();
+  margin-top: var(--navbar-height);
 }
 
 .section {
