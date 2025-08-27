@@ -59,5 +59,6 @@ declare module 'vue' {
     TTabBarItem: typeof import('tdesign-mobile-vue')['TabBarItem']
     TTabPanel: typeof import('tdesign-mobile-vue')['TabPanel']
     TTabs: typeof import('tdesign-mobile-vue')['Tabs']
+    TTag: typeof import('tdesign-mobile-vue')['Tag']
   }
 }
