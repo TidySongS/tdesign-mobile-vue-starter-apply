@@ -1,8 +1,22 @@
 <script setup lang="ts">
-import type { PriceItem, TicketItem } from '@/types/interface'
 import { Message } from 'tdesign-mobile-vue'
 import { getActivityDetail, getActivityPrices, getActivityTickets } from '@/api/activity'
 import userInfo from '@/store/userInfo'
+
+interface TicketItem {
+  id: string
+  activityId: string
+  date: string
+}
+
+interface PriceItem {
+  id: string
+  activityId: string
+  description: string
+  price: number
+  originalPrice: number
+  person: number
+}
 
 const route = useRoute()
 const router = useRouter()

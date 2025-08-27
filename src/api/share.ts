@@ -1,5 +1,22 @@
-import type { AppItem, Person } from '@/types/interface'
 import axios from '@/utils/request'
+
+export interface AppItem {
+  id: string
+  name: string
+  icon: string
+}
+
+export interface Person {
+  id: string
+  name: string
+  avatar?: string
+  birthday?: string
+  phone?: string
+  idCard?: string
+  email?: string
+  profession?: string
+  isDefault: boolean
+}
 
 /**
  * 获取朋友列表

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Filters } from '@/types/interface'
+import type { Filters } from '@/hooks/useFilters'
 import { defaultFilterOptions } from '@/constant/filters'
 import { copyFilters } from '@/hooks/useFilters'
 import { formatDateRange } from '@/utils/formatters'

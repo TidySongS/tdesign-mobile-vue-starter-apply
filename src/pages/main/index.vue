@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Activity, Filters } from '@/types/interface'
+import type { Filters } from '@/hooks/useFilters'
 import { getActivities, getHomeSwiper } from '@/api/activity'
 import { useFilters } from '@/hooks/useFilters'
 import { formatPrice } from '@/utils/formatters'
@@ -7,6 +7,19 @@ import { formatPrice } from '@/utils/formatters'
 defineOptions({
   name: 'MainIndex',
 })
+
+interface Activity {
+  id: number
+  title: string
+  cover: string
+  score: number
+  minPrice: number
+  maxPrice: number
+  date: Date
+  domain: string[]
+  type: string
+  formattedPrice?: string
+}
 
 const searchValue = ref('')
 const currentTab = ref('latest')

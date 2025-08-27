@@ -1,6 +1,4 @@
-import type { Filters } from '@/types/interface'
-
-export const defaultFilterOptions: Filters = {
+export const defaultFilterOptions = {
   domain: [
     'IT互联网',
     '艺术设计',
