@@ -190,6 +190,7 @@ header {
 .location {
   .flex-center();
   &__name {
+    .font(16px, 400);
     margin-left: 4px;
   }
 }
@@ -203,6 +204,10 @@ header {
   .city-title--active {
     font-weight: 600;
   }
+}
+
+:deep(.t-indexes__sidebar) {
+  top: calc(50% + (var(--navbar-height) + 60px) / 2);
 }
 
 .hot-city {
