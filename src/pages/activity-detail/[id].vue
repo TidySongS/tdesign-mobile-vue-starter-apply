@@ -174,16 +174,12 @@ function handleBuyClick() {
 .ad-main {
   padding-top: 48px;
   background-color: #040000;
-  height: calc(100vh - v-bind(popupHeight));
+  // height: calc(100vh - v-bind(popupHeight)); // 不注释收起时不会显示圆角
   padding-bottom: calc(80px + env(safe-area-inset-bottom));
 }
 .ad-banner {
   width: 100%;
   height: 160px;
-  // img {
-  //   width: 100%;
-  //   height: 100%;
-  // }
 }
 .ad-section-guests,
 .ad-section-scene {
@@ -199,6 +195,7 @@ function handleBuyClick() {
 .ad-swiper {
   overflow: hidden;
   margin-top: 12px;
+  --swiper-width: 283px;
   .ad-swiper-scene {
     overflow: visible;
     margin: 0 calc((100vw - var(--swiper-width)) - 28px) 0 0;

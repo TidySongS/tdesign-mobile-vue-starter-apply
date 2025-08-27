@@ -47,7 +47,7 @@ dayjs.tz.setDefault('Asia/Shanghai')
     <div class="ad-popup">
       <div v-show="!showBottomPopup" class="ad-popup-handle" @click="onToggle" />
       <div class="ad-popup-toggle" :class="{ 'ad-popup-toggle-active': showBottomPopup }" @click="onToggle">
-        <IconFont name="chevron-up" size="18px" aria-hidden="true" />
+        <ChevronUpIcon size="20px" />
       </div>
       <div v-show="showBottomPopup" class="ad-popup-content">
         <template v-if="detail">
@@ -173,22 +173,23 @@ dayjs.tz.setDefault('Asia/Shanghai')
     background-size: 100% 100%;
   }
   .ad-popup-toggle {
-    width: 16px;
-    height: 16px;
+    .flex-center();
+    height: 11px;
+    width: 100%;
     position: absolute;
-    left: 50%;
+    z-index: 99;
     top: 0;
-    transform: translateX(-50%);
-
-    i {
-      position: absolute;
+    .t-icon {
+      color: var(--td-font-gray-2);
     }
   }
   .ad-popup-toggle-active {
-    top: -24px;
-    box-shadow: var(--td-shadow-2);
-
-    i {
+    height: 44px;
+    top: -32px;
+    z-index: -1;
+    background: url('/imgs/mask.png');
+    padding-bottom: 12px;
+    .t-icon {
       color: var(--td-font-white-1);
       transform: rotate(180deg);
     }
@@ -289,17 +290,17 @@ dayjs.tz.setDefault('Asia/Shanghai')
     }
   }
   .ad-review-item {
+    height: 90px;
+    border-radius: 9px;
     :deep(.t-cell__left) {
       .flex-center();
     }
-    border-radius: 9px;
-    height: 90px;
     :deep(.t-cell__title-text) {
       font-size: 14px;
     }
     .ad-review-item-content {
       .font(12px, 400);
-      color: #00000099;
+      color: var(--td-font-gray-2);
       text-align: left;
       display: -webkit-box;
       -webkit-line-clamp: 2;
