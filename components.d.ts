@@ -8,11 +8,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ActivityCard: typeof import('./../components/ActivityCard.vue')['default']
-    ActivityCardSkeleton: typeof import('./../components/ActivityCardSkeleton.vue')['default']
-    ActivityDetailPopup: typeof import('./../components/ActivityDetailPopup.vue')['default']
-    ActivityFilterPopup: typeof import('./../components/ActivityFilterPopup.vue')['default']
-    ActivitySwiper: typeof import('./../components/ActivitySwiper.vue')['default']
+    ActivityCard: typeof import('./src/components/ActivityCard.vue')['default']
+    ActivityCardSkeleton: typeof import('./src/components/ActivityCardSkeleton.vue')['default']
+    ActivityDetailPopup: typeof import('./src/components/ActivityDetailPopup.vue')['default']
+    ActivityFilterPopup: typeof import('./src/components/ActivityFilterPopup.vue')['default']
+    ActivitySwiper: typeof import('./src/components/ActivitySwiper.vue')['default']
     CalendarIcon: typeof import('tdesign-icons-vue-next')['CalendarIcon']
     CheckIcon: typeof import('tdesign-icons-vue-next')['CheckIcon']
     ChevronLeftIcon: typeof import('tdesign-icons-vue-next')['ChevronLeftIcon']
@@ -25,7 +25,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ShareIcon: typeof import('tdesign-icons-vue-next')['ShareIcon']
-    TagFilter: typeof import('./../components/TagFilter.vue')['default']
+    TagFilter: typeof import('./src/components/TagFilter.vue')['default']
     TAvatar: typeof import('tdesign-mobile-vue')['Avatar']
     TAvatarGroup: typeof import('tdesign-mobile-vue')['AvatarGroup']
     TButton: typeof import('tdesign-mobile-vue')['Button']
