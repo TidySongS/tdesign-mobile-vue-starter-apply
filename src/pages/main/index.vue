@@ -164,7 +164,6 @@ onActivated(() => {
       <ActivitySwiper
         :is-fetch-swiper-list
         :swiper-ready
-        :slide-margin="12"
         :swiper-list="swiperList"
       />
     </div>

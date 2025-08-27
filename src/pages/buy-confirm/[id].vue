@@ -347,9 +347,6 @@ header {
   .detail-item {
     .flex-center();
     min-width: 0;
-    &::last-child {
-      flex-grow: 1;
-    }
     span {
       white-space: nowrap;
       overflow: hidden;
