@@ -1,5 +1,6 @@
+import type { ErrorToastOption, HttpErrorInfo } from '@/utils/http'
 import axios from 'axios'
-import { type HttpErrorInfo, type ErrorToastOption, getGlobalErrorToast, getUnauthorizedHandler, notifyError, shouldSkipMessage, mapStatusToMessage, setGlobalErrorToast, setUnauthorizedHandler, setErrorNotifier, setToastDedupInterval } from '@/utils/http'
+import { getGlobalErrorToast, getUnauthorizedHandler, mapStatusToMessage, notifyError, setErrorNotifier, setGlobalErrorToast, setToastDedupInterval, setUnauthorizedHandler, shouldSkipMessage } from '@/utils/http'
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -8,19 +9,23 @@ const instance = axios.create({
 })
 
 function resolveToastMessage(option: ErrorToastOption, error: HttpErrorInfo): string | false {
-  if (typeof option === 'function') return option(error)
+  if (typeof option === 'function')
+    return option(error)
   return option ? error.message : false
 }
 
 function maybeToast(errorInfo: HttpErrorInfo, rawError: any) {
   // 请求被取消不提示
-  if (axios.isCancel?.(rawError)) return
+  if (axios.isCancel?.(rawError))
+    return
   // 单请求优先，再回退全局
   const perRequestOption: ErrorToastOption | undefined = rawError?.config?.errorToast
   const finalOption: ErrorToastOption = perRequestOption ?? getGlobalErrorToast()
   const message = resolveToastMessage(finalOption, errorInfo)
-  if (!message) return
-  if (shouldSkipMessage(message)) return
+  if (!message)
+    return
+  if (shouldSkipMessage(message))
+    return
   notifyError(message)
 }
 
@@ -59,7 +64,8 @@ instance.interceptors.response.use(
         // 外部注入的 401 处理
         try {
           getUnauthorizedHandler()?.(httpError)
-        } catch {}
+        }
+        catch {}
         break
       default:
         httpError.message = mapStatusToMessage(status)
@@ -70,7 +76,7 @@ instance.interceptors.response.use(
   },
 )
 
-export { setGlobalErrorToast, setUnauthorizedHandler, setErrorNotifier, setToastDedupInterval }
+export { setErrorNotifier, setGlobalErrorToast, setToastDedupInterval, setUnauthorizedHandler }
 export type { HttpErrorInfo }
 
 export default instance

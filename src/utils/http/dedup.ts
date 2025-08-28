@@ -9,7 +9,8 @@ let lastToastTimestamp = 0
  */
 export function setToastDedupInterval(ms: number) {
   // 配置节流时间窗口；传入负数或非法值将被忽略
-  if (Number.isFinite(ms) && ms >= 0) toastDedupIntervalMs = ms
+  if (Number.isFinite(ms) && ms >= 0)
+    toastDedupIntervalMs = ms
 }
 
 /**

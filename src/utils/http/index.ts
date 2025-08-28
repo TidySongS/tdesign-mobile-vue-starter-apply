@@ -1,5 +1,5 @@
-export * from './types'
 export * from './config'
 export * from './dedup'
-export * from './notifier'
 export * from './errorMapper'
+export * from './notifier'
+export * from './types'
