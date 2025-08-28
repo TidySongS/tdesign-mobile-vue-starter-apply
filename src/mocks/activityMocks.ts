@@ -1,8 +1,8 @@
 export const covers = [
-  '/imgs/activity/cover1.png',
-  '/imgs/activity/cover2.png',
-  '/imgs/activity/cover3.png',
-  '/imgs/activity/cover4.png',
+  '/mock-imgs/activity/cover1.png',
+  '/mock-imgs/activity/cover2.png',
+  '/mock-imgs/activity/cover3.png',
+  '/mock-imgs/activity/cover4.png',
   'https://tdesign.gtimg.com/mobile/demos/swiper1.png',
   'https://tdesign.gtimg.com/mobile/demos/swiper2.png',
   'https://tdesign.gtimg.com/mobile/demos/example1.png',
