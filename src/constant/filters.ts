@@ -1,7 +1,6 @@
-import dayjs from 'dayjs'
+import { generateDateRange } from '@/utils/dateTime'
 
-const sixMonthsAgo = dayjs().subtract(6, 'month').toDate()
-const sixMonthsLater = dayjs().add(6, 'month').toDate()
+const [sixMonthsAgo, sixMonthsLater] = generateDateRange()
 
 export const defaultFilterOptions = {
   domain: [

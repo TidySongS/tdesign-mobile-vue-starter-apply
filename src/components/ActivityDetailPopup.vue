@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import type { ActivityDetail } from '@/api/activity'
-import dayjs from 'dayjs'
-import timezone from 'dayjs/plugin/timezone'
-import utc from 'dayjs/plugin/utc'
 import { IconFont } from 'tdesign-icons-vue-next'
+import { formatDate } from '@/utils/dateTime'
 
 const props = defineProps<{
   detail: ActivityDetail | null
@@ -24,16 +22,10 @@ const address = computed<string>(() => props.detail?.address ?? '')
 const introduce = computed<string>(() => props.detail?.introduce ?? '')
 const dateText = computed<string>(() => {
   const d = props.detail?.date
-  if (!d)
-    return ''
-  return dayjs.tz(d as string | number | Date, 'Asia/Shanghai').format('YYYY年M月D日')
+  return formatDate(d as string | number | Date)
 })
 
 const star = computed(() => props.detail?.score ?? 0)
-
-dayjs.extend(utc)
-dayjs.extend(timezone)
-dayjs.tz.setDefault('Asia/Shanghai')
 </script>
 
 <template>

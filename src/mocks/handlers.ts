@@ -1,5 +1,6 @@
 import type { ActivityFilterParams, SortOption } from '@/api/activity'
 import { delay, http, HttpResponse } from 'msw'
+import { compareDates, isDateInRange } from '@/utils/dateTime'
 import { swiperList } from './activityMocks'
 import { db } from './db'
 
@@ -57,10 +58,8 @@ export const handlers = [
     }
 
     if (dateRange.length === 2) {
-      const startDate = new Date(dateRange[0])
-      const endDate = new Date(dateRange[1])
       filteredResult = filteredResult.filter((activity) => {
-        return activity.date >= startDate && activity.date <= endDate
+        return isDateInRange(activity.date, dateRange[0], dateRange[1])
       })
     }
 
@@ -68,7 +67,7 @@ export const handlers = [
       filteredResult.sort((a, b) => b.score - a.score)
     }
     else if (sort === 'latest') {
-      filteredResult.sort((a, b) => b.date.getTime() - a.date.getTime())
+      filteredResult.sort((a, b) => compareDates(a.date, b.date, 'desc'))
     }
 
     const total = filteredResult.length

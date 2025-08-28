@@ -11,19 +11,3 @@ export function formatCityName(name: string) {
     return name.slice(0, -1)
   return name
 }
-
-export function formatDateRange(dateRange: Date[]) {
-  const formatDate = (date: Date) => {
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    return [year, month, day]
-  }
-  const [startYear, startMonth, startDay] = formatDate(dateRange[0])
-  if (dateRange.length === 1)
-    return `${startYear}年${startMonth}月${startDay}日`
-  const [endYear, endMonth, endDay] = formatDate(dateRange[1])
-  if (startYear === endYear)
-    return `${startYear}年${startMonth}月${startDay}日-${endMonth}月${endDay}日`
-  return `${startYear}年${startMonth}月${startDay}日-${endYear}年${endMonth}月${endDay}日`
-}

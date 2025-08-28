@@ -2,6 +2,7 @@
 import { Message } from 'tdesign-mobile-vue'
 import { getActivityDetail, getActivityPrices, getActivityTickets } from '@/api/activity'
 import userInfo from '@/store/userInfo'
+import { formatDate } from '@/utils/dateTime'
 
 interface TicketItem {
   id: string
@@ -137,11 +138,7 @@ async function fetchActivityData() {
 
     // 设置活动信息console.log(activityData)
     eventTitle.value = activityData.title
-    const date = new Date(activityData.date)
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    eventDate.value = `${year}年${month}月${day}日`
+    eventDate.value = formatDate(activityData.date)
     eventLocation.value = activityData.address
 
     // 获取票类场次
