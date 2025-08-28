@@ -155,7 +155,7 @@ function isFormValid(validationResult: ValidateResult): boolean {
 async function handleConfirm() {
   if (!form.value)
     return
-
+  // @ts-expect-error - 等待 TDesign 类型修复
   form.value.validate().then((result: ValidateResult) => {
     console.log('验证结果: ', result)
 
