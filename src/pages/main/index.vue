@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Filters } from '@/hooks/useFilters'
+import type { ActivityFilterParams as Filters, SortOption } from '@/api/activity'
 import { getActivities, getHomeSwiper } from '@/api/activity'
 import { useFilters } from '@/hooks/useFilters'
 import { formatPrice } from '@/utils/formatters'
@@ -13,16 +13,16 @@ interface Activity {
   title: string
   cover: string
   score: number
-  minPrice: number
-  maxPrice: number
-  date: Date
-  domain: string[]
-  type: string
   formattedPrice?: string
 }
 
+interface TabPanel {
+  value: SortOption
+  label: string
+}
+
 const searchValue = ref('')
-const currentTab = ref('latest')
+const currentTab = ref<SortOption>('latest')
 const isRefresh = ref(true)
 const pageContainerRef = ref<any | null>(null)
 const scrollPosition = ref(0)
@@ -36,11 +36,10 @@ const pageSize = 5
 let currentPage = 1
 
 const { filters, resetFilters } = useFilters()
-
 const swiperList = ref([])
 const activityList = ref<Activity[]>([])
 
-const tabPanels = [
+const tabPanels: TabPanel[] = [
   {
     value: 'latest',
     label: '最新活动',
@@ -50,6 +49,17 @@ const tabPanels = [
     label: '高分活动',
   },
 ]
+
+function processActivityResponse(res: any): Activity[] {
+  if (!res || !res.data || !res.data.paginatedData) {
+    throw new Error('API response format is invalid')
+  }
+
+  return res.data.paginatedData.map((item: any) => ({
+    ...item,
+    formattedPrice: formatPrice(item.minPrice, item.maxPrice),
+  }))
+}
 
 async function fetchActivityList(isRefreshMode = true) {
   if (isLoadAllActivities.value && !isRefreshMode) {
@@ -66,30 +76,31 @@ async function fetchActivityList(isRefreshMode = true) {
       sort: currentTab.value,
       page: currentPage,
       pageSize,
-      filters: JSON.stringify(filters),
+      domain: filters.domain,
+      type: filters.type,
+      minPrice: filters.minPrice,
+      maxPrice: filters.maxPrice,
+      dateRange: filters.dateRange,
     }
     const res = await getActivities(payload)
-    const paginatedData = res.data.paginatedData.map((item: Activity) => {
-      return {
-        ...item,
-        formattedPrice: formatPrice(item.minPrice, item.maxPrice),
-      }
-    })
+    const paginatedData = processActivityResponse(res)
     if (isRefresh.value) {
       activityList.value = paginatedData
     }
     else {
       activityList.value.push(...paginatedData)
     }
-    currentPage++
-    if (activityList.value.length >= res.data.total) {
+    if (paginatedData.length < pageSize) {
       isLoadAllActivities.value = true
+    }
+    else {
+      currentPage++
     }
     if (activityList.value.length === 0) {
       lastKnownScrollPosition.value = 0
     }
   }
-  catch (error: any) {
+  catch (error) {
     console.error('获取活动列表失败:', error)
   }
   finally {
@@ -100,9 +111,12 @@ async function fetchActivityList(isRefreshMode = true) {
 async function fetchSwiperList() {
   try {
     const res = await getHomeSwiper()
+    if (!res || !res.data) {
+      throw new Error('API response data is undefined')
+    }
     swiperList.value = res.data
   }
-  catch (error: any) {
+  catch (error) {
     console.error('获取轮播图列表失败:', error)
   }
   finally {

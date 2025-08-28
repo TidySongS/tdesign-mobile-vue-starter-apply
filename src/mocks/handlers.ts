@@ -1,7 +1,15 @@
+import type { ActivityFilterParams, SortOption } from '@/api/activity'
 import { delay, http, HttpResponse } from 'msw'
-import { defaultFilterOptions } from '@/constant/filters'
 import { swiperList } from './activityMocks'
 import { db } from './db'
+
+interface ActivitiesRequestBody {
+  params: ActivityFilterParams & {
+    page?: number
+    pageSize?: number
+    sort?: SortOption
+  }
+}
 
 export const handlers = [
   http.get('/api/homeSwiper', async () => {
@@ -13,45 +21,44 @@ export const handlers = [
       { status: 200 },
     )
   }),
-  http.get('/api/activities', async ({ request }) => {
+  http.post('/api/activities', async ({ request }) => {
     await delay(500)
-    const url = new URL(request.url)
-    const sort = url.searchParams.get('sort') || ''
-    const page = Number(url.searchParams.get('page')) || 1
-    const pageSize = Number(url.searchParams.get('pageSize')) || 5
-    const filters = url.searchParams.get('filters')
-      ? JSON.parse(url.searchParams.get('filters') as string)
-      : defaultFilterOptions
+    const data = await request.json()
+    const { params } = data as ActivitiesRequestBody
+    const {
+      domain = [],
+      type = [],
+      minPrice,
+      maxPrice,
+      dateRange = [],
+      sort = 'latest',
+      page = 1,
+      pageSize = 5,
+    } = params
+
     let filteredResult = db.activity.getAll()
 
-    if (filters.domain.length > 0) {
+    if (domain.length > 0) {
       filteredResult = filteredResult.filter(activity =>
-        filters.domain.some((field: string) => activity.domain.includes(field)),
+        domain.some((field: string) => activity.domain.includes(field)),
       )
     }
 
-    if (filters.type.length > 0) {
+    if (type.length > 0) {
       filteredResult = filteredResult.filter(activity =>
-        filters.type.includes(activity.type),
+        type.includes(activity.type),
       )
     }
 
-    const [minPrice, maxPrice] = filters.priceRange
-    if (
-      minPrice !== defaultFilterOptions.priceRange[0]
-      || maxPrice !== defaultFilterOptions.priceRange[1]
-    ) {
+    if (minPrice !== undefined && maxPrice !== undefined) {
       filteredResult = filteredResult.filter((activity) => {
         return activity.minPrice <= maxPrice && activity.maxPrice >= minPrice
       })
     }
 
-    const startDate = new Date(filters.dateRange[0])
-    const endDate = new Date(filters.dateRange[1])
-    if (
-      startDate.getTime() !== defaultFilterOptions.dateRange[0].getTime()
-      || endDate.getTime() !== defaultFilterOptions.dateRange[1].getTime()
-    ) {
+    if (dateRange.length === 2) {
+      const startDate = new Date(dateRange[0])
+      const endDate = new Date(dateRange[1])
       filteredResult = filteredResult.filter((activity) => {
         return activity.date >= startDate && activity.date <= endDate
       })
