@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Filters } from '@/hooks/useFilters'
+import type { ActivityFilterParams as Filters } from '@/api/activity'
 import { defaultFilterOptions } from '@/constant/filters'
 import { copyFilters } from '@/hooks/useFilters'
 import { formatDateRange } from '@/utils/formatters'
@@ -22,13 +22,22 @@ const props = defineProps({
 
 const emit = defineEmits(['update:visible', 'update:filters', 'reset'])
 const calendarVisible = ref(false)
-const tmpFilters = ref({ ...props.filters })
+const tmpFilters = ref<Filters>({ ...props.filters as Filters })
+const tmpPriceRange = computed({
+  get() {
+    return [tmpFilters.value.minPrice, tmpFilters.value.maxPrice]
+  },
+  set(newValue: number[]) {
+    tmpFilters.value.minPrice = newValue[0]
+    tmpFilters.value.maxPrice = newValue[1]
+  },
+})
 const tmpDateRange = ref(props.filters.dateRange)
 
 watch(
-  () => props.filters,
+  () => props.filters as Filters,
   (newFilters) => {
-    tmpFilters.value = { ...newFilters }
+    Object.assign(tmpFilters.value, newFilters)
     tmpDateRange.value = newFilters.dateRange.map((d: Date) => new Date(d))
   },
   { deep: true, immediate: true },
@@ -121,10 +130,10 @@ function applyFilters() {
             <div class="filter">
               <h4>价格范围(元)</h4>
               <t-slider
-                v-model="tmpFilters.priceRange"
+                v-model="tmpPriceRange"
                 range
-                :min="options.priceRange[0]"
-                :max="options.priceRange[1]"
+                :min="options.minPrice"
+                :max="options.maxPrice"
                 :label="handlePriceLabel"
                 show-extreme-value
               />

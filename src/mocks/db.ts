@@ -4,7 +4,8 @@ import dayjs from 'dayjs'
 import { defaultFilterOptions } from '@/constant/filters'
 import { covers } from './activityMocks'
 
-const twoYearsFromNow = dayjs().add(2, 'year').toDate()
+const sixMonthsAgo = dayjs().subtract(6, 'month').toDate()
+const sixMonthsLater = dayjs().add(6, 'month').toDate()
 
 // 中文介绍文案池
 const cnIntroducePool = [
@@ -32,19 +33,19 @@ function generatePrice() {
   }
   else if (priceType === 'single') {
     const singlePrice = faker.number.int({
-      min: defaultFilterOptions.priceRange[0],
-      max: defaultFilterOptions.priceRange[1],
+      min: defaultFilterOptions.minPrice,
+      max: defaultFilterOptions.maxPrice,
     })
     return { minPrice: singlePrice, maxPrice: singlePrice, priceType }
   }
   else {
     const min = faker.number.int({
-      min: defaultFilterOptions.priceRange[0],
-      max: defaultFilterOptions.priceRange[1] / 2,
+      min: defaultFilterOptions.minPrice,
+      max: defaultFilterOptions.maxPrice / 2,
     })
     const max = faker.number.int({
       min,
-      max: defaultFilterOptions.priceRange[1],
+      max: defaultFilterOptions.maxPrice,
     })
     return { minPrice: min, maxPrice: max, priceType }
   }
@@ -190,17 +191,17 @@ export const db = factory({
     score: () => faker.number.float({ min: 0, max: 5, multipleOf: 0.5 }),
     minPrice: () =>
       faker.number.int({
-        min: defaultFilterOptions.priceRange[0],
-        max: defaultFilterOptions.priceRange[1] / 2,
+        min: defaultFilterOptions.minPrice,
+        max: defaultFilterOptions.maxPrice / 2,
       }),
     maxPrice: () =>
       faker.number.int({
-        min: defaultFilterOptions.priceRange[1] / 2,
-        max: defaultFilterOptions.priceRange[1],
+        min: defaultFilterOptions.maxPrice / 2,
+        max: defaultFilterOptions.maxPrice,
       }),
     domain: () => faker.helpers.arrayElement(defaultFilterOptions.domain),
     type: () => faker.helpers.arrayElement(defaultFilterOptions.type),
-    date: () => faker.date.between({ from: new Date(), to: twoYearsFromNow }), // 未来两年
+    date: () => faker.date.between({ from: sixMonthsAgo, to: sixMonthsLater }), // 过去半年到未来半年
     address: () => faker.location.streetAddress(),
     introduce: () => faker.helpers.arrayElement(cnIntroducePool),
     // 详情：感兴趣人数（用于头像组右侧的人数展示）
@@ -229,7 +230,7 @@ export const db = factory({
     personId: () => faker.string.uuid(), // 个人 ID
     title: () => `${faker.company.name()}活动`, // 活动标题
     status: () => faker.helpers.arrayElement(['已完成', '待参加']),
-    date: () => faker.date.between({ from: new Date(), to: twoYearsFromNow }), // 未来两年
+    date: () => faker.date.between({ from: sixMonthsAgo, to: sixMonthsLater }), // 过去半年到未来半年
     cover: () => faker.helpers.arrayElement(covers),
   },
   // 职业

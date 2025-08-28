@@ -1,3 +1,8 @@
+import dayjs from 'dayjs'
+
+const sixMonthsAgo = dayjs().subtract(6, 'month').toDate()
+const sixMonthsLater = dayjs().add(6, 'month').toDate()
+
 export const defaultFilterOptions = {
   domain: [
     'IT互联网',
@@ -10,6 +15,7 @@ export const defaultFilterOptions = {
     '摄影',
   ],
   type: ['讲座', '展览', '工作坊'],
-  priceRange: [0, 588],
-  dateRange: [new Date(2023, 2, 10), new Date()],
+  minPrice: 0,
+  maxPrice: 588,
+  dateRange: [sixMonthsAgo, sixMonthsLater],
 }

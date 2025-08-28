@@ -1,44 +1,38 @@
 import axios from '@/utils/request'
 
-interface ActivityParams {
-  title?: string
-  score?: number
-  minPrice?: number
-  maxPrice?: number
-  isHighScore?: boolean
-  domain?:
-    | 'IT互联网'
-    | '艺术设计'
-    | '科技'
-    | '电商'
-    | '教育'
-    | '医疗健康'
-    | '心理学'
-    | '摄影'
-  type?: '讲座' | '展览' | '工作坊'
-  date?: Date
+export interface ActivityFilterParams {
+  domain: string[]
+  type: string[]
+  minPrice: number
+  maxPrice: number
+  dateRange: Date[]
 }
 
-interface PersonActivityParams {
-  personId?: string
-  status?: '已完成' | '待参加'
-  date?: Date
+export type SortOption = 'latest' | 'top'
+
+export interface PaginationParams {
+  page?: number | 1
+  pageSize?: number | 5
+  sort?: SortOption
 }
 
-interface PaginationParams {
-  page?: number
-  pageSize?: number
+// 获取首页活动列表
+export function getActivities(params: ActivityFilterParams & PaginationParams) {
+  return axios.post('/activities', { params })
 }
 
-export function getActivities(params: ActivityParams & PaginationParams) {
-  return axios.get('/activities', { params })
-}
-
+// 获取首页轮播图
 export function getHomeSwiper() {
   return axios.get('/homeSwiper')
 }
 
 export type ActivityStatus = '待参加' | '已完成'
+
+interface PersonActivityParams {
+  personId?: string
+  status?: ActivityStatus
+  date?: Date
+}
 
 export interface PersonActivityItem {
   id: string
