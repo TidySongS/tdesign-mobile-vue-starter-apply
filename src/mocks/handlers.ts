@@ -1,8 +1,8 @@
 import type { ActivityFilterParams, SortOption } from '@/api/activity'
 import { delay, http, HttpResponse } from 'msw'
 import { compareDates, isDateInRange } from '@/utils/dateTime'
-import { swiperList } from './activityMocks'
 import { db } from './db'
+import { swiperList } from './mockData'
 
 interface ActivitiesRequestBody {
   params: ActivityFilterParams & {

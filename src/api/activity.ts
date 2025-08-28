@@ -40,7 +40,7 @@ export interface PersonActivityItem {
   title: string
   status: ActivityStatus
   date: string | number | Date
-  cover?: string
+  cover: string
 }
 
 export interface PersonActivitiesResponse {

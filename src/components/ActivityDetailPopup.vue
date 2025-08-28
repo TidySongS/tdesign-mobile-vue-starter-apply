@@ -161,7 +161,7 @@ const star = computed(() => props.detail?.score ?? 0)
     width: 76px;
     height: 11px;
     top: -10px;
-    background: url('/imgs/half-circle.png') no-repeat center center;
+    background: url('@/assets/half-circle.png') no-repeat center center;
     background-size: 100% 100%;
   }
   .ad-popup-toggle {
@@ -179,7 +179,7 @@ const star = computed(() => props.detail?.score ?? 0)
     height: 44px;
     top: -32px;
     z-index: -1;
-    background: url('/imgs/mask.png');
+    background: url('@/assets/mask.png');
     padding-bottom: 12px;
     .t-icon {
       color: var(--td-font-white-1);
