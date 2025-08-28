@@ -143,9 +143,10 @@ const star = computed(() => props.detail?.score ?? 0)
   background-color: #fff;
   position: relative;
   height: 100%;
+  padding-top: 12px;
   .ad-popup-content {
     .flex-col();
-    padding: 24px 16px;
+    padding: 12px 16px;
     padding-bottom: 80px;
     gap: 16px;
     overflow-y: auto;
@@ -202,6 +203,9 @@ const star = computed(() => props.detail?.score ?? 0)
         --td-rate-text-active-color: var(--td-warning-color-5);
         --td-rate-disabled-selected-color: var(--td-warning-color-5);
         --td-rate-text-font-size: 14px;
+        :deep(.t-rate__text) {
+          margin-left: 8px;
+        }
       }
     }
   }

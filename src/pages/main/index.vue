@@ -373,14 +373,9 @@ h2 {
   margin-top: 8px;
   display: flex;
   color: var(--td-warning-color-5);
-
+  --td-rate-disabled-selected-color: var(--td-warning-color-5);
   span {
     margin-left: 8px;
-  }
-
-  :deep(.t-rate__icon--selected),
-  :deep(.t-rate__icon-left--selected) {
-    color: var(--td-warning-color-5);
   }
 }
 
