@@ -43,7 +43,7 @@ function goBack() {
   align-items: center;
   flex-direction: column;
   height: 100vh;
-  background-image: url('/mock-imgs/head-bg.png');
+  background-image: url('@/assets/head-bg.png');
   background-size: cover;
   background-repeat: no-repeat;
   overflow: hidden;
