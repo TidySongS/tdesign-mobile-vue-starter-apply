@@ -26,16 +26,37 @@ export function getHomeSwiper() {
   return axios.get('/homeSwiper')
 }
 
+export type ActivityStatus = '待参加' | '已完成'
+
 interface PersonActivityParams {
   personId?: string
-  status?: '已完成' | '待参加'
+  status?: ActivityStatus
   date?: Date
 }
 
-export function getPersonActivities(
+export interface PersonActivityItem {
+  id: string
+  personId: string
+  title: string
+  status: ActivityStatus
+  date: string | number | Date
+  cover?: string
+}
+
+export interface PersonActivitiesResponse {
+  data: PersonActivityItem[]
+  pagination: {
+    page: number
+    pageSize: number
+    total: number
+    totalPages: number
+  }
+}
+
+export function getPersonActivities<T = PersonActivitiesResponse>(
   params: PaginationParams & PersonActivityParams,
-) {
-  return axios.get('/personActivities', { params })
+): Promise<T> {
+  return axios.get<T, T>('/personActivities', { params })
 }
 
 // ==== Detail Types ====
@@ -90,15 +111,15 @@ export interface PriceItem {
 
 // 详情页：获取活动详情
 export function getActivityDetail(id: string): Promise<ActivityDetail> {
-  return axios.get<ActivityDetail>(`/activities/${id}`) as unknown as Promise<ActivityDetail>
+  return axios.get<ActivityDetail, ActivityDetail>(`/activities/${id}`)
 }
 
 // 详情页：获取活动票类场次
 export function getActivityTickets(id: string): Promise<TicketItem[]> {
-  return axios.get<TicketItem[]>(`/activities/${id}/tickets`) as unknown as Promise<TicketItem[]>
+  return axios.get<TicketItem[], TicketItem[]>(`/activities/${id}/tickets`)
 }
 
 // 详情页：获取活动票档价格
 export function getActivityPrices(id: string): Promise<PriceItem[]> {
-  return axios.get<PriceItem[]>(`/activities/${id}/prices`) as unknown as Promise<PriceItem[]>
+  return axios.get<PriceItem[], PriceItem[]>(`/activities/${id}/prices`)
 }
