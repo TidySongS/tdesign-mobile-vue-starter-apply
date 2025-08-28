@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ActivityDetail } from '@/api/activity'
+import dayjs from 'dayjs'
 import {
   getActivityDetail,
 } from '@/api/activity'
@@ -58,6 +59,16 @@ const priceText = computed<string>(() => {
   return `¥${min}-¥${max}`
 })
 
+// 判断活动是否已结束
+const isEnded = computed<boolean>(() => {
+  if (!detail.value || !detail.value.date)
+    return false
+  const eventEndOfDay = dayjs(detail.value.date).endOf('day')
+  if (!eventEndOfDay.isValid())
+    return false
+  return dayjs().isAfter(eventEndOfDay)
+})
+
 async function fetchData() {
   try {
     const d = await getActivityDetail(activityId.value)
@@ -76,6 +87,8 @@ onMounted(() => {
 })
 
 function handleBuyClick() {
+  if (isEnded.value)
+    return
   router.push(`/buy-confirm/${activityId.value}`)
 }
 </script>
@@ -153,8 +166,11 @@ function handleBuyClick() {
       </div>
     </div>
     <div class="ad-footer-cta">
-      <t-button size="large" theme="primary" block @click="handleBuyClick">
-        立即购买 {{ priceText }}
+      <t-button v-if="!isEnded" size="large" theme="primary" block @click="handleBuyClick">
+        {{ `立即购买 ${priceText}` }}
+      </t-button>
+      <t-button v-else size="large" theme="primary" block disabled>
+        活动已结束
       </t-button>
     </div>
   </footer>
