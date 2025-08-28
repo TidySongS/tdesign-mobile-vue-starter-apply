@@ -1,6 +1,18 @@
 <script setup lang="ts">
+import type {
+  DateValue,
+} from 'tdesign-mobile-vue'
+import type {
+  ValidateResult,
+} from '@/api/personinfo'
+import {
+  Message,
+} from 'tdesign-mobile-vue'
+// import { fentchForm } from '@api/personinfo'
 import userInfo from '@/store/userInfo'
-import { formatDate } from '@/utils/dateTime'
+import {
+  formatDate,
+} from '@/utils/dateTime'
 
 const form = ref(null)
 const router = useRouter()
@@ -25,7 +37,7 @@ const showDatePicker = ref(false)
 const showProfessionPicker = ref(false)
 
 // 日期选择器值
-const datePickerValue = ref('1994-09-27')
+const datePickerValue = ref <DateValue> ('1994-09-27')
 
 // 职业选择器值
 const professionPickerValue = ref(['设计师/艺术从业者'])
@@ -50,16 +62,7 @@ const professionColumns = [
   }],
 ]
 
-// 处理日期选择
-function onDateChange(value: any) {
-  console.log('date change: ', value)
-}
-
-function onDatePick(value: any) {
-  console.log('date pick: ', value)
-}
-
-function onDateConfirm(value: any) {
+function onDateConfirm(value: DateValue) {
   console.log('date confirm: ', value)
   if (value) {
     formData.birthday = formatDate(value)
@@ -84,6 +87,39 @@ const rules = {
   name: [{
     required: true,
     message: '请输入姓名',
+  }, {
+    validator: (val: string) => {
+      const len = val.trim().length
+
+      if (len < 2) {
+        return {
+          result: false,
+          message: '姓名至少 2 个字符',
+        }
+      }
+
+      if (/[a-z]/i.test(val)) {
+        if (len > 60) {
+          return {
+            result: false,
+            message: '姓名不能超过 60 个字符',
+          }
+        }
+      }
+      else {
+        if (len > 30) {
+          return {
+            result: false,
+            message: '姓名不能超过 30 个字符',
+          }
+        }
+      }
+
+      return {
+        result: true,
+        message: '',
+      }
+    },
   }],
   birthday: [{
     required: true,
@@ -109,14 +145,24 @@ const rules = {
   }],
 }
 
+function isFormValid(validationResult: ValidateResult): boolean {
+  return Object.values(validationResult).every(rules =>
+    Array.isArray(rules) && rules.every(rule => rule.result === true),
+  )
+}
+
 // 确认保存
 async function handleConfirm() {
-  // @ts-expect-error 临时忽略类型不匹配
-  form.value.validate().then((result: boolean) => {
-    if (result) {
-      console.log('保存个人信息:', formData)
+  if (!form.value)
+    return
 
-      // 添加到userInfo store 由于mock数据会刷新重置 目前先保存在store里
+  form.value.validate().then((result: ValidateResult) => {
+    console.log('验证结果: ', result)
+
+    if (isFormValid(result)) {
+      // 添加到userInfo store 由于mock数据会刷新重置 目前先保存在store里便于数据展示
+      // 实际使用时应该保存至后端的接口中
+      // fentchForm(formData)
       userInfo.addPerson({
         name: formData.name,
         birthday: formData.birthday,
@@ -129,12 +175,13 @@ async function handleConfirm() {
 
       router.back()
     }
+    else {
+      Message.error({
+        content: '请完善表单内容',
+        duration: 2000,
+      })
+    }
   })
-}
-
-// 重置表单
-function onReset() {
-  console.log('重置表单')
 }
 </script>
 
@@ -146,7 +193,7 @@ function onReset() {
     <div class="page-content">
       <!-- 表单内容 -->
       <div>
-        <t-form ref="form" :data="formData" :rules="rules" label-align="left" show-error-message label-width="97px" @reset="onReset" @submit="handleConfirm">
+        <t-form ref="form" :data="formData" :rules="rules" label-align="left" show-error-message label-width="97px" @submit="handleConfirm">
           <!-- 设为默认开关 -->
           <t-form-item label="设为默认" name="isDefault" content-align="right">
             <t-switch v-model="isDefault" />
@@ -196,7 +243,7 @@ function onReset() {
 
     <!-- 日期选择器 -->
     <t-popup v-model="showDatePicker" placement="bottom">
-      <t-date-time-picker :value="datePickerValue" title="选择生日" :mode="['date']" start="1950-01-01" end="2010-12-31" format="YYYY-MM-DD" @change="onDateChange" @pick="onDatePick" @confirm="onDateConfirm" @cancel="onDateCancel" />
+      <t-date-time-picker :value="datePickerValue" title="选择生日" :mode="['date']" start="1950-01-01" end="2010-12-31" format="YYYY-MM-DD" @confirm="onDateConfirm" @cancel="onDateCancel" />
     </t-popup>
 
     <!-- 职业选择器 -->
@@ -207,7 +254,7 @@ function onReset() {
 </template>
 
 <style lang="less" scoped>
-header {
+    header {
   position: fixed;
   z-index: 999;
 }
@@ -241,7 +288,6 @@ header {
   .t-form__label--required label::before {
     content: none;
   }
-
   .t-form__label--required label::after {
     display: inline-block;
     margin-left: 4px;
