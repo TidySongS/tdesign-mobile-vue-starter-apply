@@ -189,6 +189,13 @@ onMounted(() => {
   }
 }
 
+@supports (height: 100dvh) {
+  // 移动端适配
+  .user-page {
+    height: calc(100dvh - var(--navbar-height) - var(--tabbar-height));
+  }
+}
+
 .user-card-info {
   .flex-center();
   gap: var(--td-spacer-2);
@@ -232,6 +239,8 @@ onMounted(() => {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    padding-bottom: calc(var(--td-spacer-2) + constant(safe-area-inset-bottom));
+    padding-bottom: calc(var(--td-spacer-2) + env(safe-area-inset-bottom));
   }
 }
 
