@@ -197,6 +197,7 @@ function handleBuyClick() {
   overflow: hidden;
   margin-top: 12px;
   --swiper-width: 283px;
+  position: relative;
   .ad-swiper-scene {
     overflow: visible;
     margin: 0 calc((100vw - var(--swiper-width)) - 28px) 0 0;
@@ -249,5 +250,8 @@ footer {
       color: #040000;
     }
   }
+}
+:deep(.t-swiper) {
+  position: unset;
 }
 </style>
