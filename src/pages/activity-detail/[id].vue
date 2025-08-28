@@ -45,7 +45,7 @@ watch(
 
 const bannerUrl = computed(
   () =>
-    detail.value?.banner || detail.value?.cover || '/imgs/activity-banner.png',
+    detail.value?.banner || detail.value?.cover || '/mock-imgs/activity-banner.png',
 )
 const guestImages = computed<string[]>(() => detail.value?.guestImages ?? [])
 const sceneImages = computed<string[]>(() => detail.value?.sceneImages ?? [])

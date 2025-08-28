@@ -172,7 +172,7 @@ dayjs.tz.setDefault('Asia/Shanghai')
     width: 76px;
     height: 11px;
     top: -10px;
-    background: url('/public/imgs/half-circle.png') no-repeat center center;
+    background: url('/public/mock-imgs/half-circle.png') no-repeat center center;
     background-size: 100% 100%;
   }
   .ad-popup-toggle {
