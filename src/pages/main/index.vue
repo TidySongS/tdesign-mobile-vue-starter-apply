@@ -233,7 +233,7 @@ onActivated(() => {
     >
       <t-result>
         <template #image>
-          <t-image src="/imgs/result1.png" />
+          <t-image src="/mock-imgs/result1.png" />
         </template>
         <template #title>
           <div style="font-size: large">

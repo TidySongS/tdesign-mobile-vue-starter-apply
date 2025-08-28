@@ -38,6 +38,7 @@ export default defineConfig({
       name: 'remove-mockServiceWorker.js',
       closeBundle() {
         rmSync('dist/mockServiceWorker.js')
+        rmSync('dist/mock-imgs', { recursive: true })
       },
     },
     Components({
