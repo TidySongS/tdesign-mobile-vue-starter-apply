@@ -1,11 +1,10 @@
 import { fakerZH_CN as faker } from '@faker-js/faker'
 import { factory, manyOf, primaryKey } from '@mswjs/data'
-import dayjs from 'dayjs'
 import { defaultFilterOptions } from '@/constant/filters'
+import { generateDateRange } from '@/utils/dateTime'
 import { covers } from './activityMocks'
 
-const sixMonthsAgo = dayjs().subtract(6, 'month').toDate()
-const sixMonthsLater = dayjs().add(6, 'month').toDate()
+const [sixMonthsAgo, sixMonthsLater] = generateDateRange()
 
 // 中文介绍文案池
 const cnIntroducePool = [
@@ -62,7 +61,7 @@ function generateTickets(activityId: string) {
       activityId,
       date: faker.date.between({
         from: new Date(),
-        to: dayjs().add(1, 'year').toDate(),
+        to: generateDateRange(0, 12)[1], // 未来12个月
       }).toLocaleDateString('zh-CN', {
         year: 'numeric',
         month: 'long',

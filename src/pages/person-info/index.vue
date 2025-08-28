@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import userInfo from '@/store/userInfo'
+import { formatDate } from '@/utils/dateTime'
 
 const form = ref(null)
 const router = useRouter()
@@ -61,12 +62,7 @@ function onDatePick(value: any) {
 function onDateConfirm(value: any) {
   console.log('date confirm: ', value)
   if (value) {
-    const date = new Date(value)
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    const formattedDate = `${year}年${month}月${day}日`
-    formData.birthday = formattedDate
+    formData.birthday = formatDate(value)
   }
   showDatePicker.value = false
 }

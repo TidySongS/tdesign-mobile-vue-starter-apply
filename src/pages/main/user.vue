@@ -1,14 +1,8 @@
 <script setup lang="ts">
 import type { UserProfile } from '@/api/info'
-import dayjs from 'dayjs'
-import timezone from 'dayjs/plugin/timezone'
-import utc from 'dayjs/plugin/utc'
 import { getPersonActivities } from '@/api/activity'
 import { getUserProfile } from '@/api/info'
-
-dayjs.extend(utc)
-dayjs.extend(timezone)
-dayjs.tz.setDefault('Asia/Shanghai')
+import { formatDate } from '@/utils/dateTime'
 
 type TabValue = 'first' | 'second' | 'third'
 
@@ -35,9 +29,6 @@ function onReview(_id: string): void {
   // TODO: 跳转到评价
 }
 
-function formatDate(input: string | number | Date): string {
-  return dayjs.tz(input, 'Asia/Shanghai').format('YYYY年M月D日')
-}
 function mapTabToStatus(tab: TabValue): ActivityStatus | undefined {
   if (tab === 'first')
     return '待参加'

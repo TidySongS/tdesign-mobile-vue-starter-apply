@@ -4,6 +4,7 @@ import { Message } from 'tdesign-mobile-vue'
 
 import { getActivityDetail } from '@/api/activity'
 import { getAppList, getFriendList } from '@/api/share'
+import { formatDate } from '@/utils/dateTime'
 
 const route = useRoute()
 const router = useRouter()
@@ -46,16 +47,10 @@ async function fetchActivityData() {
     // 获取活动详情
     const data = await getActivityDetail(activityId.value)
 
-    // 处理日期
-    const date = new Date(data.date)
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-
     // 设置活动信息
     activity.value = {
       name: data.title,
-      date: `${year}年${month}月${day}日`,
+      date: formatDate(data.date),
       address: data.address,
       cover: data.cover,
     }

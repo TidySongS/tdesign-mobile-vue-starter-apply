@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { ActivityDetail } from '@/api/activity'
-import dayjs from 'dayjs'
 import {
   getActivityDetail,
 } from '@/api/activity'
+import { isExpired } from '@/utils/dateTime'
 
 const route = useRoute()
 const router = useRouter()
@@ -63,10 +63,7 @@ const priceText = computed<string>(() => {
 const isEnded = computed<boolean>(() => {
   if (!detail.value || !detail.value.date)
     return false
-  const eventEndOfDay = dayjs(detail.value.date).endOf('day')
-  if (!eventEndOfDay.isValid())
-    return false
-  return dayjs().isAfter(eventEndOfDay)
+  return isExpired(detail.value.date)
 })
 
 async function fetchData() {
