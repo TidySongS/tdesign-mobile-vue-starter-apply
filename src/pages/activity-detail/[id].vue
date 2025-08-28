@@ -189,6 +189,7 @@ function handleBuyClick() {
   padding-top: 48px;
   background-color: #040000;
   height: calc(100vh - 48px);
+  padding-bottom: calc(80px + constant(safe-area-inset-bottom));
   padding-bottom: calc(80px + env(safe-area-inset-bottom));
 }
 .ad-banner {
@@ -243,9 +244,17 @@ footer {
   width: 100%;
   display: flex;
   gap: 16px;
+  padding-bottom: calc(16px + constant(safe-area-inset-bottom));
   padding-bottom: calc(16px + env(safe-area-inset-bottom));
   .ad-footer-cta {
     flex: 1;
+  }
+}
+
+@supports (height: 100dvh) {
+  // 移动端地址栏/工具栏伸缩适配
+  .ad-main {
+    height: calc(100dvh - 48px);
   }
 }
 
