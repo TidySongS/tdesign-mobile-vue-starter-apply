@@ -90,31 +90,12 @@ const rules = {
   }, {
     validator: (val: string) => {
       const len = val.trim().length
-
       if (len < 2) {
         return {
           result: false,
           message: '姓名至少 2 个字符',
         }
       }
-
-      if (/[a-z]/i.test(val)) {
-        if (len > 60) {
-          return {
-            result: false,
-            message: '姓名不能超过 60 个字符',
-          }
-        }
-      }
-      else {
-        if (len > 30) {
-          return {
-            result: false,
-            message: '姓名不能超过 30 个字符',
-          }
-        }
-      }
-
       return {
         result: true,
         message: '',
@@ -201,7 +182,7 @@ async function handleConfirm() {
           </t-form-item>
           <!-- 姓名 -->
           <t-form-item label="姓名" name="name" required>
-            <t-input v-model="formData.name" placeholder="请输入姓名" borderless align="left" />
+            <t-input v-model="formData.name" placeholder="请输入姓名" maxlength="30" borderless align="left" />
           </t-form-item>
 
           <!-- 生日 -->
