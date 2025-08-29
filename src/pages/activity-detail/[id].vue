@@ -167,7 +167,7 @@ function handleBuyClick() {
         {{ `立即购买 ${priceText}` }}
       </t-button>
       <t-button v-else size="large" theme="primary" block disabled>
-        活动已结束
+        已下架
       </t-button>
     </div>
   </footer>
