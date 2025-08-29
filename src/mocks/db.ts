@@ -56,107 +56,110 @@ function generateTickets(activityId: string) {
 }
 
 // 生成票档价格数据
-function generatePrices(activityId: string, minPrice: number, maxPrice: number, priceType: string) {
-  const prices = []
+type PriceType = 'free' | 'single' | 'range'
+function generatePrices(activityId: string, minPrice: number, maxPrice: number, priceType: PriceType) {
+  // 定义每种 priceType 对应的生成策略
+  const priceStrategies = {
+    free: () => [
+      {
+        id: faker.string.uuid(),
+        activityId,
+        description: '免费活动',
+        price: 0,
+        originalPrice: 0,
+        person: 1,
+      },
+    ],
 
-  if (priceType === 'free') {
-    prices.push({
-      id: faker.string.uuid(),
-      activityId,
-      description: '免费活动',
-      price: 0,
-      originalPrice: 0,
-      person: 1,
-    })
+    single: () => {
+      const earlyBirdPrice = Math.max(0, minPrice - faker.number.int({ min: 5, max: 20 }))
+      const duoEarlyBirdPrice = Math.max(0, minPrice * 2 - faker.number.int({ min: 10, max: 40 }))
+
+      return [
+        // 早鸟价-单人
+        {
+          id: faker.string.uuid(),
+          activityId,
+          description: '早鸟价-单人票',
+          price: earlyBirdPrice,
+          originalPrice: minPrice,
+          person: 1,
+        },
+        // 正价-单人
+        {
+          id: faker.string.uuid(),
+          activityId,
+          description: '正价-单人票',
+          price: minPrice,
+          originalPrice: minPrice,
+          person: 1,
+        },
+        // 早鸟价-双人
+        {
+          id: faker.string.uuid(),
+          activityId,
+          description: '早鸟价-双人票',
+          price: duoEarlyBirdPrice,
+          originalPrice: minPrice * 2,
+          person: 2,
+        },
+        // 正价-双人
+        {
+          id: faker.string.uuid(),
+          activityId,
+          description: '正价-双人票',
+          price: minPrice * 2,
+          originalPrice: minPrice * 2,
+          person: 2,
+        },
+      ]
+    },
+
+    range: () => {
+      const earlyBirdMinPrice = Math.max(0, minPrice - faker.number.int({ min: 5, max: 20 }))
+      const earlyBirdMaxPrice = Math.max(0, maxPrice - faker.number.int({ min: 5, max: 20 }))
+
+      return [
+        // 早鸟价-最低
+        {
+          id: faker.string.uuid(),
+          activityId,
+          description: '早鸟价-单人票',
+          price: earlyBirdMinPrice,
+          originalPrice: minPrice,
+          person: 1,
+        },
+        // 正价-最低
+        {
+          id: faker.string.uuid(),
+          activityId,
+          description: '正价-单人票',
+          price: minPrice,
+          originalPrice: minPrice,
+          person: 1,
+        },
+        // 早鸟价-最高
+        {
+          id: faker.string.uuid(),
+          activityId,
+          description: '早鸟价-单人票(高价)',
+          price: earlyBirdMaxPrice,
+          originalPrice: maxPrice,
+          person: 1,
+        },
+        // 正价-最高
+        {
+          id: faker.string.uuid(),
+          activityId,
+          description: '正价-单人票(高价)',
+          price: maxPrice,
+          originalPrice: maxPrice,
+          person: 1,
+        },
+      ]
+    },
   }
-  else if (priceType === 'single') {
-    // 早鸟价
-    const earlyBirdPrice = Math.max(0, minPrice - faker.number.int({ min: 5, max: 20 }))
-    prices.push({
-      id: faker.string.uuid(),
-      activityId,
-      description: '早鸟价-单人票',
-      price: earlyBirdPrice,
-      originalPrice: minPrice,
-      person: 1,
-    })
-
-    // 正价
-    prices.push({
-      id: faker.string.uuid(),
-      activityId,
-      description: '正价-单人票',
-      price: minPrice,
-      originalPrice: minPrice,
-      person: 1,
-    })
-
-    // 双人票早鸟价
-    const duoEarlyBirdPrice = Math.max(0, minPrice * 2 - faker.number.int({ min: 10, max: 40 }))
-    prices.push({
-      id: faker.string.uuid(),
-      activityId,
-      description: '早鸟价-双人票',
-      price: duoEarlyBirdPrice,
-      originalPrice: minPrice * 2,
-      person: 2,
-    })
-
-    // 双人票正价
-    prices.push({
-      id: faker.string.uuid(),
-      activityId,
-      description: '正价-双人票',
-      price: minPrice * 2,
-      originalPrice: minPrice * 2,
-      person: 2,
-    })
-  }
-  else {
-    // 早鸟价-最低价
-    const earlyBirdMinPrice = Math.max(0, minPrice - faker.number.int({ min: 5, max: 20 }))
-    prices.push({
-      id: faker.string.uuid(),
-      activityId,
-      description: '早鸟价-单人票',
-      price: earlyBirdMinPrice,
-      originalPrice: minPrice,
-      person: 1,
-    })
-
-    // 正价-最低价
-    prices.push({
-      id: faker.string.uuid(),
-      activityId,
-      description: '正价-单人票',
-      price: minPrice,
-      originalPrice: minPrice,
-      person: 1,
-    })
-
-    // 早鸟价-最高价
-    const earlyBirdMaxPrice = Math.max(0, maxPrice - faker.number.int({ min: 5, max: 20 }))
-    prices.push({
-      id: faker.string.uuid(),
-      activityId,
-      description: '早鸟价-单人票(高价)',
-      price: earlyBirdMaxPrice,
-      originalPrice: maxPrice,
-      person: 1,
-    })
-
-    // 正价-最高价
-    prices.push({
-      id: faker.string.uuid(),
-      activityId,
-      description: '正价-单人票(高价)',
-      price: maxPrice,
-      originalPrice: maxPrice,
-      person: 1,
-    })
-  }
-
-  return prices
+  return priceStrategies[priceType]()
 }
 
 export const db = factory({

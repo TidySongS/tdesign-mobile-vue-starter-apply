@@ -1,10 +1,22 @@
 <script setup lang="ts">
-import type { AppItem, Person } from '@/api/share'
-import { Message } from 'tdesign-mobile-vue'
+import type {
+  AppItem,
+  Person,
+} from '@/api/share'
+import {
+  Message,
+} from 'tdesign-mobile-vue'
 
-import { getActivityDetail } from '@/api/activity'
-import { getAppList, getFriendList } from '@/api/share'
-import { formatDate } from '@/utils/dateTime'
+import {
+  getActivityDetail,
+} from '@/api/activity'
+import {
+  getAppList,
+  getFriendList,
+} from '@/api/share'
+import {
+  formatDate,
+} from '@/utils/dateTime'
 
 const route = useRoute()
 const router = useRouter()
@@ -36,8 +48,8 @@ const selectedPerson = ref({
   occupation: '设计师/艺术从业者',
 })
 
-const frendList = reactive<Person[]>([])
-const appList = reactive<AppItem[]>([])
+const frendList = reactive <Person[]> ([])
+const appList = reactive <AppItem[]> ([])
 // 加载状态
 const loading = ref(true)
 
@@ -227,7 +239,7 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
-.text-ellipsis {
+    .text-ellipsis {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -252,13 +264,15 @@ onMounted(() => {
 
 .activity-card {
   .p-16();
-  height: 281px;
+  width: 100%;
+  aspect-ratio: 343 / 282;
   background: white;
   border-radius: 12px;
   box-shadow: var(--td-shadow-3);
   .activity-cover {
     width: 100%;
-    height: 175px;
+    width: 100%;
+    aspect-ratio: 311 / 175;
     border-radius: 9.06px;
   }
   .activity-name {
@@ -326,9 +340,9 @@ onMounted(() => {
 .action-buttons {
   display: flex;
   gap: 8px;
-  padding: 16px 0;
+  margin-top: 38px;
+  padding-bottom: 16px;
 }
-
 /* 分享弹窗样式 */
 
 .share-popup {
@@ -371,7 +385,6 @@ onMounted(() => {
   }
   :deep(.t-grid-item__image) {
     .flex-center();
-
     width: 40px;
     background: transparent;
   }
