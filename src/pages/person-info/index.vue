@@ -165,10 +165,11 @@ async function handleConfirm() {
       // fentchForm(formData)
       userInfo.addPerson({
         name: formData.name,
+        // 仅做演示用途，但避免存储敏感信息
         birthday: formData.birthday,
         phone: formData.phone,
-        idCard: formData.idCard,
-        email: formData.email,
+        idCard: '1111111111111111111',
+        email: 'email@email.com',
         profession: formData.profession,
         isDefault: isDefault.value,
       })

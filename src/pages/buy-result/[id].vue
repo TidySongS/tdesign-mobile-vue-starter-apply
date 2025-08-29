@@ -286,6 +286,7 @@ onMounted(() => {
     .detail-item {
       display: flex;
       align-items: center;
+      margin-bottom: 4px;
       &:first-child {
         margin-right: 16px;
       }
