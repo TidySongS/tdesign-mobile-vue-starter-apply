@@ -101,9 +101,17 @@ function handleBuyClick() {
   </header>
   <main class="ad-main">
     <div class="ad-banner">
+      <t-skeleton
+        v-if="!detail"
+        :loading="true"
+        :row-col="[{ width: '100%', height: '160px' }]"
+        style="--td-skeleton-bg-color: #040000"
+      />
       <t-image
+        v-else
         :src="bannerUrl" alt="活动横幅" loading="lazy" fit="cover"
         :style="{ width: '100%', height: '160px' }"
+        class="banner-image"
       />
     </div>
     <div v-if="guestImages.length" class="ad-section-guests">
@@ -195,7 +203,21 @@ function handleBuyClick() {
 .ad-banner {
   width: 100%;
   height: 160px;
+  .banner-image {
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+  }
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .ad-section-guests,
 .ad-section-scene {
   color: var(--td-font-white-1);
