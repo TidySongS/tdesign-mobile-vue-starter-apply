@@ -20,6 +20,6 @@ export interface personFormData {
   isDefault: string
 }
 
-// export function fenchForm(data: personFormData) {
+// export function submitUserInfoForm(data: personFormData) {
 //  return axios.post('/personinfo', data)
 // }

@@ -84,25 +84,26 @@ onMounted(() => {
       <div class="user-card-info">
         <div class="user-card-avatar">
           <t-skeleton :loading="isProfileLoading && !profile" animation="flashed" :row-col="[{ height: '64px', width: '64px', type: 'circle' }]" />
-          <t-avatar v-if="profile" :image="profile.avatar" alt="用户头像" size="large" />
+          <t-avatar v-if="!isProfileLoading" :image="profile?.avatar || 'https://tdesign.gtimg.com/mobile/demos/avatar1.png'" alt="用户头像" size="large" />
         </div>
         <div class="user-card-meta">
-          <div class="user-name">
-            <t-skeleton :loading="isProfileLoading && !profile" animation="flashed" :row-col="[{ height: '24px', width: '120px' }]" />
-            <template v-if="profile">
+          <t-skeleton
+            :loading="isProfileLoading && !profile" animation="flashed"
+            style="--td-skeleton-row-spacing: 8px"
+            :row-col="[{ height: '24px', width: '48px' }, [{ height: '24px', width: '43px' }, { height: '24px', width: '106px', marginLeft: '8px' }]]"
+          />
+          <div v-if="profile">
+            <div class="user-name">
               {{ profile.name }}
-            </template>
-          </div>
-          <div class="user-tag">
-            <t-skeleton :loading="isProfileLoading && !profile" animation="flashed" :row-col="[{ height: '20px', width: '60px' }, { height: '20px', width: '120px' }]" />
-            <template v-if="profile">
+            </div>
+            <div class="user-tag">
               <t-tag variant="light">
                 {{ profile.age }}岁
               </t-tag>
               <t-tag variant="light">
                 {{ profile.occupation }}
               </t-tag>
-            </template>
+            </div>
           </div>
         </div>
       </div>
@@ -128,12 +129,25 @@ onMounted(() => {
         </t-tabs>
       </div>
       <div class="activity-content">
-        <t-skeleton
-          v-if="isFetching && activities.length === 0"
-          :loading="true"
-          animation="flashed"
-          :row-col="[{ size: '120px' }]"
-        />
+        <ActivityCardSkeleton v-if="isFetching && activities.length === 0" :count="1">
+          <t-skeleton
+            animation="flashed"
+            :loading="true"
+            style="margin-bottom: 4px"
+            :row-col="[{ height: '22px', width: '100%' }]"
+          />
+          <t-skeleton
+            animation="flashed"
+            :loading="true"
+            :row-col="[{ height: '20px', width: '90px' }]"
+          />
+          <t-skeleton
+            animation="flashed"
+            :loading="true"
+            :row-col="[{ height: '22px', width: '42px' }]"
+            style="margin-top: auto;"
+          />
+        </ActivityCardSkeleton>
         <t-empty v-if="!isFetching && activities.length === 0" description="暂无活动" />
         <div v-for="item in activities" :key="item.id" class="activity-item">
           <ActivityCard :cover="item.cover" :title="item.title">
@@ -177,6 +191,7 @@ onMounted(() => {
   .user-card {
     .p-16();
     .flex-center(space-between);
+    height: 96px;
     background: var(--bg-color-page);
     border-radius: var(--td-radius-extraLarge);
     .user-card-edit {
@@ -210,6 +225,7 @@ onMounted(() => {
     .user-name {
       .font(16px, 600);
       height: 24px;
+      margin-bottom: 8px;
       color: var(--td-font-gray-1);
     }
     .user-tag {

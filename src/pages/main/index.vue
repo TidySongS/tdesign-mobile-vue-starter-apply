@@ -1,44 +1,19 @@
 <script setup lang="ts">
-import type { ActivityFilterParams as Filters, SortOption } from '@/api/activity'
-import { getActivities, getHomeSwiper } from '@/api/activity'
-import { useFilters } from '@/hooks/useFilters'
-import { formatPrice } from '@/utils/formatters'
+import type { SortOption } from '@/api/activity'
+import { useActivities } from '@/hooks/useActivities'
+import { useHomeSwiper } from '@/hooks/useHomeSwiper'
 
 defineOptions({
   name: 'MainIndex',
 })
 
-interface Activity {
-  id: number
-  title: string
-  cover: string
-  score: number
-  formattedPrice?: string
-}
-
+// 定义 Tab 面板接口，包含值和标签
 interface TabPanel {
   value: SortOption
   label: string
 }
 
-const searchValue = ref('')
-const currentTab = ref<SortOption>('latest')
-const isRefresh = ref(true)
-const pageContainerRef = ref<any | null>(null)
-const scrollPosition = ref(0)
-const lastKnownScrollPosition = ref(0)
-const swiperReady = ref(false)
-const isFetchSwiperList = ref(true)
-const isFetchActivityList = ref(true)
-const isLoadAllActivities = ref(false)
-const filterPopupVisible = ref(false)
-const pageSize = 5
-let currentPage = 1
-
-const { filters, resetFilters } = useFilters()
-const swiperList = ref([])
-const activityList = ref<Activity[]>([])
-
+// Tab 面板的配置
 const tabPanels: TabPanel[] = [
   {
     value: 'latest',
@@ -50,118 +25,72 @@ const tabPanels: TabPanel[] = [
   },
 ]
 
-function processActivityResponse(res: any): Activity[] {
-  if (!res || !res.data || !res.data.paginatedData) {
-    throw new Error('API response format is invalid')
-  }
+const offsetHeight = 104 // 顶部固定栏（navbar+搜索框）的高度
+const searchValue = ref('') // 搜索框的值
+const pageContainerRef = ref<any | null>(null) // 页面容器的引用，用于控制滚动位置
+const scrollPosition = ref(0) // 记录组件失活时的滚动位置
+const lastKnownScrollPosition = ref(0) // 记录上一次的滚动位置
+const swiperReady = ref(false) // 用于控制轮播图的渲染时机，让其在 DOM 真正准备好之后再出现
+const filterPopupVisible = ref(false) // 筛选弹窗是否可见
 
-  return res.data.paginatedData.map((item: any) => ({
-    ...item,
-    formattedPrice: formatPrice(item.minPrice, item.maxPrice),
-  }))
-}
+const {
+  swiperList, // 轮播图列表
+  isFetchSwiperList, // 是否正在获取轮播图列表
+  fetchSwiperList, // 获取轮播图列表
+} = useHomeSwiper()
 
-async function fetchActivityList(isRefreshMode = true) {
-  if (isLoadAllActivities.value && !isRefreshMode) {
-    return
-  }
-  isRefresh.value = isRefreshMode
-  isFetchActivityList.value = true
-  if (isRefresh.value) {
-    currentPage = 1
-    isLoadAllActivities.value = false
-  }
-  try {
-    const payload = {
-      sort: currentTab.value,
-      page: currentPage,
-      pageSize,
-      domain: filters.domain,
-      type: filters.type,
-      minPrice: filters.minPrice,
-      maxPrice: filters.maxPrice,
-      dateRange: filters.dateRange,
-    }
-    const res = await getActivities(payload)
-    const paginatedData = processActivityResponse(res)
-    if (isRefresh.value) {
-      activityList.value = paginatedData
-    }
-    else {
-      activityList.value.push(...paginatedData)
-    }
-    if (paginatedData.length < pageSize) {
-      isLoadAllActivities.value = true
-    }
-    else {
-      currentPage++
-    }
-    if (activityList.value.length === 0) {
-      lastKnownScrollPosition.value = 0
-    }
-  }
-  catch (error) {
-    console.error('获取活动列表失败:', error)
-  }
-  finally {
-    isFetchActivityList.value = false
-  }
-}
+const {
+  isRefresh, // 是否处于刷新页面状态
+  isFetchActivityList, // 是否正在获取活动列表
+  isLoadAllActivities, // 是否已加载所有活动
+  filters, // 筛选器
+  currentTab, // 当前选中的 Tab
+  activityList, // 活动列表
+  fetchActivityList, // 获取活动列表
+  resetFilters, // 重置筛选器
+  handleFiltersUpdate, // 处理筛选器更新事件
+} = useActivities()
 
-async function fetchSwiperList() {
-  try {
-    const res = await getHomeSwiper()
-    if (!res || !res.data) {
-      throw new Error('API response data is undefined')
-    }
-    swiperList.value = res.data
-  }
-  catch (error) {
-    console.error('获取轮播图列表失败:', error)
-  }
-  finally {
-    isFetchSwiperList.value = false
-  }
-}
-
+/**
+ * 重置筛选器并重新获取活动列表
+ */
 function resetAndFetch() {
   resetFilters()
   fetchActivityList()
   filterPopupVisible.value = false
 }
 
-function handleFiltersUpdate(newFilters: Filters) {
-  Object.assign(filters, newFilters)
-  fetchActivityList()
-}
-
+/**
+ * 处理滚动事件，在触底时触发加载更多。
+ * @param scrollBottom 距离底部的距离
+ * @param scrollTop 距离顶部的距离
+ */
 function onScroll(scrollBottom: number, scrollTop: number) {
   lastKnownScrollPosition.value = scrollTop
-  if (
-    !isFetchActivityList.value
-    && !isLoadAllActivities.value
-    && scrollBottom < 56
-  ) {
+  if (!isFetchActivityList.value && !isLoadAllActivities.value && scrollBottom < 56) {
     fetchActivityList(false)
   }
 }
 
+// 组件挂载后，获取轮播图和活动列表
 onMounted(() => {
   fetchSwiperList()
   fetchActivityList()
 })
 
+// 当页面被 keep-alive 缓存时，组件进入失活状态
 onDeactivated(() => {
-  swiperReady.value = false
-  scrollPosition.value = lastKnownScrollPosition.value
+  swiperReady.value = false // 提前隐藏轮播图，避免在页面被缓存期间，因 DOM 仍在内存中但未正确渲染导致的视觉问题
+  scrollPosition.value = lastKnownScrollPosition.value // 记录离开页面时的滚动位置
 })
 
+// 当页面被 keep-alive 重新激活时
 onActivated(() => {
   nextTick(() => {
     swiperReady.value = true
+    // 恢复之前的滚动位置
     if (scrollPosition.value > 0) {
       if (pageContainerRef.value) {
-        const offsetHeight = 104
         let scrollTop = 0
         if (scrollPosition.value < offsetHeight)
           scrollTop = scrollPosition.value
@@ -199,7 +128,7 @@ onActivated(() => {
       <h2 style="padding-bottom: 0">
         全部活动
       </h2>
-      <t-sticky :offset-top="104" :z-index="99">
+      <t-sticky :offset-top="offsetHeight" :z-index="99">
         <div class="tab-container">
           <t-tabs
             v-model:value="currentTab"

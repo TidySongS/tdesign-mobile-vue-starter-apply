@@ -1,6 +1,6 @@
 import { generateDateRange } from '@/utils/dateTime'
 
-const [sixMonthsAgo, sixMonthsLater] = generateDateRange()
+const [oneWeekAgo, sixMonthsLater] = generateDateRange(1, 6, 'week', 'month')
 
 export const defaultFilterOptions = {
   domain: [
@@ -16,5 +16,5 @@ export const defaultFilterOptions = {
   type: ['讲座', '展览', '工作坊'],
   minPrice: 0,
   maxPrice: 588,
-  dateRange: [sixMonthsAgo, sixMonthsLater],
+  dateRange: [oneWeekAgo, sixMonthsLater],
 }
