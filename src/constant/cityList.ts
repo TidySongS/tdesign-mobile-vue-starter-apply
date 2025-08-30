@@ -4,6 +4,10 @@ const hotCityList = ['北京市', '上海市', '广州市', '深圳市', '成都
 
 const cityList = [
   {
+    index: '热门城市',
+    children: [...hotCityList],
+  },
+  {
     index: 'A',
     children: [
       '阿坝藏族羌族自治州',
@@ -443,11 +447,6 @@ const cityList = [
     ],
   },
 ]
-
-export const processedHotCityList = hotCityList.map(name => ({
-  name,
-  label: formatCityName(name),
-}))
 
 export const processedCityList = cityList.map(item => ({
   ...item,

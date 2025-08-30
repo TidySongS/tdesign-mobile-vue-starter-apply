@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev:mock": "vite --open --mode mock",
     "dev": "vite",
+    "dev:mock": "VITE_APP_ENABLE_MOCKS=true npm run dev",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",

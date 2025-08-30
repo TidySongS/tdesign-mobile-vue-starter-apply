@@ -6,8 +6,14 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "types": ["vite/client", "unplugin-vue-router/client"],
     "noEmit": true
   },
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "./node_modules/tdesign-mobile-vue/global.d.ts", "types/*.d.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "./node_modules/tdesign-mobile-vue/global.d.ts",
+    "types/*.d.ts"
+  ],
   "exclude": ["src/**/__tests__/*"]
 }

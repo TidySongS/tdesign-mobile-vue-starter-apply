@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import { loadAppConfig } from './config'
 import router from './router'
 import 'tdesign-mobile-vue/es/style/index.css'
 import '@/styles/main.less'
@@ -16,6 +17,7 @@ async function enableMocking() {
 const app = createApp(App)
 app.use(router)
 
-enableMocking().then(() => {
+enableMocking().then(async () => {
+  await loadAppConfig(app)
   app.mount('#app')
 })

@@ -6,11 +6,9 @@ export function getCityNameFromCoords(
   latitude: number,
   longitude: number,
 ): Promise<string> {
-  const tencentApiKey = import.meta.env.VITE_TENCENT_MAP_API_KEY
+  const tencentApiKey = window.appConfig?.apiKey?.tencentMap
   if (!tencentApiKey) {
-    throw new Error(
-      '腾讯地图 API Key 缺失，请在 .env 文件中设置 VITE_TENCENT_MAP_API_KEY',
-    )
+    throw new Error('腾讯地图 API Key 缺失，请检查配置文件 config.json')
   }
   const url = `/api/tencent-map/ws/geocoder/v1/?location=${latitude},${longitude}&key=${tencentApiKey}`
 

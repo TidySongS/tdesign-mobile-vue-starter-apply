@@ -63,7 +63,6 @@ const professionColumns = [
 ]
 
 function onDateConfirm(value: DateValue) {
-  console.log('date confirm: ', value)
   if (value) {
     formData.birthday = formatDate(value)
   }
@@ -138,8 +137,6 @@ async function handleConfirm() {
     return
   // @ts-expect-error - 等待 TDesign 类型修复
   form.value.validate().then((result: ValidateResult) => {
-    console.log('验证结果: ', result)
-
     if (isFormValid(result)) {
       // 添加到userInfo store 由于mock数据会刷新重置 目前先保存在store里便于数据展示
       // 实际使用时应该保存至后端的接口中
@@ -195,17 +192,17 @@ async function handleConfirm() {
 
           <!-- 手机号 -->
           <t-form-item label="手机号" name="phone" required>
-            <t-input v-model="formData.phone" placeholder="请输入手机号" borderless align="left" />
+            <t-input v-model="formData.phone" :maxlength="11" placeholder="请输入手机号" borderless align="left" />
           </t-form-item>
 
           <!-- 身份证 -->
           <t-form-item label="身份证" name="idCard" required>
-            <t-input v-model="formData.idCard" placeholder="请输入您的身份证号码" borderless align="left" />
+            <t-input v-model="formData.idCard" :maxlength="18" placeholder="请输入您的身份证号码" borderless align="left" />
           </t-form-item>
 
           <!-- 邮箱 -->
           <t-form-item label="邮箱" name="email">
-            <t-input v-model="formData.email" placeholder="请输入您的邮箱" borderless align="left" />
+            <t-input v-model="formData.email" :maxlength="35" placeholder="请输入您的邮箱" borderless align="left" />
           </t-form-item>
 
           <!-- 职业 -->
@@ -236,7 +233,7 @@ async function handleConfirm() {
 </template>
 
 <style lang="less" scoped>
-    header {
+header {
   position: fixed;
   z-index: 999;
 }

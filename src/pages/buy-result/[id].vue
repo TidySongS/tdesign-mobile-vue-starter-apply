@@ -239,7 +239,7 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
-    .text-ellipsis {
+.text-ellipsis {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -317,7 +317,6 @@ onMounted(() => {
   height: 82px;
   background: white;
   border-radius: 9px;
-  margin-bottom: 22px;
   padding: 17px 16px;
   .person-avatar {
     margin-right: 12px;
