@@ -1,14 +1,17 @@
+import type { ManipulateType } from 'dayjs'
 import dayjs from 'dayjs'
 
 /**
- * 生成日期范围：从过去N个月到未来N个月
- * @param pastMonths 过去的月数，默认6个月
- * @param futureMonths 未来的月数，默认6个月
+ * 生成日期范围：从过去N个月到未来N个月，默认过去6个月到未来6个月
+ * @param pastCount 过去的数量，默认6
+ * @param futureCount 未来的数量，默认6
+ * @param pastUnit 过去的单位，例如 'month', 'week', 'day'，默认为 'month'
+ * @param futureUnit 未来的单位，例如 'month', 'week', 'day'，默认为 'month'
  * @returns [startDate, endDate] 格式的日期数组
  */
-export function generateDateRange(pastMonths = 6, futureMonths = 6): [Date, Date] {
-  const startDate = dayjs().subtract(pastMonths, 'month').toDate()
-  const endDate = dayjs().add(futureMonths, 'month').toDate()
+export function generateDateRange(pastCount = 6, futureCount = 6, pastUnit: ManipulateType = 'month', futureUnit: ManipulateType = 'month'): [Date, Date] {
+  const startDate = dayjs().subtract(pastCount, pastUnit).toDate()
+  const endDate = dayjs().add(futureCount, futureUnit).toDate()
   return [startDate, endDate]
 }
 

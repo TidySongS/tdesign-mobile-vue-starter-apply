@@ -8,7 +8,7 @@ import type {
 import {
   Message,
 } from 'tdesign-mobile-vue'
-// import { fentchForm } from '@api/personinfo'
+// import { submitUserInfoForm } from '@api/personinfo'
 import userInfo from '@/store/userInfo'
 import {
   formatDate,
@@ -140,7 +140,7 @@ async function handleConfirm() {
     if (isFormValid(result)) {
       // 添加到userInfo store 由于mock数据会刷新重置 目前先保存在store里便于数据展示
       // 实际使用时应该保存至后端的接口中
-      // fentchForm(formData)
+      // submitUserInfoForm(formData)
       userInfo.addPerson({
         name: formData.name,
         // 仅做演示用途，但避免存储敏感信息

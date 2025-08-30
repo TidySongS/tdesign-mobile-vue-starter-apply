@@ -150,7 +150,7 @@ header {
   z-index: 99;
   position: sticky;
   background: var(--bg-color-page);
-  height: calc(var(--navbar-height) + 56px);
+  height: calc(var(--navbar-height) + 60px);
 }
 
 .location-container {
@@ -172,7 +172,6 @@ header {
 }
 
 .city-container {
-  margin-top: 4px;
   .city-check--active {
     margin-right: 24px;
     color: var(--td-brand-color-7);
