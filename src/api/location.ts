@@ -23,7 +23,6 @@ export function getCityNameFromCoords(
       return city || '未知城市'
     })
     .catch((error) => {
-      console.error('逆地理编码失败', error)
       if (axios.isAxiosError(error) && error.code === 'ECONNABORTED') {
         throw new Error('请求超时')
       }

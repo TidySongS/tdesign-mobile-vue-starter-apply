@@ -85,7 +85,9 @@ export const handlers = [
     )
   }),
 
-  http.get('/api/personActivities', ({ request }) => {
+  http.get('/api/personActivities', async ({ request }) => {
+    await delay(200)
+
     const url = new URL(request.url)
     const page = Number(url.searchParams.get('page') ?? 1)
     const pageSize = Number(url.searchParams.get('pageSize') ?? 10)
@@ -193,7 +195,9 @@ export const handlers = [
   }),
 
   // 用户信息
-  http.get('/api/user/profile', () => {
+  http.get('/api/user/profile', async () => {
+    await delay(200)
+
     const profile = db.userProfile.findFirst({
       where: { id: { equals: 'current' } },
     })

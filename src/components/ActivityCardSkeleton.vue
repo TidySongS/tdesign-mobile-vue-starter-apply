@@ -15,23 +15,25 @@ defineProps({
       :row-col="[{ size: '120px' }]"
     />
     <div class="card__content">
-      <t-skeleton
-        animation="flashed"
-        :loading="true"
-        style="margin-bottom: 8px"
-        :row-col="[{ height: '22px', width: '80%' }]"
-      />
-      <t-skeleton
-        animation="flashed"
-        :loading="true"
-        :row-col="[{ height: '20px', width: '95%' }]"
-      />
-      <t-skeleton
-        animation="flashed"
-        :loading="true"
-        :row-col="[{ height: '22px', width: '60%' }]"
-        style="margin-top: auto;"
-      />
+      <slot>
+        <t-skeleton
+          animation="flashed"
+          :loading="true"
+          style="margin-bottom: 8px"
+          :row-col="[{ height: '22px', width: '80%' }]"
+        />
+        <t-skeleton
+          animation="flashed"
+          :loading="true"
+          :row-col="[{ height: '20px', width: '95%' }]"
+        />
+        <t-skeleton
+          animation="flashed"
+          :loading="true"
+          :row-col="[{ height: '22px', width: '60%' }]"
+          style="margin-top: auto;"
+        />
+      </slot>
     </div>
   </div>
 </template>
