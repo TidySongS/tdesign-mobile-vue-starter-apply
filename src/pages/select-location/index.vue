@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Toast } from 'tdesign-mobile-vue'
 import { getCityNameFromCoords } from '@/api/location'
-import { processedCityList as cityList, processedHotCityList as hotCityList } from '@/constant/cityList'
+import { processedCityList as cityList } from '@/constant/cityList'
 import userInfo from '@/store/userInfo'
 
 const indexList = cityList.map(item => item.index)
@@ -114,30 +114,6 @@ function updateLocation() {
   <main>
     <div class="city-container">
       <t-indexes :index-list="indexList" :sticky="false">
-        <div class="hot-city">
-          <div class="hot-city__header">
-            <span> 热门城市 </span>
-          </div>
-          <div
-            v-for="(item, index) in hotCityList"
-            :key="`hot-city-${index}`"
-            class="hot-city__content"
-            @click="updateCity(item.name)"
-          >
-            <span
-              :class="{
-                'city-title--active': userInfo.locationName === item.name,
-              }"
-            >
-              {{ item.label }}
-            </span>
-            <CheckIcon
-              v-if="userInfo.locationName === item.name"
-              size="24"
-              class="city-check--active"
-            />
-          </div>
-        </div>
         <template v-for="item in cityList" :key="`city-index-${item.index}`">
           <t-indexes-anchor :index="item.index" />
           <t-cell-group>
@@ -208,21 +184,8 @@ header {
 
 :deep(.t-indexes__sidebar) {
   top: calc(50% + (var(--navbar-height) + 60px) / 2);
-}
-
-.hot-city {
-  &__header {
-    height: 30px;
-    padding: 4px 16px;
-    background: var(--td-gray-color-1);
-  }
-  &__content {
-    .font(16px, 400);
-    .flex-center(space-between);
-    height: 56px;
-    margin-left: 16px;
-    padding: 16px 16px 16px 0;
-    border-bottom: 1px solid var(--td-gray-color-1);
+  &-item:first-child {
+    display: none;
   }
 }
 </style>
