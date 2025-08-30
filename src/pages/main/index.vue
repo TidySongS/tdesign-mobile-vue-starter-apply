@@ -67,11 +67,7 @@ function resetAndFetch() {
  */
 function onScroll(scrollBottom: number, scrollTop: number) {
   lastKnownScrollPosition.value = scrollTop
-  if (
-    !isFetchActivityList.value
-    && !isLoadAllActivities.value
-    && scrollBottom < 56
-  ) {
+  if (!isFetchActivityList.value && !isLoadAllActivities.value && scrollBottom < 56) {
     fetchActivityList(false)
   }
 }

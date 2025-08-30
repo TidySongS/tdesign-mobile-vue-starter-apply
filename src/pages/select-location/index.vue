@@ -4,28 +4,35 @@ import { getCityNameFromCoords } from '@/api/location'
 import { processedCityList as cityList } from '@/constant/cityList'
 import userInfo from '@/store/userInfo'
 
-const indexList = cityList.map(item => item.index)
 const router = useRouter()
-const locationStatus = ref(false)
+const indexList = cityList.map(item => item.index) // 索引列表
+const locationStatus = ref(false) // 是否正在定位
 
+/**
+ * 更新用户选择的城市
+ * @param cityName 选定的城市名称
+ */
 function updateCity(cityName: string) {
   userInfo.locationName = cityName
   router.back()
 }
 
+/**
+ * 更新用户当前位置（通过浏览器定位）
+ */
 function updateLocation() {
   locationStatus.value = true
-  if (navigator.geolocation) {
+  if (navigator.geolocation) { // 检查浏览器是否支持地理定位功能
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords
         try {
-          const cityName = await getCityNameFromCoords(latitude, longitude)
+          const cityName = await getCityNameFromCoords(latitude, longitude) // 调用 API 进行逆地理编码，获取城市名称
           if (cityName === '未知城市') {
             throw new Error('无法获取城市信息')
           }
           else {
-            userInfo.locationName = cityName
+            userInfo.locationName = cityName // 更新 store 中的城市名称
             Toast({
               className: 'toast-root--success',
               theme: 'success',

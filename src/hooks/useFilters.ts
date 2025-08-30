@@ -1,6 +1,10 @@
 import type { ActivityFilterParams as Filters } from '@/api/activity'
 import { defaultFilterOptions } from '@/constant/filters'
 
+/**
+ * 创建并返回一个包含初始筛选设置的对象
+ * @returns 一个包含默认筛选器值的对象
+ */
 function createInitialFilters(): Filters {
   return {
     domain: [],
@@ -11,6 +15,11 @@ function createInitialFilters(): Filters {
   }
 }
 
+/**
+ * 创建给定筛选器对象的深拷贝
+ * @param filters 要复制的筛选器对象
+ * @returns 一个新的、独立的筛选器对象副本
+ */
 export function copyFilters(filters: Filters): Filters {
   return {
     ...filters,
