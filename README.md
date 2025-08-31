@@ -4,7 +4,7 @@
 
 tdesign-mobile-vue-starter-apply 是一个针对活动报名场景的纯前端页面模板，它基于 TDesign Mobile Vue 移动端组件库，并采用 Vue 3、Vite 和 TypeScript 等现代前端技术栈进行开发。
 
-该模板包含“首页”和“我的”两大核心模块，涵盖了热门推荐、活动列表、个人信息、购买确认、购买结果等多个功能页面，旨在为开发者提供一个快速启动、功能完整的移动端页面开发起点。
+该模板包含"首页"和"我的"两大核心模块，涵盖了热门推荐、活动列表、个人信息、购买确认、购买结果等多个功能页面，旨在为开发者提供一个快速启动、功能完整的移动端页面开发起点。
 
 ## ✨ 核心功能
 
@@ -37,55 +37,6 @@ tdesign-mobile-vue-starter-apply 是一个针对活动报名场景的纯前端�
 
 - **视觉稿地址**: `https://codesign.qq.com/app/s/578083411595522`
 - **访问密码**: `YFS5`
-
-## 📦 技术栈
-
-本项目采用以下技术与工具链，确保高效、规范的开发体验。
-
-### UI 框架
-
-- **tdesign-mobile-vue**: TDesign 适配移动端的组件库，专为 Vue 3 项目设计
-
-### 构建与开发工具
-
-- **Vue 3**: 渐进式 JavaScript 框架
-- **Vite**: 极速构建工具
-- **TypeScript**: 强类型语言，增强代码健壮性
-- **Less**: 样式预处理器
-
-### 插件
-
-- **unplugin-vue-components**: 自动加载组件，无需手动导入
-- **unplugin-auto-import**: 直接使用 Vue 的 Composition API 等，无需手动导入
-- **unplugin-vue-router**: 基于文件系统的自动路由，简化路由配置
-
-### 代码风格
-
-- **ESLint**: 使用 `antfu/eslint-config` 规则集，遵循单引号、无分号等现代 JavaScript 风格
-- **Composition API**: 采用 `<script setup>` 语法糖，提供更简洁的 Composition API 语法
-
-### 开发工具
-
-- **Volar**: 强大的 Vue 3 IDE 支持，特别优化了对 `<script setup>` 的支持
-- **ESLint**: 代码风格和质量检查工具
-
-## 📂 项目结构
-
-```bash
-src/
-├── api                 # 接口请求封装
-├── components          # 通用组件
-├── constants           # 常量定义
-├── hooks               # 自定义 Hooks
-├── mocks               # 模拟数据和 API 请求
-├── pages               # 业务页面
-├── router              # 路由配置
-├── store               # 状态管理
-├── style               # 全局样式
-├── types               # TypeScript 类型定义
-├── App.vue             # 根组件
-└── main.ts             # 项目入口文件
-```
 
 ## 🚀 快速启动
 
@@ -138,6 +89,26 @@ npm run preview
 
 > 此命令会在本地启动一个静态服务器，预览 dist 目录下的生产代码。
 
+## 📚 文档开发
+
+- 启动文档开发服务器:
+
+```bash
+npm run docs:dev
+```
+
+- 构建文档:
+
+```bash
+npm run docs:build
+```
+
+- 预览文档构建结果:
+
+```bash
+npm run docs:preview
+```
+
 ## 🔎 规范与检查
 
 - 类型检查:
@@ -154,6 +125,75 @@ npm run lint
 
 - 自动修复代码风格问题:
 
-```
+```bash
 npm run lint:fix
+```
+
+## 📦 技术栈
+
+本项目采用以下技术与工具链，确保高效、规范的开发体验。
+
+### UI 框架
+
+- **tdesign-mobile-vue**: TDesign 适配移动端的组件库，专为 Vue 3 项目设计
+
+### 构建与开发工具
+
+- **Vue 3**: 渐进式 JavaScript 框架
+- **Vite**: 极速构建工具
+- **TypeScript**: 强类型语言，增强代码健壮性
+- **Less**: 样式预处理器
+
+### 核心依赖
+
+- **vue-router**: Vue 官方路由管理器
+- **axios**: HTTP 客户端
+- **dayjs**: 轻量级日期处理库
+
+### 插件
+
+- **unplugin-vue-components**: 自动加载组件，无需手动导入
+- **unplugin-auto-import**: 直接使用 Vue 的 Composition API 等，无需手动导入
+- **unplugin-vue-router**: 基于文件系统的自动路由，简化路由配置
+
+### 代码风格
+
+- **ESLint**: 使用 `antfu/eslint-config` 规则集，遵循单引号、无分号等现代 JavaScript 风格
+- **Composition API**: 采用 `<script setup>` 语法糖，提供更简洁的 Composition API 语法
+
+### 开发工具
+
+- **Volar**: 强大的 Vue 3 IDE 支持，特别优化了对 `<script setup>` 的支持
+- **ESLint**: 代码风格和质量检查工具
+- **Husky**: Git hooks 管理
+- **lint-staged**: 暂存文件 lint 检查
+
+### Mock 服务
+
+- **MSW**: 模拟服务工作者，提供完整的 API 模拟
+- **@faker-js/faker**: 生成虚拟数据
+- **@mswjs/data**: MSW 数据管理
+
+### 文档工具
+
+- **VitePress**: 基于 Vite 的静态站点生成器
+
+## 📂 项目结构
+
+```bash
+src/
+├── api                 # 接口请求封装
+├── assets              # 静态资源文件
+├── components          # 通用组件
+├── config              # 配置文件
+├── constants           # 常量定义
+├── hooks               # 自定义 Hooks
+├── mocks               # 模拟数据和 API 请求
+├── pages               # 业务页面
+├── router              # 路由配置
+├── store               # 状态管理
+├── styles              # 全局样式
+├── utils               # 工具函数
+├── App.vue             # 根组件
+└── main.ts             # 项目入口文件
 ```
