@@ -2,7 +2,7 @@
 const router = useRouter()
 
 function goHome() {
-  router.push('/main')
+  router.push('/main/base')
 }
 
 function goBack() {
