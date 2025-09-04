@@ -4,6 +4,7 @@ import {
   getActivityDetail,
 } from '@/api/activity'
 import { isExpired } from '@/utils/dateTime'
+import Popup from './components/Popup.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -178,7 +179,7 @@ function handleBuyClick() {
       </t-button>
     </div>
   </footer>
-  <ActivityDetailPopup
+  <Popup
     :detail="detail"
     :show-bottom-popup="showBottomPopup"
     :popup-height="popupHeight"
