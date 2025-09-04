@@ -21,7 +21,6 @@ declare module 'vue-router/auto-routes' {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/[...all]': RouteRecordInfo<'/[...all]', '/:all(.*)', { all: ParamValue<true> }, { all: ParamValue<false> }>,
     '/activity-detail/[id]': RouteRecordInfo<'/activity-detail/[id]', '/activity-detail/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/activity-detail/components/Popup': RouteRecordInfo<'/activity-detail/components/Popup', '/activity-detail/components/Popup', Record<never, never>, Record<never, never>>,
     '/buy-confirm/[id]': RouteRecordInfo<'/buy-confirm/[id]', '/buy-confirm/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/buy-result/[id]': RouteRecordInfo<'/buy-result/[id]', '/buy-result/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/main': RouteRecordInfo<'/main', '/main', Record<never, never>, Record<never, never>, '/main/base/' | '/main/user/'>,
@@ -54,10 +53,6 @@ declare module 'vue-router/auto-routes' {
       routes: '/activity-detail/[id]'
       views: never
     }
-    'src/pages/activity-detail/components/Popup.vue': {
-      routes: '/activity-detail/components/Popup'
-      views: never
-    }
     'src/pages/buy-confirm/[id].vue': {
       routes: '/buy-confirm/[id]'
       views: never
@@ -67,7 +62,7 @@ declare module 'vue-router/auto-routes' {
       views: never
     }
     'src/pages/main.vue': {
-      routes: '/main' | '/main/base/' | '/main/user/' | '/main/base' | '/main/user'
+      routes: '/main' | '/main/user/' | '/main/base/' | '/main/base' | '/main/user'
       views: 'default'
     }
     'src/pages/main/base/index.vue': {
