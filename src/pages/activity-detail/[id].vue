@@ -3,6 +3,7 @@ import type { ActivityDetail } from '@/api/activity'
 import {
   getActivityDetail,
 } from '@/api/activity'
+import ActivitySwiper from '@/components/ActivitySwiper.vue'
 import { isExpired } from '@/utils/dateTime'
 import Popup from './components/Popup.vue'
 
@@ -48,6 +49,12 @@ const bannerUrl = computed(
 )
 const guestImages = computed<string[]>(() => detail.value?.guestImages ?? [])
 const sceneImages = computed<string[]>(() => detail.value?.sceneImages ?? [])
+const guestSwiperList = computed(() =>
+  guestImages.value.map((url, index) => ({ id: String(index), name: `活动嘉宾图片${index + 1}`, url })),
+)
+const sceneSwiperList = computed(() =>
+  sceneImages.value.map((url, index) => ({ id: String(index), name: `活动现场图片${index + 1}`, url })),
+)
 const priceText = computed<string>(() => {
   if (!detail.value)
     return ''
@@ -119,19 +126,13 @@ function handleBuyClick() {
         活动嘉宾
       </div>
       <div class="ad-swiper">
-        <t-swiper
+        <ActivitySwiper
+          :swiper-list="guestSwiperList"
           :autoplay="false"
-          :navigation="{ type: 'dots', placement: 'outside' }"
-          class="ad-swiper-scene"
-        >
-          <t-swiper-item
-            v-for="(item, index) in guestImages"
-            :key="index"
-            class="ad-slide"
-          >
-            <img :src="item" :alt="`活动嘉宾图片${index + 1}`" loading="lazy">
-          </t-swiper-item>
-        </t-swiper>
+          margin-position="right"
+          :swiper-gap="28"
+          side-type="right"
+        />
       </div>
     </div>
     <div v-if="sceneImages.length" class="ad-section-scene">
@@ -139,19 +140,13 @@ function handleBuyClick() {
         活动现场
       </div>
       <div class="ad-swiper">
-        <t-swiper
+        <ActivitySwiper
+          :swiper-list="sceneSwiperList"
           :autoplay="false"
-          :navigation="{ type: 'dots', placement: 'outside' }"
-          class="ad-swiper-scene"
-        >
-          <t-swiper-item
-            v-for="(item, index) in sceneImages"
-            :key="index"
-            class="ad-slide"
-          >
-            <img :src="item" :alt="`活动现场图片${index + 1}`" loading="lazy">
-          </t-swiper-item>
-        </t-swiper>
+          margin-position="right"
+          :swiper-gap="28"
+          side-type="right"
+        />
       </div>
     </div>
   </main>
