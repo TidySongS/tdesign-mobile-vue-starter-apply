@@ -3,7 +3,9 @@ import type { ActivityDetail } from '@/api/activity'
 import {
   getActivityDetail,
 } from '@/api/activity'
+import ActivitySwiper from '@/components/ActivitySwiper.vue'
 import { isExpired } from '@/utils/dateTime'
+import Popup from './components/Popup.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -47,6 +49,12 @@ const bannerUrl = computed(
 )
 const guestImages = computed<string[]>(() => detail.value?.guestImages ?? [])
 const sceneImages = computed<string[]>(() => detail.value?.sceneImages ?? [])
+const guestSwiperList = computed(() =>
+  guestImages.value.map((url, index) => ({ id: String(index), name: `活动嘉宾图片${index + 1}`, url })),
+)
+const sceneSwiperList = computed(() =>
+  sceneImages.value.map((url, index) => ({ id: String(index), name: `活动现场图片${index + 1}`, url })),
+)
 const priceText = computed<string>(() => {
   if (!detail.value)
     return ''
@@ -105,7 +113,6 @@ function handleBuyClick() {
         v-if="!detail"
         :loading="true"
         :row-col="[{ width: '100%', height: '160px' }]"
-        style="--td-skeleton-bg-color: #040000"
       />
       <t-image
         v-else
@@ -119,19 +126,13 @@ function handleBuyClick() {
         活动嘉宾
       </div>
       <div class="ad-swiper">
-        <t-swiper
+        <ActivitySwiper
+          :swiper-list="guestSwiperList"
           :autoplay="false"
-          :navigation="{ type: 'dots', placement: 'outside' }"
-          class="ad-swiper-scene"
-        >
-          <t-swiper-item
-            v-for="(item, index) in guestImages"
-            :key="index"
-            class="ad-slide"
-          >
-            <img :src="item" :alt="`活动嘉宾图片${index + 1}`" loading="lazy">
-          </t-swiper-item>
-        </t-swiper>
+          margin-position="right"
+          :swiper-gap="28"
+          side-type="right"
+        />
       </div>
     </div>
     <div v-if="sceneImages.length" class="ad-section-scene">
@@ -139,19 +140,13 @@ function handleBuyClick() {
         活动现场
       </div>
       <div class="ad-swiper">
-        <t-swiper
+        <ActivitySwiper
+          :swiper-list="sceneSwiperList"
           :autoplay="false"
-          :navigation="{ type: 'dots', placement: 'outside' }"
-          class="ad-swiper-scene"
-        >
-          <t-swiper-item
-            v-for="(item, index) in sceneImages"
-            :key="index"
-            class="ad-slide"
-          >
-            <img :src="item" :alt="`活动现场图片${index + 1}`" loading="lazy">
-          </t-swiper-item>
-        </t-swiper>
+          margin-position="right"
+          :swiper-gap="28"
+          side-type="right"
+        />
       </div>
     </div>
   </main>
@@ -179,7 +174,7 @@ function handleBuyClick() {
       </t-button>
     </div>
   </footer>
-  <ActivityDetailPopup
+  <Popup
     :detail="detail"
     :show-bottom-popup="showBottomPopup"
     :popup-height="popupHeight"
@@ -188,114 +183,5 @@ function handleBuyClick() {
 </template>
 
 <style lang="less" scoped>
-.ad-navbar {
-  --td-navbar-bg-color: #040000;
-  --td-navbar-color: var(--td-font-white-1);
-}
-.ad-main {
-  overflow-y: auto;
-  padding-top: 48px;
-  background-color: #040000;
-  height: calc(100vh - 48px);
-  padding-bottom: calc(80px + constant(safe-area-inset-bottom));
-  padding-bottom: calc(80px + env(safe-area-inset-bottom));
-}
-.ad-banner {
-  width: 100%;
-  height: 160px;
-  .banner-image {
-    opacity: 0;
-    animation: fadeIn 0.3s ease forwards;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.ad-section-guests,
-.ad-section-scene {
-  color: var(--td-font-white-1);
-  font-size: var(--td-font-size-mark-large);
-  margin-left: 16px;
-  .ad-section-title {
-    .font(16px, 600);
-    text-align: left;
-  }
-}
-
-.ad-swiper {
-  overflow: hidden;
-  margin-top: 12px;
-  --swiper-width: 283px;
-  position: relative;
-  .ad-swiper-scene {
-    overflow: visible;
-    margin: 0 calc((100vw - var(--swiper-width)) - 28px) 0 0;
-    .ad-slide {
-      width: var(--swiper-width);
-      height: 160px;
-    }
-    img {
-      height: var(--swiper-height);
-      width: var(--swiper-width);
-    }
-  }
-}
-
-.ad-section-guests {
-  margin-top: 21px;
-}
-
-.ad-section-scene {
-  margin-top: 24px;
-}
-
-footer {
-  .p-16();
-  z-index: 12000;
-  height: 80px;
-  background: var(--bg-color-page);
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  display: flex;
-  gap: 16px;
-  padding-bottom: calc(16px + constant(safe-area-inset-bottom));
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
-  .ad-footer-cta {
-    flex: 1;
-  }
-}
-
-@supports (height: 100dvh) {
-  // 移动端地址栏/工具栏伸缩适配
-  .ad-main {
-    height: calc(100dvh - 48px);
-  }
-}
-
-.ad-footer-actions {
-  .flex-center();
-  .ad-footer-action {
-    .flex-center();
-    width: 50px;
-    height: 48px;
-    flex-direction: column;
-    .ad-footer-action-text {
-      .font(12px, 400);
-      margin-top: 4px;
-      height: 20px;
-      color: #040000;
-    }
-  }
-}
-:deep(.t-swiper) {
-  position: unset;
-}
+@import './index.less';
 </style>

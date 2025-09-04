@@ -1,3 +1,3 @@
 <script setup lang="ts">
-window.location.href = './main/'
+window.location.href = './main/base/'
 </script>

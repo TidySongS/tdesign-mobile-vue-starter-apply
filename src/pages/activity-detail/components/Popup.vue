@@ -196,7 +196,7 @@ const star = computed(() => props.detail?.score ?? 0)
       .ad-reviews-title {
         .font(16px, 600);
         height: 24px;
-        color: #040000;
+        color: var(--bg-color-black-colorful);
         text-align: left;
       }
       .ad-reviews-rate {
@@ -212,7 +212,7 @@ const star = computed(() => props.detail?.score ?? 0)
   .ad-intro {
     .ad-intro-title {
       .font(16px, 600);
-      color: #040000;
+      color: var(--bg-color-black-colorful);
       text-align: left;
     }
     .ad-intro-content {
@@ -230,7 +230,7 @@ const star = computed(() => props.detail?.score ?? 0)
   border-bottom: 0.5px solid var(--td-gray-color-3);
   .ad-title {
     .font(20px, 600);
-    color: #040000;
+    color: var(--bg-color-black-colorful);
   }
   .ad-avatars {
     margin-top: 12px;
@@ -257,7 +257,7 @@ const star = computed(() => props.detail?.score ?? 0)
   gap: 8px;
   .ad-meta-text {
     margin-left: 4px;
-    color: #040000;
+    color: var(--bg-color-black-colorful);
   }
   .ad-time,
   .ad-location {

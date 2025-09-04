@@ -23,9 +23,9 @@ declare module 'vue-router/auto-routes' {
     '/activity-detail/[id]': RouteRecordInfo<'/activity-detail/[id]', '/activity-detail/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/buy-confirm/[id]': RouteRecordInfo<'/buy-confirm/[id]', '/buy-confirm/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/buy-result/[id]': RouteRecordInfo<'/buy-result/[id]', '/buy-result/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/main': RouteRecordInfo<'/main', '/main', Record<never, never>, Record<never, never>, '/main/' | '/main/user'>,
-    '/main/': RouteRecordInfo<'/main/', '/main', Record<never, never>, Record<never, never>>,
-    '/main/user': RouteRecordInfo<'/main/user', '/main/user', Record<never, never>, Record<never, never>>,
+    '/main': RouteRecordInfo<'/main', '/main', Record<never, never>, Record<never, never>, '/main/base/' | '/main/user/'>,
+    '/main/base/': RouteRecordInfo<'/main/base/', '/main/base', Record<never, never>, Record<never, never>>,
+    '/main/user/': RouteRecordInfo<'/main/user/', '/main/user', Record<never, never>, Record<never, never>>,
     '/person-info/': RouteRecordInfo<'/person-info/', '/person-info', Record<never, never>, Record<never, never>>,
     '/select-location/': RouteRecordInfo<'/select-location/', '/select-location', Record<never, never>, Record<never, never>>,
   }
@@ -62,15 +62,15 @@ declare module 'vue-router/auto-routes' {
       views: never
     }
     'src/pages/main.vue': {
-      routes: '/main' | '/main/' | '/main/user'
+      routes: '/main' | '/main/base/' | '/main/user/' | '/main/base' | '/main/user'
       views: 'default'
     }
-    'src/pages/main/index.vue': {
-      routes: '/main/'
+    'src/pages/main/base/index.vue': {
+      routes: '/main/base/'
       views: never
     }
-    'src/pages/main/user.vue': {
-      routes: '/main/user'
+    'src/pages/main/user/index.vue': {
+      routes: '/main/user/'
       views: never
     }
     'src/pages/person-info/index.vue': {
