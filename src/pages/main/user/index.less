@@ -1,0 +1,109 @@
+.user-page {
+  .flex-col();
+  background: var(--bg-color-secondarypage);
+  height: calc(100vh - var(--navbar-height) - var(--tabbar-height));
+  padding: 0 var(--td-spacer-2);
+
+  .user-card {
+    .p-16();
+    .flex-center(space-between);
+    height: 96px;
+    background: var(--bg-color-page);
+    border-radius: var(--td-radius-extraLarge);
+
+    .user-card-edit {
+      .flex-center();
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+  }
+}
+
+@supports (height: 100dvh) {
+  // 移动端适配
+  .user-page {
+    height: calc(100dvh - var(--navbar-height) - var(--tabbar-height));
+  }
+}
+
+.user-card-info {
+  .flex-center();
+  gap: var(--td-spacer-2);
+
+  .user-card-avatar {
+    width: 64px;
+  }
+
+  .user-card-meta {
+    .flex-col();
+    height: 54px;
+    max-width: calc(100vw - 180px);
+    justify-content: space-between;
+
+    .user-name {
+      .font(16px, 600);
+      height: 24px;
+      margin-bottom: 8px;
+      color: var(--td-font-gray-1);
+    }
+
+    .user-tag {
+      min-width: 0;
+      display: flex;
+      gap: var(--td-spacer);
+    }
+
+    .user-tag .t-tag:nth-child(2) {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.activity-list {
+  .flex-col();
+  margin-top: var(--td-spacer-2);
+  background: var(--bg-color-page);
+  border-top-left-radius: var(--td-radius-extraLarge);
+  border-top-right-radius: var(--td-radius-extraLarge);
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+
+  .activity-content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding-bottom: calc(var(--td-spacer-2) + constant(safe-area-inset-bottom));
+    padding-bottom: calc(var(--td-spacer-2) + env(safe-area-inset-bottom));
+  }
+}
+
+.activity-item {
+  .activity-item-time {
+    .font(12px, 400);
+    margin-top: 4px;
+    color: var(--td-font-gray-2);
+  }
+}
+
+.activity-item-bottom {
+  .flex-center(space-between);
+
+  .activity-item-status {
+    display: flex;
+  }
+
+  .activity-item-btn {
+    .font(14px, 400);
+    color: var(--td-brand-color-7);
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+}

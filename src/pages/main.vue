@@ -20,14 +20,14 @@ interface TabbarItem {
 const tabbarList: TabbarItem[] = [
   {
     label: '首页',
-    name: '/main/',
+    name: '/main/base/',
     icon: HomeIcon,
     showLocation: true,
     bgColor: 'var(--bg-color-page)',
   },
   {
     label: '我的',
-    name: '/main/user',
+    name: '/main/user/',
     icon: UserIcon,
     showTitle: true,
     bgColor: 'var(--bg-color-secondarypage)',
