@@ -5,11 +5,11 @@
 
 .ad-main {
   overflow-y: auto;
-  padding-top: 48px;
+  padding-top: var(--td-spacer-5);
   background-color: var(--bg-color-black-colorful);
-  height: calc(100vh - 48px);
-  padding-bottom: calc(80px + constant(safe-area-inset-bottom));
-  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  height: calc(100vh - var(--td-spacer-5));
+  padding-bottom: calc(var(--footer-height) + constant(safe-area-inset-bottom));
+  padding-bottom: calc(var(--footer-height) + env(safe-area-inset-bottom));
 }
 
 .ad-banner {
@@ -36,7 +36,7 @@
 .ad-section-scene {
   color: var(--td-font-white-1);
   font-size: var(--td-font-size-mark-large);
-  margin-left: 16px;
+  margin-left: var(--td-spacer-2);
 
   .ad-section-title {
     .font(16px, 600);
@@ -46,7 +46,7 @@
 
 .ad-swiper {
   overflow: hidden;
-  margin-top: 12px;
+  margin-top: var(--td-spacer-1);
   --swiper-width: 283px;
   position: relative;
 
@@ -71,34 +71,26 @@
 }
 
 .ad-section-scene {
-  margin-top: 24px;
+  margin-top: var(--td-spacer-3);
 }
 
 footer {
   .p-16();
   z-index: 12000;
-  height: 80px;
+  height: var(--footer-height);
   background: var(--bg-color-page);
   position: fixed;
   bottom: 0px;
   width: 100%;
   display: flex;
-  gap: 16px;
-  padding-bottom: calc(16px + constant(safe-area-inset-bottom));
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  gap: var(--td-spacer-2);
+  padding-bottom: calc(var(--td-spacer-2) + constant(safe-area-inset-bottom));
+  padding-bottom: calc(var(--td-spacer-2) + env(safe-area-inset-bottom));
 
   .ad-footer-cta {
     flex: 1;
   }
 }
-
-@supports (height: 100dvh) {
-  // 移动端地址栏/工具栏伸缩适配
-  .ad-main {
-    height: calc(100dvh - 48px);
-  }
-}
-
 .ad-footer-actions {
   .flex-center();
 
@@ -119,4 +111,11 @@ footer {
 
 :deep(.t-swiper) {
   position: unset;
+}
+
+@supports (height: 100dvh) {
+  // 移动端地址栏/工具栏伸缩适配
+  .ad-main {
+    height: calc(100dvh - var(--navbar-height)); // 减去导航栏高度
+  }
 }
