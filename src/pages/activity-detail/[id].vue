@@ -105,7 +105,6 @@ function handleBuyClick() {
         v-if="!detail"
         :loading="true"
         :row-col="[{ width: '100%', height: '160px' }]"
-        style="--td-skeleton-bg-color: #040000"
       />
       <t-image
         v-else
@@ -189,13 +188,13 @@ function handleBuyClick() {
 
 <style lang="less" scoped>
 .ad-navbar {
-  --td-navbar-bg-color: #040000;
+  --td-navbar-bg-color: var(--bg-color-black-colorful);
   --td-navbar-color: var(--td-font-white-1);
 }
 .ad-main {
   overflow-y: auto;
   padding-top: 48px;
-  background-color: #040000;
+  background-color: var(--bg-color-black-colorful);
   height: calc(100vh - 48px);
   padding-bottom: calc(80px + constant(safe-area-inset-bottom));
   padding-bottom: calc(80px + env(safe-area-inset-bottom));
@@ -291,7 +290,7 @@ footer {
       .font(12px, 400);
       margin-top: 4px;
       height: 20px;
-      color: #040000;
+      color: var(--bg-color-black-colorful);
     }
   }
 }
