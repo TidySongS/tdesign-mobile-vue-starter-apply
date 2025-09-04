@@ -3,6 +3,8 @@ import type { UserProfile } from '@/api/info'
 import { getPersonActivities } from '@/api/activity'
 import { getUserProfile } from '@/api/info'
 import { formatDate } from '@/utils/dateTime'
+import ActivityCard from '../components/ActivityCard.vue'
+import ActivityCardSkeleton from '../components/ActivityCardSkeleton.vue'
 
 type TabValue = 'first' | 'second' | 'third'
 

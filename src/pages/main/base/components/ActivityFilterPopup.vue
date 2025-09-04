@@ -3,6 +3,7 @@ import type { ActivityFilterParams as Filters } from '@/api/activity'
 import { defaultFilterOptions } from '@/constant/filters'
 import { copyFilters } from '@/hooks/useFilters'
 import { formatDateRange } from '@/utils/dateTime'
+import TagFilter from './TagFilter.vue'
 
 const props = defineProps({
   visible: {

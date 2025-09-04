@@ -2,6 +2,9 @@
 import type { SortOption } from '@/api/activity'
 import { useActivities } from '@/hooks/useActivities'
 import { useHomeSwiper } from '@/hooks/useHomeSwiper'
+import ActivityCard from '../components/ActivityCard.vue'
+import ActivityCardSkeleton from '../components/ActivityCardSkeleton.vue'
+import ActivityFilterPopup from './components/ActivityFilterPopup.vue'
 
 defineOptions({
   name: 'MainIndex',

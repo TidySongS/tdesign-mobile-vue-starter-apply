@@ -62,7 +62,7 @@ declare module 'vue-router/auto-routes' {
       views: never
     }
     'src/pages/main.vue': {
-      routes: '/main' | '/main/user/' | '/main/base/' | '/main/base' | '/main/user'
+      routes: '/main' | '/main/base/' | '/main/user/' | '/main/base' | '/main/user'
       views: 'default'
     }
     'src/pages/main/base/index.vue': {

@@ -8,10 +8,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ActivityCard: typeof import('./../src/components/ActivityCard.vue')['default']
-    ActivityCardSkeleton: typeof import('./../src/components/ActivityCardSkeleton.vue')['default']
-    ActivityDetailPopup: typeof import('../src/pages/activity-detail/components/Popup.vue')['default']
-    ActivityFilterPopup: typeof import('./../src/components/ActivityFilterPopup.vue')['default']
     ActivitySwiper: typeof import('./../src/components/ActivitySwiper.vue')['default']
     CalendarIcon: typeof import('tdesign-icons-vue-next')['CalendarIcon']
     CheckIcon: typeof import('tdesign-icons-vue-next')['CheckIcon']
@@ -25,7 +21,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ShareIcon: typeof import('tdesign-icons-vue-next')['ShareIcon']
-    TagFilter: typeof import('./../src/components/TagFilter.vue')['default']
     TAvatar: typeof import('tdesign-mobile-vue')['Avatar']
     TAvatarGroup: typeof import('tdesign-mobile-vue')['AvatarGroup']
     TButton: typeof import('tdesign-mobile-vue')['Button']
