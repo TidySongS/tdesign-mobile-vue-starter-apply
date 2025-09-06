@@ -3,29 +3,57 @@ import type { ActivityDetail } from '@/api/activity'
 import { IconFont } from 'tdesign-icons-vue-next'
 import { formatDate } from '@/utils/dateTime'
 
-const props = defineProps<{
-  detail: ActivityDetail | null
-  showBottomPopup: boolean
-  popupHeight: string
+interface Props {
+  /** 活动详情数据 */
+  detail?: ActivityDetail | null
+  /** 底部弹层显示状态 */
+  showBottomPopup?: boolean
+  /** 弹层高度 */
+  popupHeight?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  detail: null,
+  showBottomPopup: false,
+  popupHeight: '80vh',
+})
+
+const emit = defineEmits<{
+  /** 切换弹层展开/收起状态 */
+  toggle: []
 }>()
 
-const emit = defineEmits<{ (e: 'toggle'): void }>()
-
-function onToggle() {
+/** 处理弹层切换事件 */
+function onToggle(): void {
   emit('toggle')
 }
 
-const avatarList = computed<string[]>(() => (props.detail?.interestedPeople ?? []).map((p: any) => p.avatar).slice(0, 10))
+/** 感兴趣用户头像列表 */
+const avatarList = computed<string[]>(() =>
+  (props.detail?.interestedPeople ?? [])
+    .map((person: any) => person.avatar),
+)
+
+/** 感兴趣人数 */
 const interestedCount = computed<number>(() => props.detail?.interestedCount ?? 0)
+
+/** 活动标题 */
 const title = computed<string>(() => props.detail?.title ?? '')
+
+/** 活动地址 */
 const address = computed<string>(() => props.detail?.address ?? '')
+
+/** 活动介绍 */
 const introduce = computed<string>(() => props.detail?.introduce ?? '')
+
+/** 格式化后的活动日期 */
 const dateText = computed<string>(() => {
-  const d = props.detail?.date
-  return formatDate(d as string | number | Date)
+  const date = props.detail?.date
+  return date ? formatDate(date as string | number | Date) : ''
 })
 
-const star = computed(() => props.detail?.score ?? 0)
+/** 活动评分 */
+const star = computed<number>(() => props.detail?.score ?? 0)
 </script>
 
 <template>
@@ -154,7 +182,6 @@ const star = computed(() => props.detail?.score ?? 0)
     flex: 1;
     min-height: 0;
   }
-  /* skeleton 样式使用组件默认样式与行列配置，这里无需额外样式 */
   .ad-popup-handle {
     position: absolute;
     left: 50%;
