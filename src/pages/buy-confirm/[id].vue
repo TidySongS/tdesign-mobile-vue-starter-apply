@@ -125,7 +125,6 @@ const canPurchase = computed(() => {
 // 获取活动信息
 async function fetchActivityData() {
   if (!activityId.value) {
-    console.log(activityId.value)
     error.value = true
     loading.value = false
     return
@@ -134,9 +133,8 @@ async function fetchActivityData() {
   try {
     // 获取活动详情
     const activityData = await getActivityDetail(activityId.value)
-    console.log('activityData', activityData)
 
-    // 设置活动信息console.log(activityData)
+    // 设置活动信息
     eventTitle.value = activityData.title
     eventDate.value = formatDate(activityData.date)
     eventLocation.value = activityData.address

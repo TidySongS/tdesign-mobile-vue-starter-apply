@@ -87,7 +87,6 @@ async function fetchFrendandAppdata() {
     const apdata = await getAppList()
     appList.length = 0
     appList.push(...apdata)
-    console.log(appList)
     loading.value = false
   }
   catch (err) {
@@ -99,13 +98,11 @@ async function fetchFrendandAppdata() {
 // 分享给朋友
 function shareWithFriends() {
   isSharePopupVisible.value = true
-  console.log('打开分享弹窗')
 }
 
 // 关闭分享弹窗
 function closeSharePopup() {
   isSharePopupVisible.value = false
-  console.log('关闭分享弹窗')
 }
 
 // 分享至社媒
