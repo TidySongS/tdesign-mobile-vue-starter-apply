@@ -33,8 +33,6 @@ export async function loadAppConfig(app: App): Promise<AppConfig> {
     window.appConfig = config
     // 可选：将配置注入到 Vue 实例中，方便在组件内访问
     app.config.globalProperties.$config = config
-
-    console.log('App config loaded successfully.')
     return config
   }
   catch (error) {
