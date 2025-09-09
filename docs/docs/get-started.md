@@ -35,11 +35,10 @@ npm run dev
 
 ## 代理配置
 
-开发阶段，项目通过 Vite 代理腾讯地图接口：
+为了接入腾讯地图接口，项目通过 Vite 代理该接口：
 
 - 前缀：`/api/tencent-map`
 - 目标：`https://apis.map.qq.com`
-- 重写：移除前缀（见 `vite.config.ts -> server.proxy`）
 
 ## 构建与预览
 
@@ -49,7 +48,7 @@ npm run dev
 npm run build
 ```
 
-- 本地预览（构建产物）：
+- 本地预览：
 
 ```bash
 npm run preview
