@@ -1,30 +1,76 @@
 # 快速开始
 
-## 启动项目
+本项目是基于 Vue 3 + Vite + TypeScript 与 TDesign Mobile Vue 的移动端活动报名模板。
 
-在启动项目前，请确保您已经拥有`node`与`npm`的开发环境。
-项目并没有限制使用何种包管理器，您也可以采用`yarn`或`pnpm`做您的包管理器，以下使用`npm`做演示.
+## 环境要求
 
-**安装依赖**
+- Node.js ≥ 18（推荐使用 20+）
+- npm ≥ 9 或使用 yarn（本文以 npm 为例）
+
+## 获取代码
+
+```bash
+# 方式一：Git 克隆
+git clone https://github.com/TDesignOteam/tdesign-mobile-vue-starter-apply
+cd tdesign-mobile-vue-starter-apply
+
+# 方式二：直接下载压缩包并解压
+```
+
+## 安装依赖
 
 ```bash
 npm install
 ```
 
-**运行项目**
-
-- 开发模式 (无 Mock):
+## 启动开发服务器
 
 ```bash
 npm run dev
 ```
 
-> 该命令会启动一个无 Mock 的开发服务器，适用于后端已就绪的场景。
+> 启用 Mock 时会通过 MSW 在浏览器侧拦截 `/api/**` 请求，返回 `src/mocks` 中预置的数据。
 
-- 开发模式 (带 Mock):
+启动后访问：`http://localhost:5173`
+
+## 代理配置
+
+开发阶段，项目通过 Vite 代理腾讯地图接口：
+
+- 前缀：`/api/tencent-map`
+- 目标：`https://apis.map.qq.com`
+- 重写：移除前缀（见 `vite.config.ts -> server.proxy`）
+
+## 构建与预览
+
+- 生产构建：
 
 ```bash
-npm run dev:mock
+npm run build
 ```
 
-> 该命令会启动一个集成 MSW 的开发服务器，你可以直接访问 http://localhost:5173 查看页面效果，所有 API 请求都会被 mocks 文件夹下的服务拦截和模拟。
+- 本地预览（构建产物）：
+
+```bash
+npm run preview
+```
+
+## 文档站（VitePress）
+
+- 启动文档开发：
+
+```bash
+npm run docs:dev
+```
+
+- 构建文档：
+
+```bash
+npm run docs:build
+```
+
+- 预览文档站：
+
+```bash
+npm run docs:preview
+```
