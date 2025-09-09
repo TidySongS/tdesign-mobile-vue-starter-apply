@@ -10,6 +10,7 @@
 ├── .husky/               # Git 钩子管理
 ├── .vscode/              # VS Code 项目配置
 ├── docs/                 # 项目文档
+├── mocks                 # 模拟数据与接口
 ├── public/               # 静态资源
 ├── src/                  # 页面代码
 ├── types/                # TypeScript 类型定义
@@ -18,7 +19,8 @@
 ├── .gitignore            # Git 忽略文件
 ├── eslint.config.mjs     # ESLint 配置
 ├── index.html            # 主 html 文件
-├── package.json          # 项目核心配置
+├── package-lock.json     # 依赖包版本锁文件
+├── package.json          # 依赖包版本及启动配置
 ├── README.md             # 项目说明
 ├── tsconfig.app.json     # TypeScript 应用配置
 ├── tsconfig.json         # TypeScript 主配置
@@ -38,9 +40,8 @@ src/
 ├── assets              # 资源层
 ├── components          # 通用组件
 ├── config              # 配置层
-├── constants           # 常量层
+├── constant            # 常量层
 ├── hooks               # 自钩子层
-├── mocks               # 模拟层
 ├── pages               # 业务模块层
 ├── router              # 路由层
 ├── store               # 数据层

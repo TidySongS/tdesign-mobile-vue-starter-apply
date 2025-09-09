@@ -29,7 +29,7 @@ npm install
 npm run dev
 ```
 
-> 启用 Mock 时会通过 MSW 在浏览器侧拦截 `/api/**` 请求，返回 `src/mocks` 中预置的数据。
+> 启用 Mock 时会通过 MSW 在浏览器侧拦截 `/api/**` 请求，返回 `/mocks` 中预置的数据。
 
 启动后访问：`http://localhost:5173`
 
