@@ -2,13 +2,10 @@
 import type {
   DateValue,
 } from 'tdesign-mobile-vue'
-import type {
-  ValidateResult,
-} from '@/api/personinfo'
+import type { ValidateResult } from '@/api/personInfo'
 import {
   Message,
 } from 'tdesign-mobile-vue'
-// import { submitUserInfoForm } from '@api/personinfo'
 import userInfo from '@/store/userInfo'
 import {
   formatDate,
