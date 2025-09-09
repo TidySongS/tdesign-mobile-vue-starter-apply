@@ -12,7 +12,7 @@ export type SortOption = 'latest' | 'top'
 
 export interface PaginationParams {
   page?: number | 1
-  pageSize?: number | 5
+  pageSize?: number | 10
   sort?: SortOption
 }
 

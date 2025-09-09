@@ -14,7 +14,7 @@ function goBack() {
   <div class="not-found-container">
     <t-result>
       <template #image>
-        <div class="status-404__text">
+        <div class="status-404">
           <span>404</span>
         </div>
       </template>
@@ -50,7 +50,7 @@ function goBack() {
   text-align: center;
 }
 
-.status-404__text {
+.status-404 {
   font-size: 80px;
   font-weight: 700;
   color: var(--td-brand-color-7);

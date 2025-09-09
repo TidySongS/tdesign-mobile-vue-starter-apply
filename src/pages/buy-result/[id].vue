@@ -1,22 +1,9 @@
 <script setup lang="ts">
-import type {
-  AppItem,
-  Person,
-} from '@/api/share'
-import {
-  Message,
-} from 'tdesign-mobile-vue'
-
-import {
-  getActivityDetail,
-} from '@/api/activity'
-import {
-  getAppList,
-  getFriendList,
-} from '@/api/share'
-import {
-  formatDate,
-} from '@/utils/dateTime'
+import type { AppItem, Person } from '@/api/share'
+import { Message } from 'tdesign-mobile-vue'
+import { getActivityDetail } from '@/api/activity'
+import { getAppList, getFriendList } from '@/api/share'
+import { formatDate } from '@/utils/date'
 
 const route = useRoute()
 const router = useRouter()
@@ -127,24 +114,24 @@ onMounted(() => {
 
 <template>
   <header>
-    <t-navbar title="购买结果" left-arrow :on-left-click="$router.back" class="tnavbar" />
+    <t-navbar title="购买结果" left-arrow :on-left-click="$router.back" />
   </header>
-  <div class="buy-result-page">
+  <main>
     <!-- 成功状态 -->
     <t-result class="result-status" theme="success" title="购买成功" description="" />
 
     <!-- 活动信息卡片 -->
     <div class="activity-card">
-      <t-image :src="activity.cover" alt="活动封面" fit="cover" class="activity-cover" />
-      <h3 class="activity-name">
+      <t-image :src="activity.cover" alt="活动封面" fit="cover" class="activity-card__cover" />
+      <h3 class="activity-card__name">
         {{ activity.name }}
       </h3>
-      <div class="activity-details">
-        <div class="detail-item">
+      <div class="activity-card__details">
+        <div class="activity-card__detail-item">
           <TimeIcon size="16px" />
           <span>{{ activity.date }}</span>
         </div>
-        <div class="detail-item">
+        <div class="activity-card__detail-item">
           <LocationIcon size="16px" />
           <span>{{ activity.address }}</span>
         </div>
@@ -157,14 +144,14 @@ onMounted(() => {
     </h3>
     <div class="person-info">
       <t-avatar
-        class="person-avatar"
+        class="person-info__avatar"
         image="https://tdesign.gtimg.com/mobile/demos/avatar1.png"
       />
-      <div class="person-details">
-        <div class="person-name">
+      <div class="person-info__details">
+        <div class="person-info__name">
           {{ selectedPerson.name }}
         </div>
-        <div class="person-desc">
+        <div class="person-info__desc">
           {{ selectedPerson.age }} {{ selectedPerson.occupation }}
         </div>
       </div>
@@ -193,7 +180,7 @@ onMounted(() => {
         去查看
       </t-button>
     </div>
-  </div>
+  </main>
 
   <!-- 分享弹窗 -->
   <t-popup
@@ -204,7 +191,7 @@ onMounted(() => {
   >
     <div class="share-popup">
       <div class="share-section">
-        <h3 class="share-title">
+        <h3 class="share-section__title">
           分享给朋友
         </h3>
         <t-grid :column="0" class="grid-scroll">
@@ -217,7 +204,7 @@ onMounted(() => {
       </div>
 
       <div class="share-section">
-        <h3 class="share-title">
+        <h3 class="share-section__title">
           分享到社媒
         </h3>
         <t-grid :column="0" class="grid-scroll">
@@ -228,7 +215,7 @@ onMounted(() => {
           </t-grid-item>
         </t-grid>
       </div>
-      <t-button class="share-cancel" block variant="text" @click="closeSharePopup">
+      <t-button class="share-popup__btn" block variant="text" @click="closeSharePopup">
         取消
       </t-button>
     </div>

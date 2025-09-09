@@ -4,11 +4,11 @@
   text-overflow: ellipsis;
 }
 
-.tnavbar {
+.t-navbar {
   --td-navbar-bg-color: var(--bg-color-secondarypage);
 }
 
-.buy-result-page {
+main {
   .flex-col();
   padding: 0 16px;
   min-height: 100vh;
@@ -28,40 +28,41 @@
   background: white;
   border-radius: 12px;
   box-shadow: var(--td-shadow-3);
-  .activity-cover {
+  &__cover {
     width: 100%;
     width: 100%;
     aspect-ratio: 311 / 175;
     border-radius: 9.06px;
   }
-  .activity-name {
+  &__name {
     .font(18px, 600);
     .text-ellipsis();
     height: 26px;
     margin: 16px 0px 8px;
   }
-  .activity-details {
+  &__details {
     display: flex;
-    .detail-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 4px;
-      &:first-child {
-        margin-right: 16px;
-      }
-      &:last-child {
-        flex-grow: 1;
-        min-width: 0;
-      }
-      .t-icon {
-        color: var(--td-brand-color-7);
-        margin-right: 4px;
-        flex-shrink: 0;
-      }
-      span {
-        .font(12px, 400);
-        .text-ellipsis();
-      }
+  }
+
+  &__detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    &:first-child {
+      margin-right: 16px;
+    }
+    &:last-child {
+      flex-grow: 1;
+      min-width: 0;
+    }
+    .t-icon {
+      color: var(--td-brand-color-7);
+      margin-right: 4px;
+      flex-shrink: 0;
+    }
+    span {
+      .font(12px, 400);
+      .text-ellipsis();
     }
   }
 }
@@ -77,21 +78,21 @@
   background: white;
   border-radius: 9px;
   padding: 17px 16px;
-  .person-avatar {
+  &__avatar {
     margin-right: 12px;
   }
-  .person-details {
+  &__details {
     flex: 1;
     min-width: 0;
-    .person-name {
-      .font(16px, 400);
-      margin-bottom: 4px;
-    }
-    .person-desc {
-      .font();
-      .text-ellipsis();
-      color: var(--td-font-gray-2);
-    }
+  }
+  &__name {
+    .font(16px, 400);
+    margin-bottom: 4px;
+  }
+  &__desc {
+    .font();
+    .text-ellipsis();
+    color: var(--td-font-gray-2);
   }
 }
 
@@ -101,19 +102,21 @@
   margin-top: 38px;
   padding-bottom: 16px;
 }
-/* 分享弹窗样式 */
 
+/* 分享弹窗样式 */
 .share-popup {
   background-color: white;
   border-radius: 12px;
+
   .share-section {
-    .share-title {
+    &__title {
       .font(14px, 400);
       padding: 16px 0 0 16px;
       color: var(--td-font-gray-3);
     }
   }
-  .share-cancel {
+
+  &__btn {
     .flex-center();
     height: 48px;
     padding: 12px 16px;

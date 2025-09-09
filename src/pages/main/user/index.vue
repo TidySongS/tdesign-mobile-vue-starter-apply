@@ -2,7 +2,7 @@
 import type { UserProfile } from '@/api/info'
 import { getPersonActivities } from '@/api/activity'
 import { getUserProfile } from '@/api/info'
-import { formatDate } from '@/utils/dateTime'
+import { formatDate } from '@/utils/date'
 import ActivityCard from '../components/ActivityCard.vue'
 import ActivityCardSkeleton from '../components/ActivityCardSkeleton.vue'
 
@@ -137,22 +137,22 @@ onMounted(() => {
 <template>
   <div class="user-page">
     <div class="user-card">
-      <div class="user-card-info">
-        <div class="user-card-avatar">
+      <div class="user-card__info">
+        <div class="user-card__avatar">
           <t-skeleton :loading="isProfileLoading && !profile" animation="flashed" :row-col="[{ height: '64px', width: '64px', type: 'circle' }]" />
           <t-avatar v-if="!isProfileLoading" :image="profile?.avatar || 'https://tdesign.gtimg.com/mobile/demos/avatar1.png'" alt="用户头像" size="large" />
         </div>
-        <div class="user-card-meta">
+        <div class="user-card__meta">
           <t-skeleton
             :loading="isProfileLoading && !profile" animation="flashed"
             style="--td-skeleton-row-spacing: 8px"
             :row-col="[{ height: '24px', width: '48px' }, [{ height: '24px', width: '43px' }, { height: '24px', width: '106px', marginLeft: '8px' }]]"
           />
           <div v-if="profile">
-            <div class="user-name">
+            <div class="user-card__name">
               {{ profile.name }}
             </div>
-            <div class="user-tag">
+            <div class="user-card__tag">
               <t-tag variant="light">
                 {{ profile.age }}岁
               </t-tag>
@@ -164,7 +164,7 @@ onMounted(() => {
         </div>
       </div>
       <button
-        class="user-card-edit"
+        class="user-card__edit"
         type="button"
         aria-label="编辑个人信息"
         @click="onEdit"
@@ -184,7 +184,7 @@ onMounted(() => {
           <t-tab-panel value="third" label="全部活动" />
         </t-tabs>
       </div>
-      <div class="activity-content">
+      <div class="activity-list__content">
         <ActivityCardSkeleton v-if="isFetching && activities.length === 0" :count="1">
           <t-skeleton
             animation="flashed"
@@ -208,21 +208,21 @@ onMounted(() => {
         <div v-for="item in activities" :key="item.id" class="activity-item">
           <ActivityCard :cover="item.cover" :title="item.title">
             <template #content>
-              <div class="activity-item-time">
+              <div class="activity-item__time">
                 {{ item.time }}
               </div>
             </template>
             <template #footer>
-              <div class="activity-item-bottom">
+              <div class="activity-item__footer">
                 <div
-                  class="activity-item-status"
+                  class="activity-item__status"
                   :style="{ color: item.status === '已完成' ? 'var(--td-font-gray-3)' : 'var(--td-success-color-5)' }"
                 >
                   {{ item.status }}
                 </div>
                 <button
                   v-if="item.status === '已完成'"
-                  class="activity-item-btn"
+                  class="activity-item__btn"
                   type="button"
                   aria-label="去评价"
                   @click="onReview(item.id)"

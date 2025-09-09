@@ -4,7 +4,13 @@ header {
   background: var(--bg-color-page);
 }
 
-.event-container {
+main {
+  min-height: calc(100vh - var(--navbar-height));
+  background-color: #fff;
+  padding-bottom: 80px;
+}
+
+.activity-info {
   .p-16();
   .flex-col();
   min-height: 90px;
@@ -19,18 +25,18 @@ header {
     height: 0.5px;
     background-color: var(--td-gray-color-3);
   }
-  .event-title {
+  &__title {
     .font(20px, 600);
     margin-bottom: 8px;
   }
-  .event-details {
+  &__details {
     .font();
     gap: 16px;
     height: 22px;
     display: flex;
     flex-wrap: nowrap;
   }
-  .detail-item {
+  &__detail-item {
     .flex-center();
     min-width: 0;
     span {
@@ -45,12 +51,6 @@ header {
   }
 }
 
-.buy-confirm-page {
-  min-height: calc(100vh - var(--navbar-height));
-  background-color: #fff;
-  padding-bottom: 80px;
-}
-
 .page-content {
   .p-16();
   margin-top: var(--navbar-height);
@@ -61,11 +61,11 @@ header {
   &:last-child {
     margin-bottom: 0;
   }
-  .section-header {
+  &__header {
     .flex-center(space-between);
     margin-bottom: 14px;
   }
-  .section-title {
+  &__title {
     .font(16px, 600);
   }
 }
@@ -129,35 +129,34 @@ header {
   left: 1.5px;
   top: 1.5px;
   z-index: 1;
-  font-size: 14px;
 }
 
 /* 价格卡片内容布局 */
 
-.price-container {
+.price-card {
   width: 100%;
   .flex-center(space-between);
+
+  /* 价格样式 */
+
+  &__info {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  &__current-price {
+    .font(16px, 600);
+  }
+
+  &__original-price {
+    .font(16px, 400);
+    color: var(--td-font-gray-2);
+    text-decoration: line-through;
+  }
 }
 
-/* 价格样式 */
-
-.price-amount {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-}
-
-.current-price {
-  .font(16px, 600);
-}
-
-.original-price {
-  .font(16px, 400);
-  color: var(--td-font-gray-2);
-  text-decoration: line-through;
-}
-
-.bottom-action-bar {
+.bottom-action {
   .flex-center(space-between);
   height: 80px;
   position: fixed;
@@ -167,13 +166,13 @@ header {
   background: #ffffff;
   padding: 12px 16px;
   border-top: 0.5px solid var(--td-gray-color-3);
-  .price-info {
+  &__info {
     .flex-center();
-    .price-value {
-      .font(20px, 600);
-      color: var(--td-brand-color-7);
-      margin-left: 8px;
-    }
+  }
+  &__price {
+    .font(20px, 600);
+    color: var(--td-brand-color-7);
+    margin-left: 8px;
   }
   .t-button {
     width: 201px;

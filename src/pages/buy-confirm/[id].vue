@@ -2,7 +2,7 @@
 import { Message } from 'tdesign-mobile-vue'
 import { getActivityDetail, getActivityPrices, getActivityTickets } from '@/api/activity'
 import userInfo from '@/store/userInfo'
-import { formatDate } from '@/utils/dateTime'
+import { formatDate } from '@/utils/date'
 
 interface TicketItem {
   id: string
@@ -212,18 +212,18 @@ onMounted(() => {
   <header>
     <t-navbar title="购买确认" left-arrow :on-left-click="$router.back" />
   </header>
-  <main class="buy-confirm-page">
+  <main>
     <t-sticky :offset-top="48">
-      <div class="event-container">
-        <div class="event-title">
+      <div class="activity-info">
+        <div class="activity-info__title">
           <span>{{ eventTitle }}</span>
         </div>
-        <div class="event-details">
-          <div class="detail-item">
+        <div class="activity-info__details">
+          <div class="activity-info__detail-item">
             <TimeIcon size="16px" />
             <span>{{ eventDate }}</span>
           </div>
-          <div class="detail-item">
+          <div class="activity-info__detail-item">
             <LocationIcon size="16px" />
             <span>{{ eventLocation }}</span>
           </div>
@@ -233,8 +233,8 @@ onMounted(() => {
     <div class="page-content">
       <!-- 人员信息 -->
       <div class="section">
-        <div class="section-header">
-          <h3 class="section-title">
+        <div class="section__header">
+          <h3 class="section__title">
             人员信息
           </h3>
           <t-button size="extra-small" shape="round" :icon="plusIcon" @click="addPerson">
@@ -255,7 +255,7 @@ onMounted(() => {
 
       <!-- 票类场次 -->
       <div class="section">
-        <h3 class="section-title">
+        <h3 class="section__title">
           票类场次
         </h3>
         <t-radio-group v-model="selectedTicketId" @change="handleTicketChange">
@@ -277,7 +277,7 @@ onMounted(() => {
 
       <!-- 票档价格 -->
       <div class="section">
-        <h3 class="section-title">
+        <h3 class="section__title">
           票档价格
         </h3>
         <t-radio-group v-model="selectedPriceId" @change="handlePriceChange">
@@ -293,11 +293,11 @@ onMounted(() => {
               borderless
             >
               <template #label>
-                <div class="price-container">
+                <div class="price-card">
                   <span>{{ price.description }}</span>
-                  <div class="price-amount">
-                    <span class="current-price">{{ price.price }}元</span>
-                    <span v-if="price.originalPrice > price.price" class="original-price">{{ price.originalPrice }}元</span>
+                  <div class="price-card__info">
+                    <span class="price-card__current-price">{{ price.price }}元</span>
+                    <span v-if="price.originalPrice > price.price" class="price-card__original-price">{{ price.originalPrice }}元</span>
                   </div>
                 </div>
               </template>
@@ -308,10 +308,10 @@ onMounted(() => {
     </div>
 
     <!-- 底部操作栏 -->
-    <div class="bottom-action-bar">
-      <div class="price-info">
+    <div class="bottom-action">
+      <div class="bottom-action__info">
         <span>待支付:</span>
-        <span class="price-value">¥{{ totalPrice }}</span>
+        <span class="bottom-action__price">¥{{ totalPrice }}</span>
       </div>
       <t-button theme="primary" size="large" :disabled="!canPurchase" @click="handleConfirmPurchase">
         确认购买

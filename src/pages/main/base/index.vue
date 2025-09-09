@@ -147,7 +147,7 @@ onActivated(() => {
             />
           </t-tabs>
           <div
-            class="filter-container"
+            class="tab-container__filter"
             @click="filterPopupVisible = true"
           >
             <FilterIcon size="16" />
