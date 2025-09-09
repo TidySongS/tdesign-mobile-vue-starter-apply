@@ -2,8 +2,8 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'TDesign Starter - Apply',
-  description: 'a front-end page template for event registration',
+  title: 'TDesign Starter Apply',
+  description: '',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: 'https://tdesign.gtimg.com/mobile/demos/logo2.png',

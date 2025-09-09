@@ -52,7 +52,9 @@ src/
 
 ## 环境变量
 
-在项目的根目录，有 `.env.development` 配置文件，也可以根据实际需求继续扩展。项目会根据启动的命令中的 `mode` 参数，加载指定的配置文件的配置来运行， 如本地环境执行 `npm run dev`，因为对于命令中的 `mode` 参数为 `development`，项目运行会加载 `.env.development` 的配置来运行。
+项目根目录提供 `.env.development` 配置文件，你也可以按需扩展更多环境文件。
+
+启动时项目会根据命令参数中的 `mode` 加载对应的环境配置。例如本地执行 `npm run dev`（`mode` 为 `development`），将读取 `.env.development`。
 
 ## 内置的环境变量
 
