@@ -35,19 +35,6 @@ export default defineConfig({
             { text: '开发规范', link: '/docs/develop-rules' },
             { text: '路由配置', link: '/docs/router' },
             { text: '请求与数据', link: '/docs/request-data' },
-            { text: '个性化配置', link: '/docs/custom-config' },
-          ],
-        },
-        {
-          text: '构建',
-          items: [
-            { text: '项目构建', link: '/docs/build' },
-          ],
-        },
-        {
-          text: '部署',
-          items: [
-            { text: '项目部署', link: '/docs/deploy' },
           ],
         },
       ],
