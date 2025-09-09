@@ -54,6 +54,6 @@
     ]
   },
   "lint-staged": {
-    "*": "npm run lint"
+    "*.{js,jsx,ts,tsx,vue}": "npm run lint"
   }
 }
