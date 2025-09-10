@@ -12,7 +12,7 @@ hero:
       link: /guide/introduction
     - theme: alt
       text: 快速开始
-      link: /docs/get-started
+      link: /guide/get-started
 
 features:
   - title: 开箱即用
