@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { UserProfile } from '@/api/info'
+import type { UserProfile } from '@/api/userInfo'
 import { getPersonActivities } from '@/api/activity'
-import { getUserProfile } from '@/api/info'
+import { getUserProfile } from '@/api/userInfo'
 import { formatDate } from '@/utils/date'
 import ActivityCard from '../components/ActivityCard.vue'
 import ActivityCardSkeleton from '../components/ActivityCardSkeleton.vue'

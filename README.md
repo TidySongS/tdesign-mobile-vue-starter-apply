@@ -33,7 +33,7 @@ npm run preview  # 预览 dist
 
 - `npm run type-check`: 类型检查
 - `npm run lint` / `npm run lint:fix`: 代码检查 / 自动修复
-- `npm run docs:dev` / `docs:build` / `docs:preview`: 文档开发/构建/预览
+- `npm run docs:dev` / `npm run docs:build` / `npm run docs:preview`: 文档开发/构建/预览
 
 ## ✨ 功能概览
 

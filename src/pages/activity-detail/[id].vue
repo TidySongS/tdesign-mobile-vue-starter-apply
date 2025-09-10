@@ -134,7 +134,6 @@ onMounted(() => {
           :autoplay="false"
           margin-position="right"
           :swiper-gap="28"
-          side-type="right"
         />
       </div>
     </div>
@@ -148,7 +147,6 @@ onMounted(() => {
           :autoplay="false"
           margin-position="right"
           :swiper-gap="28"
-          side-type="right"
         />
       </div>
     </div>

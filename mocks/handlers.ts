@@ -2,7 +2,7 @@ import type { ActivityFilterParams, SortOption } from '@/api/activity'
 import { delay, http, HttpResponse } from 'msw'
 import { compareDates, isDateInRange } from '@/utils/date'
 import { db } from './db'
-import { swiperList } from './mockData'
+import { appList, swiperList } from './mockData'
 
 interface ActivitiesRequestBody {
   params: ActivityFilterParams & {
@@ -121,13 +121,6 @@ export const handlers = [
     })
   }),
 
-  http.get('/api/occupations', () => {
-    const all = db.occupation.getAll()
-    return HttpResponse.json({
-      data: all,
-    })
-  }),
-
   http.get('/api/activities/:id', ({ params }) => {
     const id = Array.isArray(params.id) ? params.id[0] : params.id
     if (!id) {
@@ -188,7 +181,6 @@ export const handlers = [
   }),
 
   http.get('/api/share/app', () => {
-    const appList = db.shareAppIconList.getAll()
     return HttpResponse.json(appList)
   }),
 

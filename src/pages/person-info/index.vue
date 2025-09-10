@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import type { DateValue } from 'tdesign-mobile-vue'
-import type { ValidateResult } from '@/api/personInfo'
 import { Message } from 'tdesign-mobile-vue'
 import userInfo from '@/store/userInfo'
 import { formatDate } from '@/utils/date'
+
+interface ValidationResultItem {
+  valid: boolean
+  message?: string
+}
+
+interface FieldValidationResult {
+  [fieldName: string]: ValidationResultItem[]
+}
+
+type ValidateResult = true | FieldValidationResult
 
 const form = ref(null)
 const router = useRouter()
@@ -131,18 +141,16 @@ async function handleConfirm() {
     if (isFormValid(result)) {
       // 添加到userInfo store 由于mock数据会刷新重置 目前先保存在store里便于数据展示
       // 实际使用时应该保存至后端的接口中
-      // submitUserInfoForm(formData)
       userInfo.addPerson({
         name: formData.name,
         // 仅做演示用途，但避免存储敏感信息
         birthday: formData.birthday,
         phone: formData.phone,
-        idCard: '1111111111111111111',
-        email: 'email@email.com',
+        idCard: '',
+        email: '',
         profession: formData.profession,
         isDefault: isDefault.value,
       })
-
       router.back()
     }
     else {

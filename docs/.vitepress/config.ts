@@ -17,8 +17,8 @@ export default defineConfig({
   themeConfig: {
     logo: 'https://tdesign.gtimg.com/mobile/demos/logo2.png',
     nav: [
-      { text: '指南', link: '/guide/introduction' },
-      { text: '文档', link: '/docs/get-started' },
+      { text: '介绍', link: '/guide/introduction' },
+      { text: '指南', link: '/guide/get-started' },
     ],
 
     sidebar: {
@@ -29,21 +29,19 @@ export default defineConfig({
             { text: '项目介绍', link: '/guide/introduction' },
           ],
         },
-      ],
-      '/docs/': [
         {
           text: '上手',
           items: [
-            { text: '快速开始', link: '/docs/get-started' },
+            { text: '快速开始', link: '/guide/get-started' },
           ],
         },
         {
           text: '开发',
           items: [
-            { text: '进入开发', link: '/docs/develop' },
-            { text: '开发规范', link: '/docs/develop-rules' },
-            { text: '路由配置', link: '/docs/router' },
-            { text: '请求与数据', link: '/docs/request-data' },
+            { text: '进入开发', link: '/guide/develop' },
+            { text: '开发规范', link: '/guide/develop-rules' },
+            { text: '路由配置', link: '/guide/router' },
+            { text: '请求与数据', link: '/guide/request-data' },
           ],
         },
       ],
