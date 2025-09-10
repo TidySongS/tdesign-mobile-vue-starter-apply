@@ -21,7 +21,10 @@ export default defineConfig({
     },
   },
   plugins: [
-    VueRouter({ dts: './types/typed-router.d.ts' }),
+    VueRouter({
+      exclude: ['**/components/*.vue'],
+      dts: './types/typed-router.d.ts',
+    }),
     vue(),
     AutoImport({
       resolvers: [

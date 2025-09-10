@@ -1,18 +1,9 @@
 <script setup lang="ts">
-import type {
-  DateValue,
-} from 'tdesign-mobile-vue'
-import type {
-  ValidateResult,
-} from '@/api/personinfo'
-import {
-  Message,
-} from 'tdesign-mobile-vue'
-// import { submitUserInfoForm } from '@api/personinfo'
+import type { DateValue } from 'tdesign-mobile-vue'
+import type { ValidateResult } from '@/api/personInfo'
+import { Message } from 'tdesign-mobile-vue'
 import userInfo from '@/store/userInfo'
-import {
-  formatDate,
-} from '@/utils/dateTime'
+import { formatDate } from '@/utils/date'
 
 const form = ref(null)
 const router = useRouter()
@@ -168,8 +159,8 @@ async function handleConfirm() {
   <header>
     <t-navbar title="个人信息" left-arrow :on-left-click="$router.back" />
   </header>
-  <div class="person-info-page">
-    <div class="page-content">
+  <main>
+    <div class="container">
       <!-- 表单内容 -->
       <div>
         <t-form ref="form" :data="formData" :rules="rules" label-align="left" show-error-message label-width="97px" @submit="handleConfirm">
@@ -229,58 +220,9 @@ async function handleConfirm() {
     <t-popup v-model="showProfessionPicker" placement="bottom">
       <t-picker v-model="professionPickerValue" title="选择职业" :columns="professionColumns" @confirm="onProfessionConfirm" @cancel="showProfessionPicker = false" />
     </t-popup>
-  </div>
+  </main>
 </template>
 
 <style lang="less" scoped>
-header {
-  position: fixed;
-  z-index: 999;
-}
-
-.person-info-page {
-  min-height: 100vh;
-  background-color: var(--bg-color-page);
-  padding-bottom: 80px;
-}
-
-.page-content {
-  padding-top: 48px;
-}
-
-.bottom-action {
-  .p-16();
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-:deep(.t-form) {
-  .font(16px, 400);
-  .t-form__label {
-    padding-right: 16px;
-  }
-  .t-input__control::placeholder {
-    color: var(--td-font-gray-3);
-  }
-  .t-form__label--required label::before {
-    content: none;
-  }
-  .t-form__label--required label::after {
-    display: inline-block;
-    margin-left: 4px;
-    color: var(--td-error-color-6);
-    line-height: 20px;
-    content: '*';
-  }
-}
-
-.input-with-icon {
-  .flex-center(space-between);
-  width: 100%;
-  .t-icon {
-    color: var(--td-font-gray-3);
-  }
-}
+@import './index.less';
 </style>

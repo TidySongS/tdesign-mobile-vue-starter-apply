@@ -1,7 +1,7 @@
 import { fakerZH_CN as faker } from '@faker-js/faker'
 import { factory, manyOf, primaryKey } from '@mswjs/data'
 import { defaultFilterOptions } from '@/constant/filters'
-import { generateDateRange } from '@/utils/dateTime'
+import { generateDateRange } from '@/utils/date'
 import { cnCommentPool, cnIntroducePool, covers } from './mockData'
 
 const [sixMonthsAgo, sixMonthsLater] = generateDateRange()

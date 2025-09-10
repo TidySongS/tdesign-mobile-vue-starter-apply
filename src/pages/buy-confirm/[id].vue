@@ -2,7 +2,7 @@
 import { Message } from 'tdesign-mobile-vue'
 import { getActivityDetail, getActivityPrices, getActivityTickets } from '@/api/activity'
 import userInfo from '@/store/userInfo'
-import { formatDate } from '@/utils/dateTime'
+import { formatDate } from '@/utils/date'
 
 interface TicketItem {
   id: string
@@ -125,7 +125,6 @@ const canPurchase = computed(() => {
 // 获取活动信息
 async function fetchActivityData() {
   if (!activityId.value) {
-    console.log(activityId.value)
     error.value = true
     loading.value = false
     return
@@ -134,9 +133,8 @@ async function fetchActivityData() {
   try {
     // 获取活动详情
     const activityData = await getActivityDetail(activityId.value)
-    console.log('activityData', activityData)
 
-    // 设置活动信息console.log(activityData)
+    // 设置活动信息
     eventTitle.value = activityData.title
     eventDate.value = formatDate(activityData.date)
     eventLocation.value = activityData.address
@@ -214,18 +212,18 @@ onMounted(() => {
   <header>
     <t-navbar title="购买确认" left-arrow :on-left-click="$router.back" />
   </header>
-  <main class="buy-confirm-page">
+  <main>
     <t-sticky :offset-top="48">
-      <div class="event-container">
-        <div class="event-title">
+      <div class="activity-info">
+        <div class="activity-info__title">
           <span>{{ eventTitle }}</span>
         </div>
-        <div class="event-details">
-          <div class="detail-item">
+        <div class="activity-info__details">
+          <div class="activity-info__detail-item">
             <TimeIcon size="16px" />
             <span>{{ eventDate }}</span>
           </div>
-          <div class="detail-item">
+          <div class="activity-info__detail-item">
             <LocationIcon size="16px" />
             <span>{{ eventLocation }}</span>
           </div>
@@ -235,8 +233,8 @@ onMounted(() => {
     <div class="page-content">
       <!-- 人员信息 -->
       <div class="section">
-        <div class="section-header">
-          <h3 class="section-title">
+        <div class="section__header">
+          <h3 class="section__title">
             人员信息
           </h3>
           <t-button size="extra-small" shape="round" :icon="plusIcon" @click="addPerson">
@@ -257,7 +255,7 @@ onMounted(() => {
 
       <!-- 票类场次 -->
       <div class="section">
-        <h3 class="section-title">
+        <h3 class="section__title">
           票类场次
         </h3>
         <t-radio-group v-model="selectedTicketId" @change="handleTicketChange">
@@ -279,7 +277,7 @@ onMounted(() => {
 
       <!-- 票档价格 -->
       <div class="section">
-        <h3 class="section-title">
+        <h3 class="section__title">
           票档价格
         </h3>
         <t-radio-group v-model="selectedPriceId" @change="handlePriceChange">
@@ -295,11 +293,11 @@ onMounted(() => {
               borderless
             >
               <template #label>
-                <div class="price-container">
+                <div class="price-card">
                   <span>{{ price.description }}</span>
-                  <div class="price-amount">
-                    <span class="current-price">{{ price.price }}元</span>
-                    <span v-if="price.originalPrice > price.price" class="original-price">{{ price.originalPrice }}元</span>
+                  <div class="price-card__info">
+                    <span class="price-card__current-price">{{ price.price }}元</span>
+                    <span v-if="price.originalPrice > price.price" class="price-card__original-price">{{ price.originalPrice }}元</span>
                   </div>
                 </div>
               </template>
@@ -310,10 +308,10 @@ onMounted(() => {
     </div>
 
     <!-- 底部操作栏 -->
-    <div class="bottom-action-bar">
-      <div class="price-info">
+    <div class="bottom-action">
+      <div class="bottom-action__info">
         <span>待支付:</span>
-        <span class="price-value">¥{{ totalPrice }}</span>
+        <span class="bottom-action__price">¥{{ totalPrice }}</span>
       </div>
       <t-button theme="primary" size="large" :disabled="!canPurchase" @click="handleConfirmPurchase">
         确认购买
@@ -323,185 +321,5 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
-header {
-  z-index: 99;
-  position: fixed;
-  background: var(--bg-color-page);
-}
-
-.event-container {
-  .p-16();
-  .flex-col();
-  min-height: 90px;
-  top: var(--navbar-height);
-  background: var(--bg-color-page);
-  &::after {
-    content: '';
-    position: absolute;
-    left: 16px;
-    right: 16px;
-    bottom: 0;
-    height: 0.5px;
-    background-color: var(--td-gray-color-3);
-  }
-  .event-title {
-    .font(20px, 600);
-    margin-bottom: 8px;
-  }
-  .event-details {
-    .font();
-    gap: 16px;
-    height: 22px;
-    display: flex;
-    flex-wrap: nowrap;
-  }
-  .detail-item {
-    .flex-center();
-    min-width: 0;
-    span {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .t-icon {
-      color: var(--td-brand-color-7);
-      margin-right: 4px;
-    }
-  }
-}
-
-.buy-confirm-page {
-  min-height: calc(100vh - var(--navbar-height));
-  background-color: #fff;
-  padding-bottom: 80px;
-}
-
-.page-content {
-  .p-16();
-  margin-top: var(--navbar-height);
-}
-
-.section {
-  margin-bottom: 24px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-  .section-header {
-    .flex-center(space-between);
-    margin-bottom: 14px;
-  }
-  .section-title {
-    .font(16px, 600);
-  }
-}
-/* 人员信息网格布局 */
-
-.person-grid {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-.person-grid .card {
-  margin: 0;
-}
-
-/* 卡片样式 */
-
-.card {
-  position: relative;
-  margin: 12px 0;
-  border-radius: 6px;
-  overflow: hidden;
-  box-sizing: border-box;
-  border: 1px solid var(--td-gray-color-4);
-  padding: 0.5px 0.5px 0.5px 8.5px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.card--active {
-  padding: 0 0 0 8px;
-  border: 1.5px solid var(--td-brand-color-7);
-}
-
-.card--active::after {
-  content: '';
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0;
-  border: 14px solid var(--td-brand-color-7);
-  border-bottom-color: transparent;
-  border-right-color: transparent;
-}
-
-:deep(.t-radio) {
-  width: 100%;
-  padding-left: 0;
-}
-
-:deep(.t-checkbox) {
-  padding-left: 8px;
-}
-
-.card__icon {
-  color: #fff;
-  position: absolute;
-  left: 1.5px;
-  top: 1.5px;
-  z-index: 1;
-  font-size: 14px;
-}
-
-/* 价格卡片内容布局 */
-
-.price-container {
-  width: 100%;
-  .flex-center(space-between);
-}
-
-/* 价格样式 */
-
-.price-amount {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-}
-
-.current-price {
-  .font(16px, 600);
-}
-
-.original-price {
-  .font(16px, 400);
-  color: var(--td-font-gray-2);
-  text-decoration: line-through;
-}
-
-.bottom-action-bar {
-  .flex-center(space-between);
-  height: 80px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #ffffff;
-  padding: 12px 16px;
-  border-top: 0.5px solid var(--td-gray-color-3);
-  .price-info {
-    .flex-center();
-    .price-value {
-      .font(20px, 600);
-      color: var(--td-brand-color-7);
-      margin-left: 8px;
-    }
-  }
-  .t-button {
-    width: 201px;
-  }
-}
+@import './index.less';
 </style>

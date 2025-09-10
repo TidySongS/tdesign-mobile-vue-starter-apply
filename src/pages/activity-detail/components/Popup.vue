@@ -1,31 +1,58 @@
 <script setup lang="ts">
 import type { ActivityDetail } from '@/api/activity'
-import { IconFont } from 'tdesign-icons-vue-next'
-import { formatDate } from '@/utils/dateTime'
+import { formatDate } from '@/utils/date'
 
-const props = defineProps<{
-  detail: ActivityDetail | null
-  showBottomPopup: boolean
-  popupHeight: string
+interface Props {
+  /** 活动详情数据 */
+  detail?: ActivityDetail | null
+  /** 底部弹层显示状态 */
+  showBottomPopup?: boolean
+  /** 弹层高度 */
+  popupHeight?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  detail: null,
+  showBottomPopup: false,
+  popupHeight: '80vh',
+})
+
+const emit = defineEmits<{
+  /** 切换弹层展开/收起状态 */
+  toggle: []
 }>()
 
-const emit = defineEmits<{ (e: 'toggle'): void }>()
-
-function onToggle() {
+/** 处理弹层切换事件 */
+function onToggle(): void {
   emit('toggle')
 }
 
-const avatarList = computed<string[]>(() => (props.detail?.interestedPeople ?? []).map((p: any) => p.avatar).slice(0, 10))
+/** 感兴趣用户头像列表 */
+const avatarList = computed<string[]>(() =>
+  (props.detail?.interestedPeople ?? [])
+    .map((person: any) => person.avatar),
+)
+
+/** 感兴趣人数 */
 const interestedCount = computed<number>(() => props.detail?.interestedCount ?? 0)
+
+/** 活动标题 */
 const title = computed<string>(() => props.detail?.title ?? '')
+
+/** 活动地址 */
 const address = computed<string>(() => props.detail?.address ?? '')
+
+/** 活动介绍 */
 const introduce = computed<string>(() => props.detail?.introduce ?? '')
+
+/** 格式化后的活动日期 */
 const dateText = computed<string>(() => {
-  const d = props.detail?.date
-  return formatDate(d as string | number | Date)
+  const date = props.detail?.date
+  return date ? formatDate(date as string | number | Date) : ''
 })
 
-const star = computed(() => props.detail?.score ?? 0)
+/** 活动评分 */
+const star = computed<number>(() => props.detail?.score ?? 0)
 </script>
 
 <template>
@@ -37,46 +64,46 @@ const star = computed(() => props.detail?.score ?? 0)
     :style="{ height: popupHeight }"
   >
     <div class="ad-popup">
-      <div v-show="!showBottomPopup" class="ad-popup-handle" @click="onToggle" />
-      <div class="ad-popup-toggle" :class="{ 'ad-popup-toggle-active': showBottomPopup }" @click="onToggle">
+      <div v-show="!showBottomPopup" class="ad-popup__handle" @click="onToggle" />
+      <div class="ad-popup__toggle" :class="{ 'ad-popup__toggle--active': showBottomPopup }" @click="onToggle">
         <ChevronUpIcon size="20px" />
       </div>
-      <div v-show="showBottomPopup" class="ad-popup-content">
+      <div v-show="showBottomPopup" class="ad-popup__content">
         <template v-if="detail">
           <div class="ad-summary">
-            <div class="ad-title">
+            <div class="ad-summary__title">
               {{ title }}
             </div>
-            <div class="ad-avatars">
+            <div class="ad-summary__avatars">
               <t-avatar-group cascading="right-up" :max="5" size="36px" shape="circle">
                 <t-avatar v-for="(url, index) in avatarList" :key="index" :image="url" />
               </t-avatar-group>
-              <div class="ad-interest">
+              <div class="ad-summary__interest">
                 {{ interestedCount }}人感兴趣
               </div>
             </div>
           </div>
           <div class="ad-meta">
-            <div class="ad-time">
-              <div class="ad-meta-item">
-                <div class="ad-meta-icon">
-                  <IconFont name="time" size="20px" class="ad-meta-icon-time" aria-hidden="true" />
+            <div class="ad-meta__time">
+              <div class="ad-meta__item">
+                <div class="ad-meta__icon">
+                  <TimeIcon size="20" />
                 </div>
-                <div class="ad-meta-text">
+                <div class="ad-meta__text">
                   时间：{{ dateText }}
                 </div>
               </div>
             </div>
-            <div class="ad-location">
-              <div class="ad-meta-item">
-                <div class="ad-meta-icon">
-                  <IconFont name="location" size="20px" class="ad-meta-icon-location" aria-hidden="true" />
+            <div class="ad-meta__location">
+              <div class="ad-meta__item">
+                <div class="ad-meta__icon">
+                  <LocationIcon size="20" />
                 </div>
-                <div class="ad-meta-text">
+                <div class="ad-meta__text">
                   地点：{{ address }}
                 </div>
               </div>
-              <div class="ad-meta-item">
+              <div class="ad-meta__item">
                 <t-button size="extra-small" theme="light">
                   导航
                 </t-button>
@@ -85,22 +112,22 @@ const star = computed(() => props.detail?.score ?? 0)
           </div>
           <div v-if="detail?.comments?.length" class="ad-reviews">
             <div class="ad-reviews-header">
-              <div class="ad-reviews-title">
+              <div class="ad-reviews-header__title">
                 活动评价({{ detail.comments.length }})
               </div>
-              <div class="ad-reviews-rate">
+              <div class="ad-reviews-header__rate">
                 <t-rate :value="star" size="20" variant="filled" allow-half show-text disabled />
               </div>
             </div>
             <div class="ad-reviews-list">
-              <t-swiper :autoplay="false" class="ad-reviews-swiper">
-                <t-swiper-item v-for="c in (detail?.comments ?? [])" :key="c.id" class="ad-reviews-swiper-item">
-                  <t-cell :title="c.user" class="ad-review-item">
+              <t-swiper :autoplay="false" class="ad-reviews-list__swiper">
+                <t-swiper-item v-for="c in (detail?.comments ?? [])" :key="c.id">
+                  <t-cell :title="c.user" class="ad-reviews-list__item">
                     <template #leftIcon>
                       <t-avatar shape="circle" :image="c.avatar" />
                     </template>
                     <template #description>
-                      <div class="ad-review-item-content">
+                      <div class="ad-reviews-list__content">
                         {{ c.content }}
                       </div>
                     </template>
@@ -110,10 +137,10 @@ const star = computed(() => props.detail?.score ?? 0)
             </div>
           </div>
           <div class="ad-intro">
-            <div class="ad-intro-title">
+            <div class="ad-intro__title">
               活动介绍
             </div>
-            <div class="ad-intro-content">
+            <div class="ad-intro__content">
               {{ introduce }}
             </div>
           </div>
@@ -144,7 +171,7 @@ const star = computed(() => props.detail?.score ?? 0)
   position: relative;
   height: 100%;
   padding-top: 12px;
-  .ad-popup-content {
+  &__content {
     .flex-col();
     padding: 12px 16px;
     padding-bottom: 80px;
@@ -154,8 +181,7 @@ const star = computed(() => props.detail?.score ?? 0)
     flex: 1;
     min-height: 0;
   }
-  /* skeleton 样式使用组件默认样式与行列配置，这里无需额外样式 */
-  .ad-popup-handle {
+  &__handle {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -165,7 +191,7 @@ const star = computed(() => props.detail?.score ?? 0)
     background: url('@/assets/half-circle.png') no-repeat center center;
     background-size: 100% 100%;
   }
-  .ad-popup-toggle {
+  &__toggle {
     .flex-center();
     height: 11px;
     width: 100%;
@@ -176,7 +202,8 @@ const star = computed(() => props.detail?.score ?? 0)
       color: var(--td-font-gray-2);
     }
   }
-  .ad-popup-toggle-active {
+
+  &__toggle--active {
     height: 44px;
     top: -32px;
     z-index: -1;
@@ -187,65 +214,28 @@ const star = computed(() => props.detail?.score ?? 0)
       transform: rotate(180deg);
     }
   }
-
-  .ad-reviews {
-    padding-bottom: 16px;
-    border-bottom: 0.5px solid var(--td-gray-color-3);
-    .ad-reviews-header {
-      .flex-center(space-between);
-      .ad-reviews-title {
-        .font(16px, 600);
-        height: 24px;
-        color: #040000;
-        text-align: left;
-      }
-      .ad-reviews-rate {
-        --td-rate-text-active-color: var(--td-warning-color-5);
-        --td-rate-disabled-selected-color: var(--td-warning-color-5);
-        --td-rate-text-font-size: 14px;
-        :deep(.t-rate__text) {
-          margin-left: 8px;
-        }
-      }
-    }
-  }
-  .ad-intro {
-    .ad-intro-title {
-      .font(16px, 600);
-      color: #040000;
-      text-align: left;
-    }
-    .ad-intro-content {
-      margin-top: 12px;
-    }
-  }
-  .ad-popup-actions {
-    display: flex;
-    gap: 12px;
-  }
 }
 
 .ad-summary {
   padding-bottom: 16px;
   border-bottom: 0.5px solid var(--td-gray-color-3);
-  .ad-title {
+  &__title {
     .font(20px, 600);
-    color: #040000;
+    color: var(--bg-color-black-colorful);
   }
-  .ad-avatars {
+  &__avatars {
     margin-top: 12px;
     display: flex;
     gap: 8px;
     align-items: center;
     --td-avatar-group-margin-left-medium: -12px;
-    .ad-interest {
-      font-size: 12px;
-      line-height: 20px;
-      color: var(--td-font-gray-2);
-    }
     .t-avatar__wrapper:nth-child(1) {
       margin-left: 0;
     }
+  }
+  &__interest {
+    .font(12px, 400);
+    color: var(--td-font-gray-2);
   }
 }
 
@@ -255,19 +245,42 @@ const star = computed(() => props.detail?.score ?? 0)
   padding-bottom: 16px;
   border-bottom: 0.5px solid var(--td-gray-color-3);
   gap: 8px;
-  .ad-meta-text {
+  &__text {
     margin-left: 4px;
-    color: #040000;
+    color: var(--bg-color-black-colorful);
   }
-  .ad-time,
-  .ad-location {
+  &__time,
+  &__location {
     .flex-center(space-between);
-    .ad-meta-item {
-      .flex-center();
-      .ad-meta-icon-time,
-      .ad-meta-icon-location {
-        color: var(--td-brand-color-7);
-      }
+  }
+
+  &__item {
+    .flex-center();
+    .t-icon {
+      color: var(--td-brand-color-7);
+    }
+  }
+}
+
+.ad-reviews {
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid var(--td-gray-color-3);
+}
+
+.ad-reviews-header {
+  .flex-center(space-between);
+  &__title {
+    .font(16px, 600);
+    height: 24px;
+    color: var(--bg-color-black-colorful);
+    text-align: left;
+  }
+  &__rate {
+    --td-rate-text-active-color: var(--td-warning-color-5);
+    --td-rate-disabled-selected-color: var(--td-warning-color-5);
+    --td-rate-text-font-size: 14px;
+    :deep(.t-rate__text) {
+      margin-left: 8px;
     }
   }
 }
@@ -277,15 +290,15 @@ const star = computed(() => props.detail?.score ?? 0)
   --td-cell-vertical-padding: 12px;
   margin-top: 12px;
   --ad-swiper-width: 343px;
-  .ad-reviews-swiper {
+  &__swiper {
     overflow: visible;
     margin: 0 calc((100vw - var(--ad-swiper-width)) - 48px) 0 0;
-    .ad-reviews-swiper-item {
-      width: var(--ad-swiper-width);
-      height: 90px;
-    }
   }
-  .ad-review-item {
+  .t-swiper-item {
+    width: var(--ad-swiper-width);
+    height: 90px;
+  }
+  &__item {
     height: 90px;
     border-radius: 9px;
     :deep(.t-cell__left) {
@@ -294,17 +307,28 @@ const star = computed(() => props.detail?.score ?? 0)
     :deep(.t-cell__title-text) {
       font-size: 14px;
     }
-    .ad-review-item-content {
-      .font(12px, 400);
-      color: var(--td-font-gray-2);
-      text-align: left;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      line-clamp: 2;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  }
+  &__content {
+    .font(12px, 400);
+    color: var(--td-font-gray-2);
+    text-align: left;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.ad-intro {
+  &__title {
+    .font(16px, 600);
+    color: var(--bg-color-black-colorful);
+    text-align: left;
+  }
+  &__content {
+    margin-top: 12px;
   }
 }
 </style>

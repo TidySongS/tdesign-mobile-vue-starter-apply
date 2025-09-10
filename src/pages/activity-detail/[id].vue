@@ -1,57 +1,60 @@
 <script setup lang="ts">
 import type { ActivityDetail } from '@/api/activity'
-import {
-  getActivityDetail,
-} from '@/api/activity'
-import { isExpired } from '@/utils/dateTime'
+import { getActivityDetail } from '@/api/activity'
+import ActivitySwiper from '@/components/ActivitySwiper.vue'
+import { isExpired } from '@/utils/date'
+import Popup from './components/Popup.vue'
 
 const route = useRoute()
 const router = useRouter()
-const activityId = computed(() => String((route.params as { id: string }).id))
 
-// 详情数据
+/** 活动 ID */
+const activityId = computed<string>(() => String((route.params as { id: string }).id))
+
+/** 活动详情数据 */
 const detail = ref<ActivityDetail | null>(null)
 
-// 展示交互
-const showBottomPopup = ref(true)
-const popupHeight = ref('91px')
+/** 底部弹层显示状态 */
+const showBottomPopup = ref<boolean>(true)
 
-function closeBottomPopup() {
-  showBottomPopup.value = false
-}
+/** Popup弹层高度 */
+const popupHeight = computed<string>(() => (showBottomPopup.value ? '80vh' : '91px'))
 
-function expandPopup() {
-  showBottomPopup.value = true
-}
+/** 顶部横幅图片 */
+const bannerUrl = computed<string | undefined>(() => detail.value?.banner)
 
-function controlPopup() {
-  if (showBottomPopup.value) {
-    closeBottomPopup()
-  }
-  else {
-    expandPopup()
-  }
-}
-
-watch(
-  showBottomPopup,
-  (isOpen) => {
-    popupHeight.value = isOpen ? '80vh' : '91px'
-  },
-  { immediate: true },
-)
-
-const bannerUrl = computed(
-  () =>
-    detail.value?.banner || detail.value?.cover,
-)
+/** 嘉宾图片列表 */
 const guestImages = computed<string[]>(() => detail.value?.guestImages ?? [])
+
+/** 现场图片列表 */
 const sceneImages = computed<string[]>(() => detail.value?.sceneImages ?? [])
+
+/** 构造嘉宾轮播组件数据格式 */
+const guestSwiperList = computed(() =>
+  guestImages.value.map((url, index) => ({
+    id: String(index),
+    name: `活动嘉宾图片${index + 1}`,
+    url,
+  })),
+)
+
+/** 构造现场轮播组件数据格式 */
+const sceneSwiperList = computed(() =>
+  sceneImages.value.map((url, index) => ({
+    id: String(index),
+    name: `活动现场图片${index + 1}`,
+    url,
+  })),
+)
+
+/** 价格显示文案 */
 const priceText = computed<string>(() => {
   if (!detail.value)
     return ''
+
   const min = detail.value.minPrice ?? 0
   const max = detail.value.maxPrice ?? 0
+
   if (min === 0 && max === 0)
     return '免费'
   if (min === max)
@@ -59,35 +62,43 @@ const priceText = computed<string>(() => {
   return `¥${min}-¥${max}`
 })
 
-// 判断活动是否已结束
+/** 活动是否已结束 */
 const isEnded = computed<boolean>(() => {
-  if (!detail.value || !detail.value.date)
+  if (!detail.value?.date)
     return false
   return isExpired(detail.value.date)
 })
 
-async function fetchData() {
+/** 切换底部弹层展开/收起状态 */
+function controlPopup(): void {
+  showBottomPopup.value = !showBottomPopup.value
+}
+
+/** 获取活动详情数据 */
+async function fetchData(): Promise<void> {
   try {
-    const d = await getActivityDetail(activityId.value)
-    if (!d || !d.id || String(d.id) !== activityId.value) {
-      throw new Error('Invalid activity detail')
-    }
-    detail.value = d
+    const data = await getActivityDetail(activityId.value)
+    detail.value = data
   }
   catch {
-    router.push('/not-found')
+    // 请求失败时跳转到 404 页面
+    await router.push('/not-found')
   }
+}
+
+/** 处理购买按钮点击事件 */
+function handleBuyClick(): void {
+  if (isEnded.value)
+    // 活动已结束，无响应
+    return
+  // 跳转至购买确认页
+  router.push(`/buy-confirm/${activityId.value}`)
 }
 
 onMounted(() => {
+  // 加载页面数据
   fetchData()
 })
-
-function handleBuyClick() {
-  if (isEnded.value)
-    return
-  router.push(`/buy-confirm/${activityId.value}`)
-}
 </script>
 
 <template>
@@ -105,53 +116,40 @@ function handleBuyClick() {
         v-if="!detail"
         :loading="true"
         :row-col="[{ width: '100%', height: '160px' }]"
-        style="--td-skeleton-bg-color: #040000"
       />
       <t-image
         v-else
         :src="bannerUrl" alt="活动横幅" loading="lazy" fit="cover"
         :style="{ width: '100%', height: '160px' }"
-        class="banner-image"
+        class="ad-banner__image"
       />
     </div>
-    <div v-if="guestImages.length" class="ad-section-guests">
-      <div class="ad-section-title">
+    <div v-if="guestImages.length" class="ad-section">
+      <div class="ad-section__title">
         活动嘉宾
       </div>
-      <div class="ad-swiper">
-        <t-swiper
+      <div class="ad-section__swiper">
+        <ActivitySwiper
+          :swiper-list="guestSwiperList"
           :autoplay="false"
-          :navigation="{ type: 'dots', placement: 'outside' }"
-          class="ad-swiper-scene"
-        >
-          <t-swiper-item
-            v-for="(item, index) in guestImages"
-            :key="index"
-            class="ad-slide"
-          >
-            <img :src="item" :alt="`活动嘉宾图片${index + 1}`" loading="lazy">
-          </t-swiper-item>
-        </t-swiper>
+          margin-position="right"
+          :swiper-gap="28"
+          side-type="right"
+        />
       </div>
     </div>
-    <div v-if="sceneImages.length" class="ad-section-scene">
-      <div class="ad-section-title">
+    <div v-if="sceneImages.length" class="ad-section">
+      <div class="ad-section__title">
         活动现场
       </div>
-      <div class="ad-swiper">
-        <t-swiper
+      <div class="ad-section__swiper">
+        <ActivitySwiper
+          :swiper-list="sceneSwiperList"
           :autoplay="false"
-          :navigation="{ type: 'dots', placement: 'outside' }"
-          class="ad-swiper-scene"
-        >
-          <t-swiper-item
-            v-for="(item, index) in sceneImages"
-            :key="index"
-            class="ad-slide"
-          >
-            <img :src="item" :alt="`活动现场图片${index + 1}`" loading="lazy">
-          </t-swiper-item>
-        </t-swiper>
+          margin-position="right"
+          :swiper-gap="28"
+          side-type="right"
+        />
       </div>
     </div>
   </main>
@@ -159,13 +157,13 @@ function handleBuyClick() {
     <div class="ad-footer-actions">
       <div class="ad-footer-action">
         <HeartIcon size="20px" />
-        <div class="ad-footer-action-text">
+        <div class="ad-footer-action__text">
           收藏
         </div>
       </div>
       <div class="ad-footer-action">
         <ShareIcon size="20px" />
-        <div class="ad-footer-action-text">
+        <div class="ad-footer-action__text">
           分享
         </div>
       </div>
@@ -179,7 +177,7 @@ function handleBuyClick() {
       </t-button>
     </div>
   </footer>
-  <ActivityDetailPopup
+  <Popup
     :detail="detail"
     :show-bottom-popup="showBottomPopup"
     :popup-height="popupHeight"
@@ -188,114 +186,5 @@ function handleBuyClick() {
 </template>
 
 <style lang="less" scoped>
-.ad-navbar {
-  --td-navbar-bg-color: #040000;
-  --td-navbar-color: var(--td-font-white-1);
-}
-.ad-main {
-  overflow-y: auto;
-  padding-top: 48px;
-  background-color: #040000;
-  height: calc(100vh - 48px);
-  padding-bottom: calc(80px + constant(safe-area-inset-bottom));
-  padding-bottom: calc(80px + env(safe-area-inset-bottom));
-}
-.ad-banner {
-  width: 100%;
-  height: 160px;
-  .banner-image {
-    opacity: 0;
-    animation: fadeIn 0.3s ease forwards;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.ad-section-guests,
-.ad-section-scene {
-  color: var(--td-font-white-1);
-  font-size: var(--td-font-size-mark-large);
-  margin-left: 16px;
-  .ad-section-title {
-    .font(16px, 600);
-    text-align: left;
-  }
-}
-
-.ad-swiper {
-  overflow: hidden;
-  margin-top: 12px;
-  --swiper-width: 283px;
-  position: relative;
-  .ad-swiper-scene {
-    overflow: visible;
-    margin: 0 calc((100vw - var(--swiper-width)) - 28px) 0 0;
-    .ad-slide {
-      width: var(--swiper-width);
-      height: 160px;
-    }
-    img {
-      height: var(--swiper-height);
-      width: var(--swiper-width);
-    }
-  }
-}
-
-.ad-section-guests {
-  margin-top: 21px;
-}
-
-.ad-section-scene {
-  margin-top: 24px;
-}
-
-footer {
-  .p-16();
-  z-index: 12000;
-  height: 80px;
-  background: var(--bg-color-page);
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  display: flex;
-  gap: 16px;
-  padding-bottom: calc(16px + constant(safe-area-inset-bottom));
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
-  .ad-footer-cta {
-    flex: 1;
-  }
-}
-
-@supports (height: 100dvh) {
-  // 移动端地址栏/工具栏伸缩适配
-  .ad-main {
-    height: calc(100dvh - 48px);
-  }
-}
-
-.ad-footer-actions {
-  .flex-center();
-  .ad-footer-action {
-    .flex-center();
-    width: 50px;
-    height: 48px;
-    flex-direction: column;
-    .ad-footer-action-text {
-      .font(12px, 400);
-      margin-top: 4px;
-      height: 20px;
-      color: #040000;
-    }
-  }
-}
-:deep(.t-swiper) {
-  position: unset;
-}
+@import './index.less';
 </style>

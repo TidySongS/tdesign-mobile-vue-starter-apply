@@ -12,25 +12,34 @@ const props = withDefaults(
     sideType?: 'both' | 'right' | 'left'
     swiperGap?: number
     swiperReady?: boolean
+    autoplay?: boolean // 自动播放
+    navigation?: Record<string, any> | undefined // 自定义 navigation
+    height?: number | string
+    marginPosition?: 'both' | 'right' | 'left' // 边距位置，控制是两侧/左/右
   }>(),
   {
     isFetchSwiperList: false,
     sideType: 'both',
     swiperGap: 12,
     swiperReady: true,
+    autoplay: true,
+    height: 159.2,
+    marginPosition: 'both',
   },
 )
 
+const resolvedNavigation = computed(() => props.navigation ?? { type: 'dots', placement: 'outside' })
+
 const swiperStyle = computed(() => {
   const sideSpace = `calc(100vw - var(--swiper-width))`
-  if (props.sideType === 'right') {
+  if (props.marginPosition === 'right') {
     return {
-      margin: `0 0 0 calc(${sideSpace} - ${props.swiperGap}px)`,
+      margin: `0 calc(${sideSpace} - ${props.swiperGap}px) 0 0`,
     }
   }
-  else if (props.sideType === 'left') {
+  else if (props.marginPosition === 'left') {
     return {
-      margin: `0 calc(${sideSpace} - ${props.swiperGap}px * 2) 0 ${props.swiperGap}px`,
+      margin: `0 0 0 calc(${sideSpace} - ${props.swiperGap}px)`,
     }
   }
   else {
@@ -73,9 +82,9 @@ const swiperStyle = computed(() => {
       v-if="swiperReady && props.swiperList.length > 0"
     >
       <t-swiper
-        :height="159.2"
-        :autoplay="true"
-        :navigation="{ type: 'dots', placement: 'outside' }"
+        :height="props.height"
+        :autoplay="props.autoplay"
+        :navigation="resolvedNavigation"
         class="swiper"
         :style="swiperStyle"
       >

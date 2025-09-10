@@ -1,11 +1,20 @@
 import { defineConfig } from 'vitepress'
+import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'TDesign Starter Apply',
   description: '',
+  markdown: {
+    config(md) {
+      md.use(groupIconMdPlugin)
+    },
+  },
+  vite: {
+    plugins: [
+      groupIconVitePlugin(),
+    ],
+  },
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
     logo: 'https://tdesign.gtimg.com/mobile/demos/logo2.png',
     nav: [
       { text: '指南', link: '/guide/introduction' },

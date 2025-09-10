@@ -56,7 +56,6 @@ src/
 ├── config      # 配置
 ├── constant    # 常量
 ├── hooks       # 自定义 Hooks
-├── mocks       # 模拟数据与接口
 ├── pages       # 业务页面
 ├── router      # 路由
 ├── store       # 状态管理

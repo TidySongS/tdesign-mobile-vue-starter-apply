@@ -10,6 +10,7 @@
 ├── .husky/               # Git 钩子管理
 ├── .vscode/              # VS Code 项目配置
 ├── docs/                 # 项目文档
+├── mocks/                # 模拟数据与接口
 ├── public/               # 静态资源
 ├── src/                  # 页面代码
 ├── types/                # TypeScript 类型定义
@@ -18,7 +19,8 @@
 ├── .gitignore            # Git 忽略文件
 ├── eslint.config.mjs     # ESLint 配置
 ├── index.html            # 主 html 文件
-├── package.json          # 项目核心配置
+├── package-lock.json     # 依赖包版本锁文件
+├── package.json          # 依赖包版本及启动配置
 ├── README.md             # 项目说明
 ├── tsconfig.app.json     # TypeScript 应用配置
 ├── tsconfig.json         # TypeScript 主配置
@@ -38,9 +40,8 @@ src/
 ├── assets              # 资源层
 ├── components          # 通用组件
 ├── config              # 配置层
-├── constants           # 常量层
+├── constant            # 常量层
 ├── hooks               # 自钩子层
-├── mocks               # 模拟层
 ├── pages               # 业务模块层
 ├── router              # 路由层
 ├── store               # 数据层
@@ -56,7 +57,40 @@ src/
 
 启动时项目会根据命令参数中的 `mode` 加载对应的环境配置。例如本地执行 `npm run dev`（`mode` 为 `development`），将读取 `.env.development`。
 
-## 内置的环境变量
+> .env 文件管理的环境变量在项目打包时被注入到代码中。
+
+### 内置环境变量
+
+以下是项目中已预定义的环境变量：
 
 - `VITE_API_BASE_URL`: API 基础路径
-- `VITE_APP_ENABLE_MOCKS`: 启用模拟数据
+- `VITE_APP_ENABLE_MOCKS`: 是否启用 MSW Mock
+
+```ini [.env.development]
+VITE_API_BASE_URL=/api
+VITE_APP_ENABLE_MOCKS=true
+```
+
+## 全局配置
+
+项目通过 `public/config.json` 文件来管理全局配置，如应用名称、版本号和 `API` 密钥。
+
+`src/config/index.ts` 中的 `loadAppConfig` 函数负责在应用启动时加载此文件，并将其配置对象注入到 `window.appConfig` 和 `Vue` 实例的 `$config` 属性中，方便在组件中访问。
+
+::: tip 说明
+这样做的好处是：你可以将项目打包一次，然后部署到不同的环境中。在部署时，只需替换 `public` 目录下的` config.json` 文件，就能轻松切换不同的配置，例如不同的 `API` 密钥或应用名称，而无需重新运行 `npm run build` 命令。
+:::
+
+### 配置说明
+
+```json [public/config.json]
+{
+  "app": {
+    "name": "Tdesign Mobile Vue Starter Apply",
+    "version": "0.0.0"
+  },
+  "apiKey": {
+    "tencentMap": "your_tencent_map_api_key_here"
+  }
+}
+```

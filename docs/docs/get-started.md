@@ -1,75 +1,145 @@
 # 快速开始
 
-本项目是基于 Vue 3 + Vite + TypeScript 与 TDesign Mobile Vue 的移动端活动报名模板。
+## 前置准备
 
-## 环境要求
-
-- Node.js ≥ 18（推荐使用 20+）
-- npm ≥ 9 或使用 yarn（本文以 npm 为例）
+- [Node.js](https://nodejs.org/) ≥ 18（推荐使用 20+）
+- 包管理器：`npm`, `yarn`, 或 `pnpm`
 
 ## 获取代码
 
-```bash
-# 方式一：Git 克隆
+```sh
 git clone https://github.com/TDesignOteam/tdesign-mobile-vue-starter-apply
 cd tdesign-mobile-vue-starter-apply
-
-# 方式二：直接下载压缩包并解压
 ```
 
 ## 安装依赖
 
-```bash
-npm install
+::: code-group
+
+```sh [npm]
+$ npm install
 ```
 
-## 启动开发服务器
-
-```bash
-npm run dev
+```sh [pnpm]
+$ pnpm install
 ```
 
-> 启用 Mock 时会通过 MSW 在浏览器侧拦截 `/api/**` 请求，返回 `src/mocks` 中预置的数据。
+```sh [yarn]
+$ yarn
+```
 
-启动后访问：`http://localhost:5173`
+:::
 
-## 代理配置
+## 运行
 
-为了接入腾讯地图接口，项目通过 Vite 代理该接口：
+::: code-group
 
-- 前缀：`/api/tencent-map`
-- 目标：`https://apis.map.qq.com`
+```sh [npm]
+$ npm run dev
+```
+
+```sh [pnpm]
+$ pnpm dev
+```
+
+```sh [yarn]
+$ yarn dev
+```
+
+:::
+
+开发服务会运行在 `http://localhost:5173` 上。在浏览器中访问 `URL` 以查看运行情况吧！
 
 ## 构建与预览
 
 - 生产构建：
 
-```bash
-npm run build
+::: code-group
+
+```sh [npm]
+$ npm run build
 ```
+
+```sh [pnpm]
+$ pnpm build
+```
+
+```sh [yarn]
+$ yarn build
+```
+
+:::
 
 - 本地预览：
 
-```bash
-npm run preview
+::: code-group
+
+```sh [npm]
+$ npm run preview
 ```
 
-## 文档站（VitePress）
+```sh [pnpm]
+$ pnpm preview
+```
+
+```sh [yarn]
+$ yarn preview
+```
+
+:::
+
+## 文档站点
 
 - 启动文档开发：
 
-```bash
-npm run docs:dev
+::: code-group
+
+```sh [npm]
+$ npm run docs:dev
 ```
+
+```sh [pnpm]
+$ pnpm docs:dev
+```
+
+```sh [yarn]
+$ yarn docs:dev
+```
+
+:::
 
 - 构建文档：
 
-```bash
-npm run docs:build
+::: code-group
+
+```sh [npm]
+$ npm run docs:build
 ```
+
+```sh [pnpm]
+$ pnpm docs:build
+```
+
+```sh [yarn]
+$ yarn docs:build
+```
+
+:::
 
 - 预览文档站：
 
-```bash
-npm run docs:preview
+::: code-group
+
+```sh [npm]
+$ npm run docs:preview
 ```
+
+```sh [pnpm]
+$ pnpm docs:preview
+```
+
+```sh [yarn]
+$ yarn docs:preview
+```
+
+:::

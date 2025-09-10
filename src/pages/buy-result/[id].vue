@@ -1,22 +1,9 @@
 <script setup lang="ts">
-import type {
-  AppItem,
-  Person,
-} from '@/api/share'
-import {
-  Message,
-} from 'tdesign-mobile-vue'
-
-import {
-  getActivityDetail,
-} from '@/api/activity'
-import {
-  getAppList,
-  getFriendList,
-} from '@/api/share'
-import {
-  formatDate,
-} from '@/utils/dateTime'
+import type { AppItem, Person } from '@/api/share'
+import { Message } from 'tdesign-mobile-vue'
+import { getActivityDetail } from '@/api/activity'
+import { getAppList, getFriendList } from '@/api/share'
+import { formatDate } from '@/utils/date'
 
 const route = useRoute()
 const router = useRouter()
@@ -87,7 +74,6 @@ async function fetchFrendandAppdata() {
     const apdata = await getAppList()
     appList.length = 0
     appList.push(...apdata)
-    console.log(appList)
     loading.value = false
   }
   catch (err) {
@@ -99,13 +85,11 @@ async function fetchFrendandAppdata() {
 // 分享给朋友
 function shareWithFriends() {
   isSharePopupVisible.value = true
-  console.log('打开分享弹窗')
 }
 
 // 关闭分享弹窗
 function closeSharePopup() {
   isSharePopupVisible.value = false
-  console.log('关闭分享弹窗')
 }
 
 // 分享至社媒
@@ -130,24 +114,24 @@ onMounted(() => {
 
 <template>
   <header>
-    <t-navbar title="购买结果" left-arrow :on-left-click="$router.back" class="tnavbar" />
+    <t-navbar title="购买结果" left-arrow :on-left-click="$router.back" />
   </header>
-  <div class="buy-result-page">
+  <main>
     <!-- 成功状态 -->
     <t-result class="result-status" theme="success" title="购买成功" description="" />
 
     <!-- 活动信息卡片 -->
     <div class="activity-card">
-      <t-image :src="activity.cover" alt="活动封面" fit="cover" class="activity-cover" />
-      <h3 class="activity-name">
+      <t-image :src="activity.cover" alt="活动封面" fit="cover" class="activity-card__cover" />
+      <h3 class="activity-card__name">
         {{ activity.name }}
       </h3>
-      <div class="activity-details">
-        <div class="detail-item">
+      <div class="activity-card__details">
+        <div class="activity-card__detail-item">
           <TimeIcon size="16px" />
           <span>{{ activity.date }}</span>
         </div>
-        <div class="detail-item">
+        <div class="activity-card__detail-item">
           <LocationIcon size="16px" />
           <span>{{ activity.address }}</span>
         </div>
@@ -160,14 +144,14 @@ onMounted(() => {
     </h3>
     <div class="person-info">
       <t-avatar
-        class="person-avatar"
+        class="person-info__avatar"
         image="https://tdesign.gtimg.com/mobile/demos/avatar1.png"
       />
-      <div class="person-details">
-        <div class="person-name">
+      <div class="person-info__details">
+        <div class="person-info__name">
           {{ selectedPerson.name }}
         </div>
-        <div class="person-desc">
+        <div class="person-info__desc">
           {{ selectedPerson.age }} {{ selectedPerson.occupation }}
         </div>
       </div>
@@ -196,7 +180,7 @@ onMounted(() => {
         去查看
       </t-button>
     </div>
-  </div>
+  </main>
 
   <!-- 分享弹窗 -->
   <t-popup
@@ -207,7 +191,7 @@ onMounted(() => {
   >
     <div class="share-popup">
       <div class="share-section">
-        <h3 class="share-title">
+        <h3 class="share-section__title">
           分享给朋友
         </h3>
         <t-grid :column="0" class="grid-scroll">
@@ -220,7 +204,7 @@ onMounted(() => {
       </div>
 
       <div class="share-section">
-        <h3 class="share-title">
+        <h3 class="share-section__title">
           分享到社媒
         </h3>
         <t-grid :column="0" class="grid-scroll">
@@ -231,7 +215,7 @@ onMounted(() => {
           </t-grid-item>
         </t-grid>
       </div>
-      <t-button class="share-cancel" block variant="text" @click="closeSharePopup">
+      <t-button class="share-popup__btn" block variant="text" @click="closeSharePopup">
         取消
       </t-button>
     </div>
@@ -239,159 +223,5 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
-.text-ellipsis {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tnavbar {
-  --td-navbar-bg-color: var(--bg-color-secondarypage);
-}
-
-.buy-result-page {
-  .flex-col();
-  padding: 0 16px;
-  min-height: 100vh;
-  justify-content: center;
-  padding-top: var(--navbar-height);
-  background-color: var(--bg-color-secondarypage);
-}
-
-.result-status {
-  margin-bottom: 24px;
-}
-
-.activity-card {
-  .p-16();
-  width: 100%;
-  aspect-ratio: 343 / 282;
-  background: white;
-  border-radius: 12px;
-  box-shadow: var(--td-shadow-3);
-  .activity-cover {
-    width: 100%;
-    width: 100%;
-    aspect-ratio: 311 / 175;
-    border-radius: 9.06px;
-  }
-  .activity-name {
-    .font(18px, 600);
-    .text-ellipsis();
-    height: 26px;
-    margin: 16px 0px 8px;
-  }
-  .activity-details {
-    display: flex;
-    .detail-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 4px;
-      &:first-child {
-        margin-right: 16px;
-      }
-      &:last-child {
-        flex-grow: 1;
-        min-width: 0;
-      }
-      .t-icon {
-        color: var(--td-brand-color-7);
-        margin-right: 4px;
-        flex-shrink: 0;
-      }
-      span {
-        .font(12px, 400);
-        .text-ellipsis();
-      }
-    }
-  }
-}
-
-.section-title {
-  .font(16px, 600);
-  margin: 24px 0 12px 0;
-}
-
-.person-info {
-  .flex-center();
-  height: 82px;
-  background: white;
-  border-radius: 9px;
-  padding: 17px 16px;
-  .person-avatar {
-    margin-right: 12px;
-  }
-  .person-details {
-    flex: 1;
-    min-width: 0;
-    .person-name {
-      .font(16px, 400);
-      margin-bottom: 4px;
-    }
-    .person-desc {
-      .font();
-      .text-ellipsis();
-      color: var(--td-font-gray-2);
-    }
-  }
-}
-
-.action-buttons {
-  display: flex;
-  gap: 8px;
-  margin-top: 38px;
-  padding-bottom: 16px;
-}
-/* 分享弹窗样式 */
-
-.share-popup {
-  background-color: white;
-  border-radius: 12px;
-  .share-section {
-    .share-title {
-      .font(14px, 400);
-      padding: 16px 0 0 16px;
-      color: var(--td-font-gray-3);
-    }
-  }
-  .share-cancel {
-    .flex-center();
-    height: 48px;
-    padding: 12px 16px;
-    padding-bottom: calc(16px + env(safe-area-inset-bottom));
-    border-top: 0.5px solid var(--td-gray-color-3);
-    :deep(.t-button__content) {
-      .font(16px, 400);
-    }
-  }
-}
-
-.grid-scroll {
-  overflow-x: auto;
-  white-space: nowrap;
-  scrollbar-width: none;
-  /* Firefox */
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  &::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari, Opera */
-  }
-  :deep(.t-grid-item) {
-    max-width: 80px;
-    flex-basis: 80px;
-    padding: 16px 20px;
-  }
-  :deep(.t-grid-item__image) {
-    .flex-center();
-    width: 40px;
-    background: transparent;
-  }
-  :deep(.t-grid-item__title) {
-    .font(12px, 400);
-    .text-ellipsis();
-    max-width: 72px;
-    padding-top: 4px;
-  }
-}
+@import './index.less';
 </style>
