@@ -6,8 +6,10 @@ import 'tdesign-mobile-vue/es/style/index.css'
 import '@/styles/main.less'
 
 async function enableMocking() {
+  if (import.meta.env.PROD)
+    return
   if (import.meta.env.VITE_APP_ENABLE_MOCKS === 'true') {
-    const { worker } = await import('./mocks/browser')
+    const { worker } = await import('../mocks/browser')
     return worker.start({
       onUnhandledRequest: 'bypass',
     })

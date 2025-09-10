@@ -1,6 +1,6 @@
 import type { ActivityFilterParams, SortOption } from '@/api/activity'
 import { delay, http, HttpResponse } from 'msw'
-import { compareDates, isDateInRange } from '@/utils/dateTime'
+import { compareDates, isDateInRange } from '@/utils/date'
 import { db } from './db'
 import { swiperList } from './mockData'
 
@@ -34,7 +34,7 @@ export const handlers = [
       dateRange = [],
       sort = 'latest',
       page = 1,
-      pageSize = 5,
+      pageSize = 10,
     } = params
 
     let filteredResult = db.activity.getAll()

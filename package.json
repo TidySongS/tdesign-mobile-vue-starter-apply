@@ -5,7 +5,6 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "dev:mock": "VITE_APP_ENABLE_MOCKS=true npm run dev",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
@@ -47,6 +46,7 @@
     "unplugin-vue-router": "^0.15.0",
     "vite": "^7.0.6",
     "vitepress": "^2.0.0-alpha.12",
+    "vitepress-plugin-group-icons": "^1.6.3",
     "vue-tsc": "^3.0.6"
   },
   "msw": {

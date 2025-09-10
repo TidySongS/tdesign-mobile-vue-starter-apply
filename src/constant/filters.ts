@@ -1,4 +1,4 @@
-import { generateDateRange } from '@/utils/dateTime'
+import { generateDateRange } from '@/utils/date'
 
 const [oneWeekAgo, sixMonthsLater] = generateDateRange(1, 6, 'week', 'month')
 

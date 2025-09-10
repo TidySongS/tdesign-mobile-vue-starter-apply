@@ -2,7 +2,7 @@
 import type { ActivityDetail } from '@/api/activity'
 import { getActivityDetail } from '@/api/activity'
 import ActivitySwiper from '@/components/ActivitySwiper.vue'
-import { isExpired } from '@/utils/dateTime'
+import { isExpired } from '@/utils/date'
 import Popup from './components/Popup.vue'
 
 const route = useRoute()
@@ -121,14 +121,14 @@ onMounted(() => {
         v-else
         :src="bannerUrl" alt="活动横幅" loading="lazy" fit="cover"
         :style="{ width: '100%', height: '160px' }"
-        class="banner-image"
+        class="ad-banner__image"
       />
     </div>
-    <div v-if="guestImages.length" class="ad-section-guests">
-      <div class="ad-section-title">
+    <div v-if="guestImages.length" class="ad-section">
+      <div class="ad-section__title">
         活动嘉宾
       </div>
-      <div class="ad-swiper">
+      <div class="ad-section__swiper">
         <ActivitySwiper
           :swiper-list="guestSwiperList"
           :autoplay="false"
@@ -138,11 +138,11 @@ onMounted(() => {
         />
       </div>
     </div>
-    <div v-if="sceneImages.length" class="ad-section-scene">
-      <div class="ad-section-title">
+    <div v-if="sceneImages.length" class="ad-section">
+      <div class="ad-section__title">
         活动现场
       </div>
-      <div class="ad-swiper">
+      <div class="ad-section__swiper">
         <ActivitySwiper
           :swiper-list="sceneSwiperList"
           :autoplay="false"
@@ -157,13 +157,13 @@ onMounted(() => {
     <div class="ad-footer-actions">
       <div class="ad-footer-action">
         <HeartIcon size="20px" />
-        <div class="ad-footer-action-text">
+        <div class="ad-footer-action__text">
           收藏
         </div>
       </div>
       <div class="ad-footer-action">
         <ShareIcon size="20px" />
-        <div class="ad-footer-action-text">
+        <div class="ad-footer-action__text">
           分享
         </div>
       </div>

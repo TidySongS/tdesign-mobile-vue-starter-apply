@@ -1,11 +1,20 @@
 import { defineConfig } from 'vitepress'
+import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'TDesign Starter - Apply',
-  description: 'a front-end page template for event registration',
+  title: 'TDesign Starter Apply',
+  description: '',
+  markdown: {
+    config(md) {
+      md.use(groupIconMdPlugin)
+    },
+  },
+  vite: {
+    plugins: [
+      groupIconVitePlugin(),
+    ],
+  },
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
     logo: 'https://tdesign.gtimg.com/mobile/demos/logo2.png',
     nav: [
       { text: '指南', link: '/guide/introduction' },
@@ -35,19 +44,6 @@ export default defineConfig({
             { text: '开发规范', link: '/docs/develop-rules' },
             { text: '路由配置', link: '/docs/router' },
             { text: '请求与数据', link: '/docs/request-data' },
-            { text: '个性化配置', link: '/docs/custom-config' },
-          ],
-        },
-        {
-          text: '构建',
-          items: [
-            { text: '项目构建', link: '/docs/build' },
-          ],
-        },
-        {
-          text: '部署',
-          items: [
-            { text: '项目部署', link: '/docs/deploy' },
           ],
         },
       ],

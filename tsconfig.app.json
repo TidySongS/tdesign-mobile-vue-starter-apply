@@ -13,7 +13,8 @@
     "src/**/*.ts",
     "src/**/*.vue",
     "./node_modules/tdesign-mobile-vue/global.d.ts",
-    "types/*.d.ts"
+    "types/*.d.ts",
+    "mocks/**/*.ts"
   ],
   "exclude": ["src/**/__tests__/*"]
 }

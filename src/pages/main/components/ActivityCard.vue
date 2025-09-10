@@ -18,10 +18,10 @@ const props = defineProps({
     </div>
     <div class="card__content">
       <h3>{{ props.title }}</h3>
-      <div class="slot-1">
+      <div class="slot-content">
         <slot name="content" />
       </div>
-      <div class="slot-2">
+      <div class="slot-footer">
         <slot name="footer" />
       </div>
     </div>
@@ -61,11 +61,11 @@ const props = defineProps({
       text-overflow: ellipsis;
     }
   }
-  .slot-1 {
+  .slot-content {
     display: flex;
   }
 
-  .slot-2 {
+  .slot-footer {
     .font(14px, 600);
     margin-top: auto;
   }

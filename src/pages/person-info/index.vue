@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import type {
-  DateValue,
-} from 'tdesign-mobile-vue'
+import type { DateValue } from 'tdesign-mobile-vue'
 import type { ValidateResult } from '@/api/personInfo'
-import {
-  Message,
-} from 'tdesign-mobile-vue'
+import { Message } from 'tdesign-mobile-vue'
 import userInfo from '@/store/userInfo'
-import {
-  formatDate,
-} from '@/utils/dateTime'
+import { formatDate } from '@/utils/date'
 
 const form = ref(null)
 const router = useRouter()
@@ -165,8 +159,8 @@ async function handleConfirm() {
   <header>
     <t-navbar title="个人信息" left-arrow :on-left-click="$router.back" />
   </header>
-  <div class="person-info-page">
-    <div class="page-content">
+  <main>
+    <div class="container">
       <!-- 表单内容 -->
       <div>
         <t-form ref="form" :data="formData" :rules="rules" label-align="left" show-error-message label-width="97px" @submit="handleConfirm">
@@ -226,7 +220,7 @@ async function handleConfirm() {
     <t-popup v-model="showProfessionPicker" placement="bottom">
       <t-picker v-model="professionPickerValue" title="选择职业" :columns="professionColumns" @confirm="onProfessionConfirm" @cancel="showProfessionPicker = false" />
     </t-popup>
-  </div>
+  </main>
 </template>
 
 <style lang="less" scoped>

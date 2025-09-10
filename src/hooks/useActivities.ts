@@ -18,7 +18,7 @@ export function useActivities() {
   const isFetchActivityList = ref(true) // 是否正在获取活动列表
   const isLoadAllActivities = ref(false) // 是否已加载所有活动
   const activityList = ref<Activity[]>([]) // 活动列表
-  const pageSize = 5 // 每次加载（每页显示）的活动数量
+  const pageSize = 10 // 每次加载（每页显示）的活动数量
   let currentPage = 1 // 当前页码
 
   const { filters, resetFilters } = useFilters() // 使用自定义 Hook 来管理筛选器状态
