@@ -53,11 +53,11 @@ src/
 
 ## 环境变量
 
-项目根目录提供 `.env.development` 配置文件，你也可以按需扩展更多环境文件。
+项目根目录提供 `.env.development` 配置文件，您也可以按需扩展更多环境文件。
 
 启动时项目会根据命令参数中的 `mode` 加载对应的环境配置。例如本地执行 `npm run dev`（`mode` 为 `development`），将读取 `.env.development`。
 
-> .env 文件管理的环境变量在项目打包时被注入到代码中。
+> .env 文件管理的环境变量会在项目打包时被注入到代码中。
 
 ### 内置环境变量
 
@@ -78,7 +78,7 @@ VITE_APP_ENABLE_MOCKS=true
 `src/config/index.ts` 中的 `loadAppConfig` 函数负责在应用启动时加载此文件，并将其配置对象注入到 `window.appConfig` 和 `Vue` 实例的 `$config` 属性中，方便在组件中访问。
 
 ::: tip 说明
-这样做的好处是：你可以将项目打包一次，然后部署到不同的环境中。在部署时，只需替换 `public` 目录下的` config.json` 文件，就能轻松切换不同的配置，例如不同的 `API` 密钥或应用名称，而无需重新运行 `npm run build` 命令。
+这样做的好处是：您可以将项目打包一次，然后部署到不同的环境中。在部署时，只需替换 `public` 目录下的 `config.json` 文件，就能轻松切换不同的配置，例如不同的 `API` 密钥或应用名称，而无需重新运行 `npm run build` 命令。
 :::
 
 ### 配置说明
@@ -94,3 +94,12 @@ VITE_APP_ENABLE_MOCKS=true
   }
 }
 ```
+
+项目预置了更新定位功能，相关函数参见`src/api/location.ts`，集成了腾讯地图的逆地址解析服务。如需要此服务，请在配置文件中填入您的 `API` 密钥以启用此功能。
+
+您可以前往[腾讯位置服务](https://lbs.qq.com/dev/console/application/mine)应用管理，创建应用 -> 添加 `Key`（选择 `WebServiceAPI`，并设置域名白名单），然后前往[配额管理](https://lbs.qq.com/dev/console/quota/account)，将逆地址解析接口分配额度给刚刚填写的 `Key`。
+
+::: tip 建议
+
+如果您需要处理更敏感的数据，比如用户的详细住址信息，并且需要将这些数据传递给您的后端进行处理，那么更安全的做法是：1. 在前端获取用户的位置坐标。2. 将这个坐标发送到您的后端服务。3. 在后端使用一个非公开的 `API` 密钥来调用腾讯地图的相关解析接口。4.后端将结果返回给前端。
+:::
