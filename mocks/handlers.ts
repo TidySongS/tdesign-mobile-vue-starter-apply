@@ -181,7 +181,7 @@ export const handlers = [
   }),
 
   http.get('/api/share/app', () => {
-    return HttpResponse.json({ data: appList })
+    return HttpResponse.json(appList)
   }),
 
   // 用户信息
