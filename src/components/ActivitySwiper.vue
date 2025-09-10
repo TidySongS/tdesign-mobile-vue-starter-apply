@@ -9,7 +9,6 @@ const props = withDefaults(
   defineProps<{
     swiperList: SwiperItem[]
     isFetchSwiperList?: boolean
-    sideType?: 'both' | 'right' | 'left'
     swiperGap?: number
     swiperReady?: boolean
     autoplay?: boolean // 自动播放
@@ -19,7 +18,6 @@ const props = withDefaults(
   }>(),
   {
     isFetchSwiperList: false,
-    sideType: 'both',
     swiperGap: 12,
     swiperReady: true,
     autoplay: true,
@@ -39,7 +37,7 @@ const swiperStyle = computed(() => {
   }
   else if (props.marginPosition === 'left') {
     return {
-      margin: `0 0 0 calc(${sideSpace} - ${props.swiperGap}px)`,
+      margin: `0 -${props.swiperGap}px 0 ${sideSpace}`,
     }
   }
   else {
@@ -55,17 +53,17 @@ const swiperStyle = computed(() => {
     <div v-show="!swiperReady || props.swiperList.length === 0">
       <div class="swiper-placeholder">
         <div
-          v-show="sideType !== 'right'"
+          v-show="marginPosition !== 'right'"
           class="swiper-placeholder__side swiper-img"
-          style="border-radius: 0 9px 9px 0"
+          style="border-radius: 0 9px 9px 0; margin-right: 12px;"
         />
         <div class="swiper-placeholder__main swiper-img">
           <span v-show="!isFetchSwiperList && props.swiperList.length === 0">暂无轮播图数据</span>
         </div>
         <div
-          v-show="sideType !== 'left'"
+          v-show="marginPosition !== 'left'"
           class="swiper-placeholder__side swiper-img"
-          style="border-radius: 9px 0 0 9px"
+          style="border-radius: 9px 0 0 9px; margin-left: 12px;"
         />
       </div>
       <div class="dots-placeholder">
@@ -117,7 +115,6 @@ const swiperStyle = computed(() => {
   &__main {
     .flex-center();
     width: var(--swiper-width);
-    margin: 0 12px;
   }
   .swiper-img {
     height: 100%;

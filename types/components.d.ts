@@ -15,6 +15,7 @@ declare module 'vue' {
     ChevronUpIcon: typeof import('tdesign-icons-vue-next')['ChevronUpIcon']
     CloseIcon: typeof import('tdesign-icons-vue-next')['CloseIcon']
     EditIcon: typeof import('tdesign-icons-vue-next')['EditIcon']
+    ErrorPage: typeof import('./../src/components/ErrorPage.vue')['default']
     FilterIcon: typeof import('tdesign-icons-vue-next')['FilterIcon']
     HeartIcon: typeof import('tdesign-icons-vue-next')['HeartIcon']
     LocationIcon: typeof import('tdesign-icons-vue-next')['LocationIcon']

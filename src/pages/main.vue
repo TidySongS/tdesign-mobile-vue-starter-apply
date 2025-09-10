@@ -64,7 +64,6 @@ function handleTabbarChange(name: string | number) {
   <header>
     <t-navbar
       :title="currentInfo.showTitle ? currentInfo.label : ''"
-      class="header-navbar"
       :style="{
         '--navbar-bg-color': currentInfo.bgColor,
       }"
@@ -122,19 +121,16 @@ function handleTabbarChange(name: string | number) {
   padding-top: var(--navbar-height);
   padding-bottom: var(--tabbar-height);
 }
-</style>
 
-<style lang="less">
-.header-navbar {
-  z-index: 99;
-  .t-navbar__content {
+:deep(.t-navbar) {
+  &__content {
     background-image: url('@/assets/head-bg.png');
     background-position: left var(--status-bar-height);
     background-repeat: no-repeat;
     background-size: cover;
     background-color: var(--navbar-bg-color);
   }
-  .t-navbar__left {
+  &__left {
     margin-left: 16px;
   }
 }
