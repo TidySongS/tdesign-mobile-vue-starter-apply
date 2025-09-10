@@ -107,7 +107,6 @@ import type { HttpErrorInfo } from '@/utils/http'
 import { Toast } from 'tdesign-mobile-vue'
 // in main.ts (或应用初始化处)
 import {
-
   setErrorNotifier,
   setGlobalErrorToast,
   setToastDedupInterval,
@@ -138,8 +137,10 @@ setToastDedupInterval(1000)
 
 // 4) 统一 401 处理（如跳转登录/刷新 Token）
 setUnauthorizedHandler((error: HttpErrorInfo) => {
-  Toast({ message: '请先登录' })
-  // router.replace({ path: '/login', query: { redirect: location.pathname + location.search } })
+  if (error.status === 401) {
+    Toast({ message: '请先登录' })
+    // router.replace({ path: '/login', query: { redirect: location.pathname + location.search } })
+  }
 })
 ```
 
