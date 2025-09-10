@@ -3,6 +3,7 @@ import type { Theme } from 'vitepress'
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { h } from 'vue'
+import 'virtual:group-icons.css'
 import './style.css'
 
 export default {

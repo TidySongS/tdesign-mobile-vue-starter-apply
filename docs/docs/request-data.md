@@ -9,7 +9,7 @@
 - 示例🌰
 
 ```typescript
-//in src/api/...ts
+// in src/api/...ts
 import axios from '@/utils/request'
 
 export function getOccupations() {

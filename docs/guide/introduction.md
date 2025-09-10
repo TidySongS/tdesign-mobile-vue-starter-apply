@@ -1,6 +1,6 @@
 # 项目介绍
 
-为帮助社区开发者快速搭建风格统一、易于扩展的移动端应用，**TDesign Mobile Vue Apply** 模板应运而生。
+**TDesign Mobile Vue Starter Apply** 是一个基于 [TDesign Mobie Vue](https://tdesign.tencent.com/mobile-vue/overview) 移动端组件库，使用 `Vue3`、`Vite`、`TypeScript` 开发，拥有`首页`、`我的`两大模块，包含`热门推荐`、`活动列表`、`个人信息`、`购买确认`、`购买结果`等多个功能模块，是一个针对活动报名场景的纯前端页面模版。
 
 ## 技术栈
 
