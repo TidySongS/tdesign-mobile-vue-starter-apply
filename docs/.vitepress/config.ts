@@ -17,8 +17,8 @@ export default defineConfig({
   themeConfig: {
     logo: 'https://tdesign.gtimg.com/mobile/demos/logo2.png',
     nav: [
-      { text: '指南', link: '/guide/introduction' },
-      { text: '文档', link: '/guide/get-started' },
+      { text: '介绍', link: '/guide/introduction' },
+      { text: '指南', link: '/guide/get-started' },
     ],
 
     sidebar: {
