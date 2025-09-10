@@ -44,6 +44,18 @@ export default defineConfig({
             { text: '请求与数据', link: '/guide/request-data' },
           ],
         },
+        {
+          text: '功能模块',
+          items: [
+            { text: '首页', link: '/guide/page/home' },
+            { text: '我的', link: '/guide/page/my' },
+            { text: '选择城市', link: '/guide/page/select-location' },
+            { text: '活动详情', link: '/guide/page/activity-detail' },
+            { text: '购买确认', link: '/guide/page/buy-confirm' },
+            { text: '购买结果', link: '/guide/page/buy-result' },
+            { text: '个人信息', link: '/guide/page/person-info' },
+          ],
+        },
       ],
     },
 
