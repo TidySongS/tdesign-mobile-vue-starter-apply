@@ -60,3 +60,11 @@ export const cnCommentPool = [
   '场地与服务体验不错，细节考虑得很周到。',
   '主题设置紧贴行业趋势，收获了许多新思路。',
 ]
+
+export const appList = [
+  { id: '1', name: 'WeChat', icon: '/mock-imgs/app-icon/wechat.png' },
+  { id: '2', name: 'QQ', icon: '/mock-imgs/app-icon/qq.png' },
+  { id: '3', name: 'Doc', icon: '/mock-imgs/app-icon/doc.png' },
+  { id: '4', name: 'Map', icon: '/mock-imgs/app-icon/map.png' },
+  { id: '5', name: 'QQ Music', icon: '/mock-imgs/app-icon/qqmusic.png' },
+]

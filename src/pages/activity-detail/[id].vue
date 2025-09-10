@@ -132,7 +132,7 @@ onMounted(() => {
         <ActivitySwiper
           :swiper-list="guestSwiperList"
           :autoplay="false"
-          margin-position="left"
+          margin-position="right"
           :swiper-gap="28"
         />
       </div>

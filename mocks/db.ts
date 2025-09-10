@@ -209,6 +209,7 @@ export const db = factory({
     name: () => faker.person.fullName(),
     avatar: () => faker.image.avatar(),
   },
+
   personActivity: {
     id: primaryKey(faker.string.uuid), // 主键 ID
     personId: () => faker.string.uuid(), // 个人 ID
@@ -216,11 +217,6 @@ export const db = factory({
     status: () => faker.helpers.arrayElement(['已完成', '待参加']),
     date: () => faker.date.between({ from: sixMonthsAgo, to: sixMonthsLater }), // 过去半年到未来半年
     cover: () => faker.helpers.arrayElement(covers),
-  },
-  // 职业
-  occupation: {
-    id: primaryKey(faker.string.uuid),
-    title: () => faker.person.jobTitle(),
   },
 
   friendList: {
@@ -234,6 +230,7 @@ export const db = factory({
     activityId: String,
     date: String,
   },
+
   price: {
     id: primaryKey(faker.string.uuid),
     activityId: String,
@@ -242,6 +239,7 @@ export const db = factory({
     originalPrice: Number,
     person: Number,
   },
+
   shareAppIconList: {
     id: primaryKey(String),
     name: String,
@@ -290,22 +288,6 @@ for (let i = 0; i < 100; i++) {
 for (let i = 0; i < 20; i++) {
   db.personActivity.create()
 }
-
-for (let i = 0; i < 20; i++) {
-  db.occupation.create()
-}
-
-const appList = [
-  { id: '1', name: 'WeChat', icon: '/mock-imgs/app-icon/wechat.png' },
-  { id: '2', name: 'QQ', icon: '/mock-imgs/app-icon/qq.png' },
-  { id: '3', name: 'Doc', icon: '/mock-imgs/app-icon/doc.png' },
-  { id: '4', name: 'Map', icon: '/mock-imgs/app-icon/map.png' },
-  { id: '5', name: 'QQ Music', icon: '/mock-imgs/app-icon/qqmusic.png' },
-]
-
-appList.forEach((app) => {
-  db.shareAppIconList.create(app)
-})
 
 // 预置一个用户档案
 db.userProfile.create({

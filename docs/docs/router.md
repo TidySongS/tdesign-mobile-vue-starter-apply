@@ -8,17 +8,17 @@
 
 ```bash
 src/pages/
-├── index.vue                 # 入口页（项目中会重定向到 /main/base/）
-├── main.vue                  # 布局页（含顶部 Navbar、底部 TabBar）
-├── main/
-│   ├── base/index.vue        # 首页（/main/base/）
-│   └── user/index.vue        # 我的（/main/user/）
 ├── activity-detail/[id].vue  # 活动详情（/activity-detail/:id）
 ├── buy-confirm/[id].vue      # 确认订单（/buy-confirm/:id）
 ├── buy-result/[id].vue       # 购买结果（/buy-result/:id）
+├── main/
+│   ├── base/index.vue        # 首页（/main/base/）
+│   └── user/index.vue        # 我的（/main/user/）
 ├── person-info/index.vue     # 个人信息 (/person-info)
 ├── select-location/index.vue # 选择城市 (/select-location)
 └── [...all].vue              # 404 兜底页
+├── index.vue                 # 入口页（项目中会重定向到 /main/base/）
+├── main.vue                  # 布局页（含顶部 Navbar、底部 TabBar）
 ```
 
 ## 动态路由

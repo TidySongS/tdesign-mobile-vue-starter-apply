@@ -1,9 +1,5 @@
 import axios from '@/utils/request'
 
-export function getOccupations() {
-  return axios.get('/occupations')
-}
-
 export interface UserProfile {
   id: string
   name: string

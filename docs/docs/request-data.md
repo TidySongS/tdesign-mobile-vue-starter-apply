@@ -1,55 +1,54 @@
 # 请求与数据
 
-### 发起请求
+## 发起请求
 
 本项目采用 `axios` 做为请求的资源库，并进行了二次封装。
 
 您可以直接从 `@/utils/request` 路径导入使用。大部分情况下，不需要改动 `src/utils/request` 中的代码，只需要在 `src/api` 目录中新增您使用的接口，并在页面中引入接口使用即可。
 
-通过引入封装好的 axios 实例发起请求：
+通过引入封装好的 `axios` 实例发起请求：
 
 - 示例
 
-```typescript
-// in src/api/...ts
+```typescript [src/api/activity.ts]
 import axios from '@/utils/request'
 
-export function getOccupations() {
-  return axios.get('/occupations')
+export function getHomeSwiper() {
+  return axios.get('/homeSwiper')
 }
 ```
 
-然后在实例组件导入定义的api即可：
+然后在实例组件导入定义的接口即可：
 
-```js
-// 在vue文件中导入api发送请求
-// ...
-import { getOccupations } from '@/api/info'
+```typescript [src/hooks/useHomeSwiper.ts]
+import { getHomeSwiper } from '@/api/activity'
 
-// 在异步函数中调用
-async function fetchData() {
+async function fetchSwiperList() {
   try {
-    const list = await getOccupations()
-    console.log(list)
+    const res = await getHomeSwiper()
+    swiperList.value = res.data
   }
   catch (error) {
-    console.error('请求失败:', error)
+    console.error('获取轮播图列表失败:', error)
+  }
+  finally {
+    isFetchSwiperList.value = false
   }
 }
 ```
 
 项目中的请求封装还提供了以下特性：
 
-- 统一的 baseURL 配置（默认为 `/api`）
+- 统一的 `baseURL` 配置（默认为 `/api`）
 - 3秒超时设置
 - 响应拦截器自动提取 `response.data`
 - [统一错误处理和提示机制（可自定义）](#error-handling-custom)
 
-### Mock 数据
+## Mock 服务
 
 项目使用 [MSW (Mock Service Worker)](https://mswjs.io/) 作为 Mock 解决方案，在开发环境中拦截请求并返回模拟数据。
 
-#### 启用方式
+### 启用方式
 
 Mock 功能通过环境变量控制，默认在开发环境中启用：
 
@@ -58,13 +57,13 @@ Mock 功能通过环境变量控制，默认在开发环境中启用：
 VITE_APP_ENABLE_MOCKS=true
 ```
 
-#### Mock 配置
+### Mock 配置
 
 - **Mock 入口**: `src/mocks/browser.ts`
 - **路由处理器**: `src/mocks/handlers.ts`
 - **虚拟数据库**: `src/mocks/db.ts`
 
-#### 使用示例
+### 使用示例
 
 在 `src/mocks/handlers.ts` 中定义 Mock 路由：
 
@@ -84,7 +83,7 @@ export const handlers = [
 
 <a id="error-handling-custom"></a>
 
-### 统一错误处理与提示
+## 统一错误处理与提示
 
 项目对错误处理与提示做了统一封装，并提供“全局配置 + 单次请求覆盖”的可定制机制，位于 `@/utils/request` 与 `@/utils/http/`。
 
@@ -100,7 +99,7 @@ export const handlers = [
 > - 无响应时提示“请求失败”
 > - 401 会触发外部注入的未认证处理（如跳转登录），并按规则提示
 
-#### 全局配置（推荐在应用启动时设置）
+### 全局配置（推荐在应用启动时设置）
 
 ```ts
 import type { HttpErrorInfo } from '@/utils/http'
@@ -144,7 +143,7 @@ setUnauthorizedHandler((error: HttpErrorInfo) => {
 })
 ```
 
-#### 按请求覆盖
+### 按请求覆盖
 
 在单次请求中通过 axios 的配置项 `errorToast` 定制提示策略（类型见下文）。
 
@@ -170,7 +169,7 @@ await axios.post(
 )
 ```
 
-#### 错误对象类型
+### 错误对象类型
 
 `HttpErrorInfo` 统一描述了错误信息，便于在全局/局部回调内做分支处理：
 
@@ -186,7 +185,7 @@ interface HttpErrorInfo {
 
 在请求被取消的情况下，`message` 为“请求已取消”；无响应时为“请求失败”。
 
-#### 去重与节流
+### 去重与节流
 
 错误提示采用“内容 + 时间窗口”的去重策略：相同文案在设定的时间窗口内只提示一次。
 
@@ -196,7 +195,7 @@ import { setToastDedupInterval } from '@/utils/http'
 setToastDedupInterval(800) // 默认 800ms，可按需调整
 ```
 
-#### 类型扩展（按请求 `errorToast`）
+### 类型扩展（按请求 `errorToast`）
 
 为方便在请求配置中直接书写 `errorToast`，项目通过类型声明扩展了 axios 的 `AxiosRequestConfig`：
 
